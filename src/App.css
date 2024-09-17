@@ -36,3 +36,14 @@
     transform: rotate(360deg);
   }
 }
+
+
+.swal2-popup .swal2-title {
+  font-family: sans-serif;
+  color: rgba(0,0,255,0.7);   
+}
+
+.swal2-popup .swal2-text {
+  font-family: sans-serif;
+  color:red;
+}
