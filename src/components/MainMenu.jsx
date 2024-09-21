@@ -10,13 +10,18 @@ import { useEffect,useState } from 'react';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import logo from "../Images/logo.png"
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import CreatePin from './CreateTransactionPin';
+import { userLogin } from '../Features/Slice';
 
 const MainMenu = () => {
-  const { setMenuSwitch, theme } = useContext(Context);
+  const { setMenuSwitch, theme,createTransactionPinSwitch,setCreateTransactionPinSwitch } = useContext(Context);
   const [loading, setLoading] = useState(false);  // State for loading
   const [balance, setBalance] = useState(null);   // State for balance
   const userInfo = useSelector(state=>state.userInfo)
+  const userToken = useSelector(state=>state.userToken)
+  const dispatch = useDispatch();
+
 
   
   useEffect(() => {
@@ -73,6 +78,44 @@ const MainMenu = () => {
   }, []); // Empty dependency array ensures this runs only once on mount
   
 
+  useEffect(() => {
+    // Function to fetch user info from the server
+    const fetchUserInfo = async () => {
+        try {
+            const response = await fetch('https://paysphere-api.vercel.app/get_user', {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${userToken}`, // Replace userToken with actual token
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            // Handle the response based on the status code
+            if (response.ok) {
+                const data = await response.json();
+                // setUserInfo(data);  // Store user data in state
+                // console.log(data)
+                const userInfo = data.user
+
+                dispatch(userLogin({userInfo,userToken}))
+            } else if (response.status === 404) {
+                console.log('User not found.');
+            } else {
+                console,log('An error occurred while fetching user details.');
+            }
+        } catch (err) {
+            console.error('Fetch error:', err);
+            // setError('Network error. Please try again later.');
+        } finally {
+            setLoading(false);  // Stop the loading state
+        }
+    };
+
+    fetchUserInfo();  // Fetch user info when component mounts
+
+}, []);  // Empty dependency ar
+
+
   return (
     <DashboardContainer theme={theme}>
       <UserInfoSection theme={theme}>
@@ -92,11 +135,14 @@ const MainMenu = () => {
       <UserInfoSection theme={theme}>
         <UserInfoTitle theme={theme}>Hi, {userInfo.firstName}</UserInfoTitle>
         {/* <UserInfoItem theme={theme}><Strong primary theme={theme}>Hi, {userInfo.firstName}</Strong></UserInfoItem> */}
-        <UserInfoItem theme={theme}><Strong theme={theme}>User ID:</Strong> {userInfo.uniqueID}</UserInfoItem>
+        <UserInfoItem theme={theme}><Strong theme={theme}>User ID:</Strong> {userInfo.walletID}</UserInfoItem>
         <UserInfoItem theme={theme}><Strong theme={theme}>Email:</Strong> {userInfo.email}</UserInfoItem>
         <UserInfoItem theme={theme}><Strong theme={theme}>Phone Number: </Strong> {userInfo.phoneNumber}</UserInfoItem>
-        <UserInfoItem theme={theme}><Strong theme={theme}>Balance: </Strong> NGN {userInfo.acctBalance}</UserInfoItem>
+        <UserInfoItem theme={theme}><Strong theme={theme}>Balance: </Strong> NGN {userInfo.wallet}</UserInfoItem>
+        {createTransactionPinSwitch&&<CreatePin/>}
+        <Button onClick={()=>setCreateTransactionPinSwitch(true)}>Create Transaction Pin</Button>
       </UserInfoSection>
+      
 
 
       {/* Main Menu Sections */}
@@ -118,10 +164,10 @@ const MainMenu = () => {
             <ItemText theme={theme}>Ussd Payment</ItemText>
           </GridItem>
 
-          <GridItem onClick={() => setMenuSwitch(13)} theme={theme}>
+          {/* <GridItem onClick={() => setMenuSwitch(13)} theme={theme}>
             <Icon theme={theme}><FaCreditCard /> <FaArrowDown/></Icon>
             <ItemText theme={theme}>Manual Card Payment</ItemText>
-          </GridItem>
+          </GridItem> */}
 
           <GridItem onClick={() => setMenuSwitch(14)} theme={theme}>
             <Icon theme={theme}><FaUniversity /> <FaArrowDown/><FaArrowUp/></Icon>
@@ -383,4 +429,12 @@ const Img = styled.img`
   width:35px;
   margin-top:5px;
   margin-left:5px;
+`
+
+const Button = styled.button`
+  padding:5px;
+  width:200px;
+  cursor:pointer;
+  color:blue;
+  border:1px solid blue;
 `

@@ -1,11 +1,85 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import styled from 'styled-components';
 import { Context } from './Context';
 import { FaUserFriends } from 'react-icons/fa';
-import logo from "../Images/logo.png"
+import logo from "../Images/logo.png";
+import axios from 'axios';
+import Swal from 'sweetalert2';
 
 const PayUser = () => {
   const { setMenuSwitch, theme } = useContext(Context);
+  const [walletID, setWalletID] = useState('');
+  const [amount, setAmount] = useState('');
+  const [pin, setPin] = useState('');
+  const [error, setError] = useState('');
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
+
+    // Validate inputs
+    if (!walletID || !amount || !pin) {
+      setError('Please fill in all fields.');
+      return;
+    }
+    if (parseFloat(amount) < 100) {
+      setError('Amount must be ₦100 or more.');
+      return;
+    }
+
+    try {
+      Swal.fire({
+        title: 'Processing...',
+        text: 'Please wait while we process your transaction.',
+        allowOutsideClick: false,
+        didOpen: () => {
+          Swal.showLoading();
+        },
+      });
+
+      const response = await axios.post(
+        'https://paysphere-api.vercel.app/transfer_to_user', // Replace with your actual API URL
+        { walletID, amount: parseFloat(amount), pin },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`, // Replace with your token management
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+
+      Swal.fire({
+        title: 'Success!',
+        text: response.data.message,
+        icon: 'success',
+      });
+      
+      // Reset fields
+      setWalletID('');
+      setAmount('');
+      setPin('');
+      
+    } catch (error) {
+      let message = 'An error occurred. Please try again.';
+      const status = error.response?.status;
+
+      if (status === 400) {
+        if (error.response.data.message) {
+          message = error.response.data.message;
+        }
+      } else if (status === 404) {
+        message = 'Invalid user or recipient.';
+      } else if (status === 500) {
+        message = 'Transaction initiation failed.';
+      }
+
+      Swal.fire({
+        title: 'Error!',
+        text: message,
+        icon: 'error',
+      });
+    }
+  };
 
   return (
     <PayUserContainerA>
@@ -13,13 +87,37 @@ const PayUser = () => {
         <Icon theme={theme}>
           <FaUserFriends />
         </Icon>
-        <Title theme={theme}>Payshpere Transfer (P2P) <Img src={logo} alt="logo"/></Title>
-        <Input theme={theme} type="text" placeholder="Enter User ID" />
-        <Input theme={theme} type="text" placeholder="Enter Amount" />
-        <ButtonContainer>
-          <Button primary theme={theme}>Pay</Button>
-          <Button onClick={() => setMenuSwitch(0)} theme={theme}>Cancel</Button>
-        </ButtonContainer>
+        <Title theme={theme}>
+          Paysphere Transfer (P2P) <Img src={logo} alt="logo" />
+        </Title>
+        <form onSubmit={handleSubmit}>
+          <Input 
+            theme={theme} 
+            type="text" 
+            placeholder="Enter User ID" 
+            value={walletID}
+            onChange={(e) => setWalletID(e.target.value)} 
+          />
+          <Input 
+            theme={theme} 
+            type="number" 
+            placeholder="Enter Amount" 
+            value={amount}
+            onChange={(e) => setAmount(e.target.value)} 
+          />
+          <Input 
+            theme={theme} 
+            type="password" 
+            placeholder="Enter Transfer PIN" 
+            value={pin}
+            onChange={(e) => setPin(e.target.value)} 
+          />
+          {error && <Error>{error}</Error>}
+          <ButtonContainer>
+            <Button primary theme={theme} type="submit">Pay</Button>
+            <Button onClick={() => setMenuSwitch(0)} theme={theme}>Cancel</Button>
+          </ButtonContainer>
+        </form>
       </PayUserContainer>
     </PayUserContainerA>
   );
@@ -31,7 +129,6 @@ const PayUserContainerA = styled.div`
   padding-top: 100px;
 `;
 
-// Styled component for the main container
 const PayUserContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -39,7 +136,7 @@ const PayUserContainer = styled.div`
   padding: 20px;
   background-color: ${({ theme }) => (theme === 'light' ? 'whitesmoke' : '#333')};
   border-radius: 8px;
-  box-shadow:0px 4px 10px rgba(0,0,0,0.3);
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
   max-width: 400px;
   margin: 0 auto;
 
@@ -51,17 +148,16 @@ const PayUserContainer = styled.div`
 
 const Icon = styled(FaUserFriends)`
   font-size: 4rem;
-  color: ${({ theme }) => (theme === 'light' ? 'rgba(0,0,255,0.5)' : '#bbb')};
+  color: ${({ theme }) => (theme === 'light' ? 'rgba(0, 0, 255, 0.5)' : '#bbb')};
   margin-bottom: 20px;
 `;
 
-// Styled component for the title
 const Title = styled.h2`
-   display:flex;
-    justify-content:center;
-    align-items:center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   font-size: 24px;
-  color: ${({ theme }) => (theme === 'light' ? 'rgba(0,0,255,0.5)' : '#bbb')};
+  color: ${({ theme }) => (theme === 'light' ? 'rgba(0, 0, 255, 0.5)' : '#bbb')};
   margin-bottom: 20px;
 
   @media (min-width: 768px) {
@@ -69,7 +165,6 @@ const Title = styled.h2`
   }
 `;
 
-// Styled component for the input fields
 const Input = styled.input`
   width: 100%;
   padding: 10px;
@@ -91,7 +186,6 @@ const Input = styled.input`
   }
 `;
 
-// Styled component for the button container
 const ButtonContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -103,7 +197,6 @@ const ButtonContainer = styled.div`
   }
 `;
 
-// Styled component for the buttons
 const Button = styled.button`
   padding: 12px;
   width: 100%;
@@ -111,7 +204,7 @@ const Button = styled.button`
     primary ? (theme === 'light' ? '#007bff' : '#0056b3') : 
     (theme === 'light' ? '#ccc' : '#666')};
   color: ${({ primary }) => (primary ? 'white' : 'black')};
-  border: ${({ secondary }) => (secondary ? '1px solid rgba(0,0,255,0.5)' : 'none')};
+  border: none;
   border-radius: 4px;
   font-size: 16px;
   cursor: pointer;
@@ -130,8 +223,16 @@ const Button = styled.button`
     width: 48%;
   }
 `;
+
 const Img = styled.img`
-  width:35px;
-  margin-top:5px;
-  margin-left:5px;
-`
+  width: 35px;
+  margin-top: 5px;
+  margin-left: 5px;
+`;
+
+const Error = styled.p`
+  color: red;
+  font-size: 14px;
+  text-align: center;
+  margin: 10px 0;
+`;

@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import styled from 'styled-components';
-import { FaMoneyBillWave, FaLink, FaQrcode, FaUserFriends, FaUniversity, FaFileInvoiceDollar, FaMobileAlt, FaWifi, FaCreditCard, FaSms, FaPhoneAlt, FaUserPlus, FaHome } from 'react-icons/fa';
+import { FaMoneyBillWave, FaLink, FaQrcode, FaUserFriends, FaUniversity, FaFileInvoiceDollar, FaMobileAlt, FaWifi, FaCreditCard, FaSms, FaPhoneAlt, FaUserPlus, FaHome, FaUniregistry } from 'react-icons/fa';
 import { Context } from './Context';
 import { useEffect,useState } from 'react';
 import axios from 'axios';
@@ -8,47 +8,47 @@ import Swal from 'sweetalert2';
 import { useNavigate,useParams } from 'react-router-dom';
 import Footer from './Footer';
 
-const QrCodeAndPaymentLink2 = () => {
+const QrCodeAndPaymentLink3 = () => {
   const { setMenuSwitch, theme } = useContext(Context);
   const [loading, setLoading] = useState(false);  // State for loading
   const [balance, setBalance] = useState(null);   // State for balance
 const navigate = useNavigate()
-const { encodedData2 } = useParams();  // 'encodedData' is the Base64 encoded value from the URL
+const { encodedData3 } = useParams();  // 'encodedData' is the Base64 encoded value from the URL
     const {userId, setUserId,
         amount2,setAmount2,
         userName,setUserName,
         userPhoneNumber,setUserPhoneNumber,
-        description,setDescription}=useContext(Context)
+      description,setDescription}=useContext(Context)
 
     // Base64 decoding function
     const base64Decode = (str) => atob(str);
 
     useEffect(() => {
-        if (encodedData2) {
+        if (encodedData3) {
             // Decode the Base64 string
-            const decodedData = base64Decode(encodedData2);  // e.g., 'userId123-2000'
-            const [decodedUserId,decodedUserName,decodedPhoneNumber,decodedDescription] = decodedData.split('-');  // Split by the hyphen
+            const decodedData = base64Decode(encodedData3);  // e.g., 'userId123-2000'
+            const [decodedUserId, decodedAmount,decodedUserName,decodedPhoneNumber,decodedDescription] = decodedData.split('-');  // Split by the hyphen
             setUserId(decodedUserId);  // Set userId state
-            // setAmount2(decodedAmount);
+            setAmount2(decodedAmount);
             setUserName(decodedUserName);
             setUserPhoneNumber(decodedPhoneNumber);  // Set amount state
             setDescription(decodedDescription)
         }
-    }, [encodedData2]);
+    }, [encodedData3]);
 
 
   return (
     <DashboardContainer theme={theme}>
        {/* Main Menu Sections */}
       <Section>
-        <SectionTitle theme={theme}>Please enter Amount and select your preferred payment method</SectionTitle>
+        <SectionTitle theme={theme}>Please select your preferred receiving method</SectionTitle>
         <UserInfoSection theme={theme}>
         {/* <UserInfoTitle theme={theme}>User Details</UserInfoTitle> */}
-        <UserInfoItem theme={theme}><Strong theme={theme}>Beneficiary Name:</Strong> {userName}</UserInfoItem>
+        <UserInfoItem theme={theme}><Strong theme={theme}>Payer Name:</Strong> {userName}</UserInfoItem>
         <UserInfoItem theme={theme}><Strong theme={theme}>User ID:</Strong> {userId}</UserInfoItem>
         <UserInfoItem theme={theme}><Strong theme={theme}>Phone Number: </Strong> {userPhoneNumber}</UserInfoItem>
-        <UserInfoItem theme={theme}><Strong theme={theme}>Enter Amount:  </Strong><Input onChange={(e)=>setAmount2(e.target.value)}placeholder="Enter Amount to pay"/></UserInfoItem>
-        <UserInfoItem theme={theme}><Strong theme={theme}>Description:  </Strong>{description}</UserInfoItem>
+        <UserInfoItem theme={theme}><Strong theme={theme}>Amount:  </Strong> NGN {amount2}</UserInfoItem>
+        <UserInfoItem theme={theme}><Strong theme={theme}>Description:  </Strong> {description}</UserInfoItem>
       
       </UserInfoSection>
         <GridContainer>
@@ -57,17 +57,17 @@ const { encodedData2 } = useParams();  // 'encodedData' is the Base64 encoded va
             <ItemText theme={theme}>Mobile Money</ItemText>
           </GridItem>
           <GridItem onClick={() => setMenuSwitch(10)} theme={theme}>
-            <Icon theme={theme}><FaMobileAlt /></Icon>
-            <ItemText theme={theme}>Ussd</ItemText>
+            <Icon theme={theme}><FaUniversity /></Icon>
+            <ItemText theme={theme}>Bank</ItemText>
           </GridItem>
           <GridItem onClick={() => setMenuSwitch(11)} theme={theme}>
-            <Icon theme={theme}><FaCreditCard /></Icon>
-            <ItemText theme={theme}>Card Tap</ItemText>
+            <Icon theme={theme}><FaMobileAlt /></Icon>
+            <ItemText theme={theme}>Payshpere</ItemText>
           </GridItem>
-          <GridItem onClick={() => setMenuSwitch(12)} theme={theme}>
+          {/* <GridItem onClick={() => setMenuSwitch(12)} theme={theme}>
             <Icon theme={theme}><FaMobileAlt /></Icon>
             <ItemText theme={theme}>Phone Tap</ItemText>
-          </GridItem>
+          </GridItem> */}
           {/* <GridItem onClick={() => setMenuSwitch(13)} theme={theme}>
             <Icon theme={theme}><FaCreditCard /></Icon>
             <ItemText theme={theme}>Receive Manual Card Payment</ItemText>
@@ -80,11 +80,11 @@ const { encodedData2 } = useParams();  // 'encodedData' is the Base64 encoded va
             <Icon theme={theme}><FaSms /></Icon>
             <ItemText theme={theme}>Receive Sms Payment</ItemText>
           </GridItem> */}
-          <GridItem onClick={() => setMenuSwitch(17)} theme={theme}>
+          {/* <GridItem onClick={() => setMenuSwitch(17)} theme={theme}>
             <Icon theme={theme}><FaCreditCard /></Icon>
             <Icon theme={theme}><FaUniversity /></Icon>
             <ItemText theme={theme}>Card / Bank Transfer</ItemText>
-          </GridItem>
+          </GridItem> */}
         </GridContainer>
       </Section>
 
@@ -110,7 +110,7 @@ const { encodedData2 } = useParams();  // 'encodedData' is the Base64 encoded va
   );
 };
 
-export default QrCodeAndPaymentLink2;
+export default QrCodeAndPaymentLink3;
 
 // Styled component for the main dashboard container
 const DashboardContainer = styled.div`
@@ -153,8 +153,8 @@ const UserInfoTitle = styled.h2`
 // Styled component for each user info item
 const UserInfoItem = styled.p`
 display:flex;
-gap:5px;
   font-size: 16px;
+  gap:5px;
   margin: 5px 0;
   color: ${({ theme }) => (theme === 'light' ? '#555' : '#ddd')};
   
@@ -292,7 +292,3 @@ const ItemText = styled.p`
   }
 `;
 
-const Input = styled.input`
-padding:5px;
-outline:none;
-`

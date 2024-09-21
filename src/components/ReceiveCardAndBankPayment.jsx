@@ -1,72 +1,417 @@
-import React, { useContext, useState } from 'react';
+
+import React, { useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Context } from './Context';
-import { FaCreditCard, FaUniversity } from 'react-icons/fa'; // Icon for Card and Bank Payment
+import { FaCreditCard, FaUniversity } from 'react-icons/fa'; 
 import Swal from 'sweetalert2';
+import { useSelector } from 'react-redux';
 
 const ReceiveCardAndBankPayment = () => {
     const { setMenuSwitch, theme } = useContext(Context);
     const [amount, setAmount] = useState('');
+    const userInfo = useSelector(state => state.userInfo);
+    const userToken = useSelector(state => state.userToken);
+    const [amountPaid,setAmountPaid]=useState(null)
 
-    const handlePayment = () => {
-        if (!amount || isNaN(amount) || parseFloat(amount) <= 0) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Invalid Amount',
-                text: 'Please enter a valid amount.'
-            });
-            return;
-        }
+   
 
-        const loadingAlert = Swal.fire({
-            title: 'Processing...',
-            onBeforeOpen: () => Swal.showLoading()
+    // const handlePayment = () => {
+    //     if (!amount || isNaN(amount) || parseFloat(amount) <= 0) {
+    //         Swal.fire({
+    //             icon: 'error',
+    //             title: 'Invalid Amount',
+    //             text: 'Please enter a valid amount.'
+    //         });
+    //         return;
+    //     }
+
+    //     const loadingAlert = Swal.fire({
+    //         title: 'Processing...',
+    //         onBeforeOpen: () => Swal.showLoading()
+    //     });
+
+    //     const key = `key${Math.random()}`;
+        
+    //     try {
+    //         window.Korapay.initialize({
+    //             key: "pk_test_tSvcVcCCD8YG7ZCsn4nM2Jr1QBVuKRyARvRxJXDy",
+    //             reference: key,
+    //             amount: parseFloat(amount), // Convert to smallest currency unit (e.g., kobo for NGN)
+    //             currency: "NGN",
+    //             customer: {
+    //                 name: "Esther",
+    //                 email: "esomesther@gmail.com",
+    //             },
+    //             onClose: function () {
+    //                 console.log('Payment modal closed');
+    //             },
+    //             onSuccess: function (data) {
+
+    //                 console.log('Payment successful:', data);
+               
+
+    //                 // Query the charge using the reference
+    //                 queryChargeAndCreditWallet(data.reference);
+    //             },
+    //             onFailed: function (data) {
+    //                 console.error('Payment failed:', data);
+    //                 Swal.fire({
+    //                     icon: 'error',
+    //                     title: 'Payment Failed',
+    //                     text: 'Payment failed, please try again.'
+    //                 });
+    //             },
+    //         });
+    //     } catch (error) {
+    //         console.error('Payment error:', error);
+    //         Swal.fire({
+    //             icon: 'error',
+    //             title: 'Payment Error',
+    //             text: 'An error occurred while processing your payment. Please try again.'
+    //         });
+    //     } finally {
+    //         loadingAlert.close();
+    //     }
+    // };
+
+    
+  
+    
+    // const queryChargeAndCreditWallet = async (reference) => {
+    //     const loadingAlert = Swal.fire({ text: "Retrieving payment status..." });
+    //     Swal.showLoading();
+    //     try {
+    //         const response = await fetch(`https://api.korapay.com/merchant/api/v1/charges/${reference}`, {
+    //             method: 'GET',
+    //             headers: {
+    //                 'Authorization': `Bearer sk_test_YureVAxZbyoA41CyRZCVxhnopPeyVztLbqG71rU1`, // Use your actual secret key
+    //                 'Content-Type': 'application/json'
+    //             }
+    //         });
+
+    //         const data = await response.json();
+
+    //         if (response.ok && data.status) {
+    //             const { amount_paid } = data.data; // Get the amount paid
+    //             console.log('Charge retrieved successfully:', data);
+                
+    //             // Credit the user's wallet
+ 
+    //             creditUserWallet(userInfo.walletID, parseFloat(amount_paid));
+            
+
+                
+    //         } else {
+    //             console.error('Failed to retrieve charge:', data);
+    //             Swal.fire({
+    //                 icon: 'error',
+    //                 title: 'Failed to Retrieve Payment',
+    //                 text: data.message || 'An error occurred while retrieving the payment status.'
+    //             });
+    //         }
+    //     } catch (error) {
+    //         console.error('Error while querying charge:', error);
+    //         Swal.fire({
+    //             icon: 'error',
+    //             title: 'Network Error',
+    //             text: 'Failed to retrieve payment status. Please try again.'
+    //         });
+    //     } finally {
+    //         loadingAlert.close();
+    //     }
+    // };
+
+
+    // const creditUserWallet = async (walletID,amount) => {
+    //     const loadingAlert = Swal.fire({ text: "Crediting wallet..." });
+
+    //     Swal.showLoading();
+
+    //     try {
+    //         const response = await fetch('https://paysphere-api.vercel.app/credit_wallet/bank', {
+    //             method: 'POST',
+    //             headers: {
+    //                 'Authorization': `Bearer ${userToken}`,
+    //                 'Content-Type': 'application/json'
+    //             },
+    //             body: JSON.stringify({walletID, amount})
+    
+    //         });
+
+    //         const data = await response.json();
+
+    //         if (response.ok) {
+    //             console.log('Wallet credited successfully:', data.wallet);
+    //             Swal.fire({
+    //                 icon: 'success',
+    //                 title: 'Wallet Credited',
+    //                 text: `Your wallet has been credited. New Balance: ${data.wallet}`
+    //             });
+    //             setAmountPaid(null)
+    //             setMenuSwitch(0);
+    //         } else {
+    //             console.error('Failed to credit wallet:', data);
+    //             Swal.fire({
+    //                 icon: 'error',
+    //                 title: 'Failed to Credit Wallet',
+    //                 text: data.message || 'An error occurred.'
+    //             });
+    //         }
+    //     } catch (error) {
+    //         console.error('Error while crediting wallet:', error);
+    //         Swal.fire({
+    //             icon: 'error',
+    //             title: 'Network Error',
+    //             text: 'Failed to credit your wallet. Please try again.'
+    //         });
+    //     } finally {
+    //         loadingAlert.close();
+    //     }
+    // };
+
+
+//     // 2nd 
+//     let hasCredited = false; // Add a flag to track whether the wallet has been credited
+
+// const queryChargeAndCreditWallet = async (reference) => {
+//     const loadingAlert = Swal.fire({ text: "Retrieving payment status..." });
+//     Swal.showLoading();
+//     try {
+//         const response = await fetch(`https://api.korapay.com/merchant/api/v1/charges/${reference}`, {
+//             method: 'GET',
+//             headers: {
+//                 'Authorization': `Bearer sk_test_YureVAxZbyoA41CyRZCVxhnopPeyVztLbqG71rU1`, // Use your actual secret key
+//                 'Content-Type': 'application/json'
+//             }
+//         });
+
+//         const data = await response.json();
+
+//         if (response.ok && data.status) {
+//             const { amount_paid } = data.data; // Get the amount paid
+//             console.log('Charge retrieved successfully:', data);
+
+//             // Check if the wallet has already been credited
+//             if (!hasCredited) {
+//                 // Credit the user's wallet
+//                 await creditUserWallet(userInfo.walletID, parseFloat(amount_paid));
+//                 hasCredited = true; // Mark as credited after successful crediting
+//             } else {
+//                 console.log('Wallet has already been credited.');
+//             }
+
+//         } else {
+//             console.error('Failed to retrieve charge:', data);
+//             Swal.fire({
+//                 icon: 'error',
+//                 title: 'Failed to Retrieve Payment',
+//                 text: data.message || 'An error occurred while retrieving the payment status.'
+//             });
+//         }
+//     } catch (error) {
+//         console.error('Error while querying charge:', error);
+//         Swal.fire({
+//             icon: 'error',
+//             title: 'Network Error',
+//             text: 'Failed to retrieve payment status. Please try again.'
+//         });
+//     } finally {
+//         loadingAlert.close();
+//     }
+// };
+
+
+
+
+let paymentInProgress = false; // Global variable to track the payment state
+
+const handlePayment = () => {
+    if (!amount || isNaN(amount) || parseFloat(amount) <= 0) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Invalid Amount',
+            text: 'Please enter a valid amount.'
+        });
+        return;
+    }
+
+    if (paymentInProgress) {
+        console.log('Payment is already being processed. Please wait.');
+        return;
+    }
+
+    paymentInProgress = true; // Set flag to true to prevent multiple triggers
+
+    const loadingAlert = Swal.fire({
+        title: 'Processing...',
+        onBeforeOpen: () => Swal.showLoading()
+    });
+
+    const key = `key${Math.random()}`;
+
+    try {
+        window.Korapay.initialize({
+            key: "pk_test_tSvcVcCCD8YG7ZCsn4nM2Jr1QBVuKRyARvRxJXDy",
+            reference: key,
+            amount: parseFloat(amount), // Convert to smallest currency unit (e.g., kobo for NGN)
+            currency: "NGN",
+            customer: {
+                name: "Esther",
+                email: "esomesther@gmail.com",
+            },
+            onClose: function () {
+                console.log('Payment modal closed');
+                paymentInProgress = false; // Allow new payments if modal is closed
+            },
+            onSuccess: function (data) {
+                console.log('Payment successful:', data);
+
+                // Query the charge using the reference
+                queryChargeAndCreditWallet(data.reference);
+            },
+            onFailed: function (data) {
+                console.error('Payment failed:', data);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Payment Failed',
+                    text: 'Payment failed, please try again.'
+                });
+                paymentInProgress = false; // Reset flag to allow retry
+            },
+        });
+    } catch (error) {
+        console.error('Payment error:', error);
+        Swal.fire({
+            icon: 'error',
+            title: 'Payment Error',
+            text: 'An error occurred while processing your payment. Please try again.'
+        });
+        paymentInProgress = false; // Reset flag on error
+    } finally {
+        loadingAlert.close();
+    }
+};
+
+
+
+
+
+// Declare hasCredited and queryInProgress globally or at a component level
+let hasCredited = {};
+let queryInProgress = {};
+
+const queryChargeAndCreditWallet = async (reference) => {
+    // Check if the wallet has already been credited or if a query is already in progress for this reference
+    if (hasCredited[reference]) {
+        console.log("Wallet has already been credited for this reference.");
+        return; // Prevent further execution if already credited
+    }
+
+    if (queryInProgress[reference]) {
+        console.log("Query is already in progress for this reference.");
+        return; // Prevent multiple queries for the same reference
+    }
+
+    queryInProgress[reference] = true; // Set query in progress
+
+    const loadingAlert = Swal.fire({ text: "Retrieving payment status..." });
+    Swal.showLoading();
+
+    try {
+        const response = await fetch(`https://api.korapay.com/merchant/api/v1/charges/${reference}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer sk_test_YureVAxZbyoA41CyRZCVxhnopPeyVztLbqG71rU1`,
+                'Content-Type': 'application/json'
+            }
         });
 
-        const key = `key${Math.random()}`;
-        
-        try {
-            window.Korapay.initialize({
-                key: "pk_test_tSvcVcCCD8YG7ZCsn4nM2Jr1QBVuKRyARvRxJXDy",
-                reference: key,
-                amount: parseFloat(amount), // Convert to smallest currency unit (e.g., kobo for NGN)
-                currency: "NGN",
-                customer: {
-                    name: "Esther",
-                    email: "esomesther@gmail.com",
-                },
-                onClose: function () {
-                    console.log('Payment modal closed');
-                },
-                onSuccess: function (data) {
-                    console.log('Payment successful:', data);
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Payment Successful',
-                        text: 'We have sent a confirmation to your email.'
-                    });
-                    setMenuSwitch(0)
-                },
-                onFailed: function (data) {
-                    console.error('Payment failed:', data);
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Payment Failed',
-                        text: 'Payment failed, please try again.'
-                    });
-                },
-            });
-        } catch (error) {
-            console.error('Payment error:', error);
+        const data = await response.json();
+
+        if (response.ok && data.status) {
+            const { amount_paid } = data.data; // Get the amount paid
+            console.log('Charge retrieved successfully:', data);
+
+            // Check if the wallet has already been credited for this specific reference
+            if (!hasCredited[reference]) {
+                // Credit the user's wallet
+                await creditUserWallet(userInfo.walletID, parseFloat(amount_paid));
+                hasCredited[reference] = true; // Set the flag for this reference
+            } else {
+                console.log('Wallet has already been credited.');
+            }
+        } else {
+            console.error('Failed to retrieve charge:', data);
             Swal.fire({
                 icon: 'error',
-                title: 'Payment Error',
-                text: 'An error occurred while processing your payment. Please try again.'
+                title: 'Failed to Retrieve Payment',
+                text: data.message || 'An error occurred while retrieving the payment status.'
             });
-        } finally {
-            loadingAlert.close();
         }
-    };
+    } catch (error) {
+        console.error('Error while querying charge:', error);
+        Swal.fire({
+            icon: 'error',
+            title: 'Network Error',
+            text: 'Failed to retrieve payment status. Please try again.'
+        });
+    } finally {
+        queryInProgress[reference] = false; // Reset query in progress flag
+        loadingAlert.close();
+    }
+};
+
+
+
+
+
+
+const creditUserWallet = async (walletID, amount) => {
+    const loadingAlert = Swal.fire({ text: "Crediting wallet..." });
+
+    Swal.showLoading();
+
+    try {
+        const response = await fetch('https://paysphere-api.vercel.app/credit_wallet/bank', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${userToken}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ walletID, amount })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            console.log('Wallet credited successfully:', data.wallet);
+            Swal.fire({
+                icon: 'success',
+                title: 'Wallet Credited',
+                text: `Your wallet has been credited. New Balance: ${data.wallet}`
+            });
+            setAmountPaid(null)
+            setMenuSwitch(0);
+        } else {
+            console.error('Failed to credit wallet:', data);
+            Swal.fire({
+                icon: 'error',
+                title: 'Failed to Credit Wallet',
+                text: data.message || 'An error occurred.'
+            });
+        }
+    } catch (error) {
+        console.error('Error while crediting wallet:', error);
+        Swal.fire({
+            icon: 'error',
+            title: 'Network Error',
+            text: 'Failed to credit your wallet. Please try again.'
+        });
+    } finally {
+        loadingAlert.close();
+    }
+};
+
 
     return (
         <PaymentContainerA>
@@ -93,6 +438,7 @@ const ReceiveCardAndBankPayment = () => {
 }
 
 export default ReceiveCardAndBankPayment;
+
 
 
 const PaymentContainerA = styled.div`

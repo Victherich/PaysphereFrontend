@@ -31,7 +31,7 @@ const Header = () => {
       </ThemeSwitch> 
       <Icon2><FaMoon/></Icon2>
       </ThemeSwitchWrap>}
-      {location.pathname.includes("payment")?"":<MenuIcon />}
+      {/* {location.pathname.includes("payment")?"":<MenuIcon />} */}
     </HeaderContainer>
   );
 };

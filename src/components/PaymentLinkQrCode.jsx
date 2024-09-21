@@ -90,14 +90,14 @@ const PaymentLinkQrCode = () => {
                     Receive link/ Qr code payment with Fixed amount
                         </Button2>
                         <Button2 primary theme={theme} onClick={()=>setPaymentLinkQrCodeUiSwitch(2)}>
-                        Receive link/Qr code payment with for variable amount
+                        Receive link/Qr code payment for variable amounts
                         </Button2>
                         <Button2 primary theme={theme} onClick={()=>setPaymentLinkQrCodeUiSwitch(3)}>
                         Make link/ Qr code payment with Fixed amount
                         </Button2>
-                        <Button2 primary theme={theme} onClick={()=>setPaymentLinkQrCodeUiSwitch(4)}>
+                        {/* <Button2 primary theme={theme} onClick={()=>setPaymentLinkQrCodeUiSwitch(4)}>
                         Make link/ qr code payment with fixed amount to specific Paysphere user
-                        </Button2>
+                        </Button2> */}
                     <ButtonContainer>
                         
                         <Button onClick={() => {setMenuSwitch(0);setPaymentLinkQrCodeUiSwitch(0)}} theme={theme}>Cancel</Button>

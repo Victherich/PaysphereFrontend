@@ -5,6 +5,7 @@ import { Context } from './Context';
 import { FaCopy, FaLink, FaQrcode, FaShareAlt } from 'react-icons/fa';
 import { QRCodeCanvas } from 'qrcode.react';
 import Swal from 'sweetalert2';
+import { useDispatch, useSelector } from 'react-redux';
 
 // Base64 encoding function
 const base64Encode = (str) => {
@@ -19,19 +20,20 @@ const base64Decode = (str) => {
 const PaymentLinkQrCode2 = () => {
 
     const { setMenuSwitch, theme ,paymenLinkQrCodeUiswitch,setPaymentLinkQrCodeUiSwitch} = useContext(Context);
-    // const [amount, setAmount] = useState('');
+    const [description, setDescription] = useState('');
+    const userInfo = useSelector(state=>state.userInfo)
     const [url, setUrl] = useState('');
-    const baseUrl = "http://localhost:3000"; // Example base URL
-    const userId = "userId123";  // Example user ID
-    const userName = "Esther"
-    const phoneNumber = "123456789"
+    const baseUrl = window.location.origin; // Example base URL
+    const userId = userInfo.uniqueID;  // Example user ID
+    const userName = userInfo.firstName;
+    const phoneNumber = userInfo.phoneNumber
 
     const generateLink = () => {
      
 
         // Encode the userId and amount
-        const encodedData = base64Encode(`${userId}-${userName}-${phoneNumber}`);
-        const paymentUrl = `${baseUrl}/payment/${encodedData}`;  // Use the encoded data in the URL
+        const encodedData2 = base64Encode(`${userId}-${userName}-${phoneNumber}-${description}`);
+        const paymentUrl = `${baseUrl}/payment2/${encodedData2}`;  // Use the encoded data in the URL
         setUrl(paymentUrl);
     };
 
@@ -80,13 +82,13 @@ const PaymentLinkQrCode2 = () => {
                         <FaLink /><FaQrcode/>
                     </Icon>
                     <Title theme={theme}>Receive link/Qr code payment for variable amounts</Title>
-                    {/* <Input
+                    <Input
                         theme={theme}
                         type="text"
-                        placeholder="Enter Amount"
-                        value={amount}
-                        onChange={(e) => setAmount(e.target.value)}
-                    /> */}
+                        placeholder="Enter Description"
+                        value={description}
+                        onChange={(e) => setDescription(e.target.value)}
+                    />
                     <ButtonContainer>
                         <Button primary theme={theme} onClick={generateLink}>
                             Generate Link / QR Code

@@ -1,20 +1,307 @@
 
 
-import React, { useContext, useState } from 'react';
+// import React, { useContext, useState, useEffect } from 'react';
+// import styled from 'styled-components';
+// import { Context } from './Context';
+// import { FaUserPlus } from 'react-icons/fa';
+// import { useNavigate } from 'react-router-dom';
+// import Swal from 'sweetalert2'; 
+// import axios from 'axios';
+// import HeroImg4 from '../Images/heroImg7.png';
+// import HeroImg5 from '../Images/heroImg5.png';
+// import countryCodes from './CountryCodes';
+// import { FaEye,FaEyeSlash } from 'react-icons/fa';
+
+// const SignUp = () => {
+//     const { setMenuSwitch, theme, menuSwitch } = useContext(Context);
+//     const navigate = useNavigate();
+//     const [showPassword,setShowPassword]=useState(true)
+
+//     const [formData, setFormData] = useState({
+//         firstName: '',
+//         lastName: '',
+//         email: '',
+//         countryCode: '',
+//         phoneNumber: '',
+//         password: '',
+//         confirmPassword: ''
+//     });
+
+//     const [errors, setErrors] = useState({
+//         firstName: '',
+//         lastName: '',
+//         email: '',
+//         countryCode: '',
+//         phoneNumber: '',
+//         password: '',
+//         confirmPassword: ''
+//     });  
+    
+
+
+
+//     const validate = (name, value) => {
+//         switch (name) {
+//             case 'firstName':
+//                 if (!value) return 'First name is required.';
+//                 if (/\s/.test(value)) return 'No spaces allowed.';
+//                 if (value.length < 3) return 'Must be at least 3 characters.';
+//                 if (value.split(' ').length > 1) return 'No two words allowed.';
+//                 break;
+//             case 'lastName':
+//                 if (!value) return 'Last name is required.';
+//                 if (/\s/.test(value)) return 'No spaces allowed.';
+//                 if (value.length < 3) return 'Must be at least 3 characters.';
+//                 if (value.split(' ').length > 1) return 'No two words allowed.';
+//                 break;
+//             case 'email':
+//                 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+//                 if (!value) return 'Email is required.';
+//                 if (!emailRegex.test(value)) return 'Invalid email format.';
+//                 break;
+//             case 'countryCode':
+//                 if (!value) return 'Country code is required.';
+//                 // if (!countryCodes.includes(value)) return 'Invalid country code.';
+//                 break;
+//             case 'phoneNumber':
+//                 if (!value) return 'Phone number is required.';
+//                 if (value.startsWith('0')) return 'Phone number cannot start with zero.';
+//                 break;
+//             case 'password':
+//                 const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+//                 if (!value) return 'Password is required.';
+//                 if (!passwordRegex.test(value)) return 'Password must be at least 8 characters, include letters, numbers, and special characters.';
+//                 break;
+//             case 'confirmPassword':
+//                 if (value !== formData.password) return 'Passwords do not match.';
+//                 break;
+//             default:
+//                 break;
+//         }
+//         return true
+        
+//     };
+
+//     console.log(validate())
+
+    
+
+   
+
+//     const handleInputChange = (e) => {
+//         const { name, value } = e.target;
+//         setFormData({
+//             ...formData,
+//             [name]: value
+//         });
+//         const error = validate(name, value);
+//         setErrors({
+//             ...errors,
+//             [name]: error
+//         });
+//     };
+
+//     const handleSubmit = async (event) => {
+//         event.preventDefault();
+
+//         // Check if passwords match before submitting
+//         // if (formData.password !== formData.confirmPassword) {
+//         //     Swal.fire({
+//         //         title: 'Error!',
+//         //         text: 'Passwords do not match!',
+//         //         icon: 'error',
+//         //     });
+//         //     return;
+//         // }
+
+//         if(validate()===true){
+//             try {
+//                 Swal.fire({
+//                     title: 'Processing...',
+//                     text: 'Please wait while we process your request.',
+//                     allowOutsideClick: false,
+//                     didOpen: () => {
+//                         Swal.showLoading();
+//                     },
+//                 });
+    
+//                 const response = await axios.post('https://paysphere-api.vercel.app/signup', {
+//                     firstName: formData.firstName,
+//                     lastName: formData.lastName,
+//                     email: formData.email,
+//                     countryCode: formData.countryCode,
+//                     phoneNumber: formData.phoneNumber,
+//                     password: formData.password,
+//                     confirmPassword: formData.confirmPassword,
+//                 }, {
+//                     headers: {
+//                         'Content-Type': 'application/json',
+//                     },
+//                 });
+    
+//                 Swal.fire({
+//                     title: 'Success!',
+//                     text: 'Sign up successful. We have sent your User ID to your email',
+//                     icon: 'success',
+//                     confirmButtonText:"Go to Login"
+//                 }).then(() => {
+//                     navigate('/login');
+//                 });
+    
+//             } catch (error) {
+//                 console.error(error);
+//                 Swal.fire({
+//                     title: 'Error!',
+//                     text: error.response?.data?.msg || 'Sign up failed',
+//                     icon: 'error',
+//                 });
+//             }   
+//         }
+
+       
+//     };
+
+//     return (
+//         <SignUpWrap theme={theme} menuSwitch={menuSwitch}>
+//             <FormContainerWrapper>
+//                 <FormContainer theme={theme}>
+//                     <Icon theme={theme}>
+//                         <FaUserPlus />
+//                     </Icon>
+//                     <Title theme={theme}>Sign Up</Title>
+//                     <form onSubmit={handleSubmit}>
+//                         <PasswordWrap>
+//                             <InputWrap>
+//                             <Input
+//                                 name="firstName"
+//                                 theme={theme}
+//                                 type="text"
+//                                 placeholder="First Name"
+//                                 value={formData.firstName}
+//                                 onChange={handleInputChange}
+//                                 required
+//                             />
+//                             {errors.firstName && <Error>{errors.firstName}</Error>}
+//                             </InputWrap>    
+//                             <InputWrap>
+//                             <Input
+//                                 name="lastName"
+//                                 theme={theme}
+//                                 type="text"
+//                                 placeholder="Last Name"
+//                                 value={formData.lastName}
+//                                 onChange={handleInputChange}
+//                                 required
+//                             />
+//                             {errors.lastName && <Error>{errors.lastName}</Error>}
+//                             </InputWrap>
+//                         </PasswordWrap>
+//                         <InputWrap>
+//                         <Input
+//                             name="email"
+//                             theme={theme}
+//                             type="email"
+//                             placeholder="Email"
+//                             value={formData.email}
+//                             onChange={handleInputChange}
+//                             required
+//                         />
+//                         {errors.email && <Error>{errors.email}</Error>}
+//                         </InputWrap>
+//                         <PasswordWrap>
+//                             <InputWrap>
+//                             <Select
+//                                 name="countryCode"
+//                                 value={formData.countryCode}
+//                                 onChange={handleInputChange}
+//                                 required
+//                             >
+//                                 <option value="">Select Country Code</option>
+//                                 {countryCodes.map(code => (
+//                                     <option key={code} value={code.code}>{code.name} {code.code} </option>
+//                                 ))}
+//                             </Select>
+//                             {errors.countryCode && <Error>{errors.countryCode}</Error>}
+//                             </InputWrap>
+
+//                             <InputWrap>
+//                             <Input
+//                                 name="phoneNumber"
+//                                 theme={theme}
+//                                 type="text"
+//                                 placeholder="Phone Number"
+//                                 value={formData.phoneNumber}
+//                                 onChange={handleInputChange}
+//                                 required
+//                             />
+//                             {errors.phoneNumber && <Error>{errors.phoneNumber}</Error>}
+//                             </InputWrap>
+//                         </PasswordWrap>
+//                         <PasswordWrap>
+//                            <InputWrap>
+//                            <Input
+//                                 name="password"
+//                                 theme={theme}
+//                                 type={showPassword?"password":"text"}
+//                                 placeholder="Enter Password"
+//                                 value={formData.password}
+//                                 onChange={handleInputChange}
+//                                 required
+//                             />
+//                             <ToggleVisibility onClick={() => setShowPassword(!showPassword)}>
+//                                     {showPassword ? <FaEyeSlash /> : <FaEye />}
+//                                 </ToggleVisibility>
+//                             {errors.password && <Error>{errors.password}</Error>}
+//                            </InputWrap>
+//                             <InputWrap>
+//                             <Input
+//                                 name="confirmPassword"
+//                                 theme={theme}
+//                                 type={showPassword?"password":"text"}
+//                                 placeholder="Confirm Password"
+//                                 value={formData.confirmPassword}
+//                                 onChange={handleInputChange}
+//                                 required
+//                             />
+//                             <ToggleVisibility onClick={() => setShowPassword(!showPassword)}>
+//                                     {showPassword ? <FaEyeSlash /> : <FaEye />}
+//                                 </ToggleVisibility>
+
+//                             {errors.confirmPassword && <Error>{errors.confirmPassword}</Error>}
+//                             </InputWrap>
+//                         </PasswordWrap>
+//                         <ButtonContainer>
+//                             <Button primary theme={theme} type="submit">Sign Up</Button>
+//                         </ButtonContainer>
+//                         <Paragraph1>
+//                             Already have an account? <Span1 onClick={() => navigate('/login')}>Login</Span1>
+//                         </Paragraph1>
+//                     </form>
+//                 </FormContainer>
+//             </FormContainerWrapper>
+//         </SignUpWrap>
+//     );
+// };
+
+// export default SignUp;
+import React, { useContext, useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Context } from './Context';
 import { FaUserPlus } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
-import Swal from 'sweetalert2'; // Import SweetAlert2
+import Swal from 'sweetalert2'; 
 import axios from 'axios';
+import countryCodes from './CountryCodes';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import HeroImg4 from '../Images/heroImg7.png';
 import HeroImg5 from '../Images/heroImg5.png';
 
 const SignUp = () => {
     const { setMenuSwitch, theme, menuSwitch } = useContext(Context);
     const navigate = useNavigate();
+    const [showPassword, setShowPassword] = useState(true);
 
-    // State to manage form inputs
+    // Form state
     const [formData, setFormData] = useState({
         firstName: '',
         lastName: '',
@@ -25,33 +312,138 @@ const SignUp = () => {
         confirmPassword: ''
     });
 
-    console.log(formData)
+    // Error state for each input
+    const [firstNameError, setFirstNameError] = useState('');
+    const [lastNameError, setLastNameError] = useState('');
+    const [emailError, setEmailError] = useState('');
+    const [countryCodeError, setCountryCodeError] = useState('');
+    const [phoneNumberError, setPhoneNumberError] = useState('');
+    const [passwordError, setPasswordError] = useState('');
+    const [confirmPasswordError, setConfirmPasswordError] = useState('');
+    const [isFormValid, setIsFormValid] = useState(false);
 
-    // Handle input change
+    // Validate each field
+    const validate = (name, value) => {
+        if (name === 'firstName') {
+            if (!value) {
+                setFirstNameError('First name is required.');
+            } else if (/\s/.test(value)) {
+                setFirstNameError('No spaces allowed.');
+            } else if (value.length < 3) {
+                setFirstNameError('Must be at least 3 characters.');
+            } else if (value.split(' ').length > 1) {
+                setFirstNameError('No two words allowed.');
+            } else {
+                setFirstNameError('');
+            }
+        } else if (name === 'lastName') {
+            if (!value) {
+                setLastNameError('Last name is required.');
+            } else if (/\s/.test(value)) {
+                setLastNameError('No spaces allowed.');
+            } else if (value.length < 3) {
+                setLastNameError('Must be at least 3 characters.');
+            } else if (value.split(' ').length > 1) {
+                setLastNameError('No two words allowed.');
+            } else {
+                setLastNameError('');
+            }
+        } else if (name === 'email') {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!value) {
+                setEmailError('Email is required.');
+            } else if (!emailRegex.test(value)) {
+                setEmailError('Invalid email format.');
+            } else {
+                setEmailError('');
+            }
+        } else if (name === 'countryCode') {
+            if (!value) {
+                setCountryCodeError('Country code is required.');
+            } else {
+                setCountryCodeError('');
+            }
+        } else if (name === 'phoneNumber') {
+            if (!value) {
+                setPhoneNumberError('Phone number is required.');
+            } else if (value.startsWith('0')) {
+                setPhoneNumberError('Phone number cannot start with zero.');
+            } else {
+                setPhoneNumberError('');
+            }
+        } else if (name === 'password') {
+            const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+            if (!value) {
+                setPasswordError('Password is required.');
+            } else if (!passwordRegex.test(value)) {
+                setPasswordError('Password must be at least 8 characters, include letters, numbers, and special characters.');
+            } else {
+                setPasswordError('');
+            }
+        } else if (name === 'confirmPassword') {
+            if (value !== formData.password) {
+                setConfirmPasswordError('Passwords do not match.');
+            } else {
+                setConfirmPasswordError('');
+            }
+        }
+    };
+
+    // Handle input changes
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setFormData({
-            ...formData, // Copy existing form data
-            [name]: value, // Update specific field with new value
+            ...formData,
+            [name]: value
         });
+        validate(name, value);
+    };
+
+    // Check form validity on change
+    useEffect(() => {
+        const isValid =
+            !firstNameError &&
+            !lastNameError &&
+            !emailError &&
+            !countryCodeError &&
+            !phoneNumberError &&
+            !passwordError &&
+            !confirmPasswordError &&
+            Object.values(formData).every(field => field !== '');
+
+        setIsFormValid(isValid);
+    }, [firstNameError, lastNameError, emailError, countryCodeError, phoneNumberError, passwordError, confirmPasswordError, formData]);
+
+    // Alert if any field is empty
+    const emptyAlert = () => {
+        const emptyFields = Object.entries(formData).filter(([key, value]) => !value);
+        if (emptyFields.length > 0) {
+            Swal.fire({
+                icon: 'error',
+                text: 'Please fill all fields.'
+            });
+            return true;  // indicates that there are empty fields
+        }
+        return false;  // no empty fields
     };
 
     // Handle form submission
     const handleSubmit = async (event) => {
         event.preventDefault();
 
-        // Check if passwords match before submitting
-        if (formData.password !== formData.confirmPassword) {
+        // Alert if fields are empty
+        if (emptyAlert()) return;
+
+        if (!isFormValid) {
             Swal.fire({
                 title: 'Error!',
-                text: 'Passwords do not match!',
+                text: 'Please correct the highlighted errors before submitting.',
                 icon: 'error',
             });
             return;
         }
 
         try {
-            // Display processing message
             Swal.fire({
                 title: 'Processing...',
                 text: 'Please wait while we process your request.',
@@ -61,7 +453,6 @@ const SignUp = () => {
                 },
             });
 
-            // Send POST request to backend
             const response = await axios.post('https://paysphere-api.vercel.app/signup', {
                 firstName: formData.firstName,
                 lastName: formData.lastName,
@@ -69,27 +460,24 @@ const SignUp = () => {
                 countryCode: formData.countryCode,
                 phoneNumber: formData.phoneNumber,
                 password: formData.password,
-                confirmPassword:formData.confirmPassword,
+                confirmPassword: formData.confirmPassword,
             }, {
                 headers: {
-                    'Content-Type': 'application/json',  // Specify JSON request
+                    'Content-Type': 'application/json',
                 },
             });
 
-            // Success feedback
             Swal.fire({
                 title: 'Success!',
-                text: 'You have successfully signed up. Redirecting to login...',
+                text: 'Sign up successful. We have sent your User ID to your email',
                 icon: 'success',
-                timer: 2000,
-                showConfirmButton: false,
+                confirmButtonText: "Go to Login"
             }).then(() => {
-                navigate('/login'); // Redirect to login page
+                navigate('/login');
             });
 
         } catch (error) {
-            console.error(error)
-            // Handle errors
+            console.error(error);
             Swal.fire({
                 title: 'Error!',
                 text: error.response?.data?.msg || 'Sign up failed',
@@ -108,80 +496,108 @@ const SignUp = () => {
                     <Title theme={theme}>Sign Up</Title>
                     <form onSubmit={handleSubmit}>
                         <PasswordWrap>
-                            <Input
-                                name="firstName"
-                                theme={theme}
-                                type="text"
-                                placeholder="First Name"
-                                value={formData.firstName}
-                                onChange={handleInputChange}
-                                required
-                            />
-                            <Input
-                                name="lastName"
-                                theme={theme}
-                                type="text"
-                                placeholder="Last Name"
-                                value={formData.lastName}
-                                onChange={handleInputChange}
-                                required
-                            />
+                            <InputWrap>
+                                <Input
+                                    name="firstName"
+                                    theme={theme}
+                                    type="text"
+                                    placeholder="First Name"
+                                    value={formData.firstName}
+                                    onChange={handleInputChange}
+                                    required
+                                />
+                                {firstNameError && <Error>{firstNameError}</Error>}
+                            </InputWrap>    
+                            <InputWrap>
+                                <Input
+                                    name="lastName"
+                                    theme={theme}
+                                    type="text"
+                                    placeholder="Last Name"
+                                    value={formData.lastName}
+                                    onChange={handleInputChange}
+                                    required
+                                />
+                                {lastNameError && <Error>{lastNameError}</Error>}
+                            </InputWrap>
                         </PasswordWrap>
-                        <Input
-                            name="email"
-                            theme={theme}
-                            type="email"
-                            placeholder="Email"
-                            value={formData.email}
-                            onChange={handleInputChange}
-                            required
-                        />
+                        <InputWrap>
+                            <Input
+                                name="email"
+                                theme={theme}
+                                type="email"
+                                placeholder="Email"
+                                value={formData.email}
+                                onChange={handleInputChange}
+                                required
+                            />
+                            {emailError && <Error>{emailError}</Error>}
+                        </InputWrap>
                         <PasswordWrap>
-                            <Input
-                                name="countryCode"
-                                theme={theme}
-                                type="text"
-                                placeholder="Country Code"
-                                value={formData.countryCode}
-                                onChange={handleInputChange}
-                                required
-                            />
-                            <Input
-                                name="phoneNumber"
-                                theme={theme}
-                                type="text"
-                                placeholder="Phone Number"
-                                value={formData.phoneNumber}
-                                onChange={handleInputChange}
-                                required
-                            />
+                            <InputWrap>
+                                <Select
+                                    name="countryCode"
+                                    value={formData.countryCode}
+                                    onChange={handleInputChange}
+                                    required
+                                >
+                                    <option value="">Select Country Code</option>
+                                    {countryCodes.map(code => (
+                                        <option key={code} value={code.code}>{code.name} {code.code}</option>
+                                    ))}
+                                </Select>
+                                {countryCodeError && <Error>{countryCodeError}</Error>}
+                            </InputWrap>
+                            <InputWrap>
+                                <Input
+                                    name="phoneNumber"
+                                    theme={theme}
+                                    type="text"
+                                    placeholder="Phone Number"
+                                    value={formData.phoneNumber}
+                                    onChange={handleInputChange}
+                                    required
+                                />
+                                {phoneNumberError && <Error>{phoneNumberError}</Error>}
+                            </InputWrap>
                         </PasswordWrap>
                         <PasswordWrap>
-                            <Input
-                                name="password"
-                                theme={theme}
-                                type="text"
-                                placeholder="Enter Password"
-                                value={formData.password}
-                                onChange={handleInputChange}
-                                required
-                            />
-                            <Input
-                                name="confirmPassword"
-                                theme={theme}
-                                type="text"
-                                placeholder="Confirm Password"
-                                value={formData.confirmPassword}
-                                onChange={handleInputChange}
-                                required
-                            />
+                            <InputWrap>
+                                <Input
+                                    name="password"
+                                    theme={theme}
+                                    type={showPassword ? "password" : "text"}
+                                    placeholder="Enter Password"
+                                    value={formData.password}
+                                    onChange={handleInputChange}
+                                    required
+                                />
+                                <ToggleVisibility onClick={() => setShowPassword(!showPassword)}>
+                                    {showPassword ? <FaEyeSlash /> : <FaEye />}
+                                </ToggleVisibility>
+                                {passwordError && <Error>{passwordError}</Error>}
+                            </InputWrap>
+                            <InputWrap>
+                                <Input
+                                    name="confirmPassword"
+                                    theme={theme}
+                                    type="password"
+                                    placeholder="Confirm Password"
+                                    value={formData.confirmPassword}
+                                    onChange={handleInputChange}
+                                    required
+                                />
+                                {confirmPasswordError && <Error>{confirmPasswordError}</Error>}
+                            </InputWrap>
                         </PasswordWrap>
                         <ButtonContainer>
-                            <Button primary theme={theme} type="submit">Sign Up</Button>
+                            <Button primary type="submit" theme={theme}>
+                                Sign Up
+                            </Button>
                         </ButtonContainer>
                         <Paragraph1>
-                            Already have an account? <Span1 onClick={() => navigate('/login')}>Login</Span1>
-                        </Paragraph1>
+                        Already have an account? <Span1 onClick={() => navigate("/login")}>Login</Span1>
+                    </Paragraph1>
                     </form>
                 </FormContainer>
             </FormContainerWrapper>
@@ -189,7 +605,18 @@ const SignUp = () => {
     );
 };
 
+// Your styled components go here...
+
 export default SignUp;
+
+
+// Styled components for error messages
+const Error = styled.div`
+    color: red;
+    font-size: 0.7rem;
+    margin-top: 0.25em;
+`;
+
 
 
 const SignUpWrap = styled.div`
@@ -260,7 +687,7 @@ const Title = styled.h2`
 const Input = styled.input`
     width: 100%;
     padding: 10px;
-    margin-bottom: 10px;
+    // margin-bottom: 10px;
     border-radius: 4px;
     border: 1px solid ${({ theme }) => (theme === 'light' ? '#ccc' : '#555')};
     font-size: 16px;
@@ -331,245 +758,32 @@ const Span1 = styled.span`
     cursor:pointer;
 `
 
+const InputWrap = styled.div`
+    display:flex;
+    width:100%;
+    flex-direction:column;
+    // justify-content:center;
+    margin-bottom:10px;
+    position:relative;
+`
 
+const Select = styled.select`
+padding:12px;
+border: 1px solid light-gray;
+outline:none;
+cursor:pointer;
+width:100%;
+`
 
-
-// import React, { useContext } from 'react';
-// import styled from 'styled-components';
-// import { Context } from './Context';
-// import { FaUserPlus } from 'react-icons/fa';
-// import { useNavigate } from "react-router-dom";
-// import Swal from 'sweetalert2';
-// import HeroImg4 from "../Images/heroImg7.png";
-// import HeroImg5 from "../Images/heroImg5.png";
-
-// const SignUp = () => {
-//     const { theme, menuSwitch } = useContext(Context);
-//     const navigate = useNavigate();
-
-//     const handleSubmit = async (event) => {
-//         event.preventDefault();
-//         const formData = new FormData(event.target);
-//         const data = Object.fromEntries(formData.entries());
-
-//         // Show loading alert
-//         Swal.fire({
-//             title: 'Signing Up...',
-//             text: 'Please wait while we process your request.',
-//             icon: 'info',
-//             showConfirmButton: false,
-//             allowOutsideClick: false,
-//             didOpen: () => {
-//                 Swal.showLoading();
-//             }
-//         });
-
-//         try {
-//             const response = await fetch('http://localhost:5000/auth/signup', {
-//                 method: 'POST',
-//                 headers: { 'Content-Type': 'application/json' },
-//                 body: JSON.stringify(data),
-//             });
-
-//             const result = await response.json();
-
-//             if (response.ok) {
-//                 // Show success message
-//                 Swal.fire({
-//                     title: 'Success!',
-//                     text: 'You have successfully signed up. Redirecting to login...',
-//                     icon: 'success',
-//                     timer: 2000,
-//                     showConfirmButton: false
-//                 }).then(() => {
-//                     navigate('/login');
-//                 });
-//                 console.log("Sign up successful:", result);
-//             } else {
-//                 // Show error message
-//                 Swal.fire({
-//                     title: 'Error!',
-//                     text: result.msg || 'Something went wrong. Please try again.',
-//                     icon: 'error',
-//                     confirmButtonText: 'Try Again'
-//                 });
-//                 console.error("Sign up error:", result.msg);
-//             }
-//         } catch (error) {
-//             // Handle network or other errors
-//             Swal.fire({
-//                 title: 'Error!',
-//                 text: 'Network error. Please check your connection and try again.',
-//                 icon: 'error',
-//                 confirmButtonText: 'Okay'
-//             });
-//             console.error("Network error:", error);
-//         }
-//     };
-
-//     return (
-//         <SignUpWrap theme={theme} menuSwitch={menuSwitch}>
-//             <FormContainerWrapper>
-//                 <FormContainer theme={theme} onSubmit={handleSubmit}>
-//                     <Icon theme={theme}>
-//                         <FaUserPlus />
-//                     </Icon>
-//                     <Title theme={theme}>Sign Up</Title>
-//                     <PasswordWrap>
-//                         <Input theme={theme} name="firstName" type="text" placeholder="Enter First Name" required />
-//                         <Input theme={theme} name="lastName" type="text" placeholder="Enter Last Name" required />
-//                     </PasswordWrap>
-//                     <PasswordWrap>
-//                         <Input theme={theme} name="email" type="email" placeholder="Enter Email" required />
-//                         <Input theme={theme} name="phoneNumber" type="text" placeholder="Enter Phone Number" required />
-//                     </PasswordWrap>
-//                     <PasswordWrap>
-//                         <Input theme={theme} name="password" type="password" placeholder="Enter Password" required />
-//                         <Input theme={theme} name="confirmPassword" type="password" placeholder="Confirm Password" required />
-//                     </PasswordWrap>
-//                     <ButtonContainer>
-//                         <Button primary theme={theme} type="submit">Sign Up</Button>
-//                     </ButtonContainer>
-//                     <Paragraph1>Don't have an account? <Span1 onClick={() => navigate("/login")}>Login</Span1></Paragraph1>
-//                 </FormContainer>
-//             </FormContainerWrapper>
-//         </SignUpWrap>
-//     );
-// };
-
-// const SignUpWrap = styled.div`
-//  width: 100%;
-//   position: relative;
-//   color: ${({ theme }) => (theme === 'light' ? '#000' : '#fff')};
-//   min-height: 100vh;
-//   background-image: url(${({ theme }) => (theme === 'light' ? HeroImg4 : HeroImg5)});
-//   background-size: cover;
-//   background-position: center;
-//   z-index: 1;
-
-//   &::before {
-//     content: '';
-//     position: absolute;
-//     top: 0;
-//     left: 0;
-//     width: 100%;
-//     height: 100%;
-//     background: ${({ theme }) => theme === "light" ? "rgba(255,255,255,0.7)" : "rgba(0, 0, 0, 0.7)"};
-//     z-index: -1;
-//   }
-//   @media (max-width: 320px) {
-//     padding-bottom: 100px;
-//   }
-// `;
-
-// const FormContainerWrapper = styled.div`
-//     padding-top: 100px;
-// `;
-
-// const FormContainer = styled.form`
-//     display: flex;
-//     flex-direction: column;
-//     align-items: center;
-//     padding: 20px;
-//     background-color: ${({ theme }) => (theme === 'light' ? 'whitesmoke' : '#333')};
-//     border-radius: 8px;
-//     box-shadow: 0px 4px 10px rgba(0,0,0,0.3);
-//     max-width: 400px;
-//     margin: 0 auto;
-
-//     @media (min-width: 768px) {
-//         padding: 30px;
-//         max-width: 600px;
-//     }
-// `;
-
-// const Icon = styled(FaUserPlus)`
-//     font-size: 4rem;
-//     color: ${({ theme }) => (theme === 'light' ? 'rgba(0,0,255,0.5)' : '#bbb')};
-// `;
-
-// const Title = styled.h2`
-//     font-size: 24px;
-//     color: ${({ theme }) => (theme === 'light' ? 'rgba(0,0,255,0.5)' : '#bbb')};
-//     margin-bottom: 5px;
-
-//     @media (min-width: 768px) {
-//         font-size: 28px;
-//     }
-// `;
-
-// const Input = styled.input`
-//     width: 100%;
-//     padding: 10px;
-//     margin-bottom: 10px;
-//     border-radius: 4px;
-//     border: 1px solid ${({ theme }) => (theme === 'light' ? '#ccc' : '#555')};
-//     font-size: 16px;
-//     outline: none;
-//     background-color: ${({ theme }) => (theme === 'light' ? '#fff' : '#444')};
-//     color: ${({ theme }) => (theme === 'light' ? '#000' : '#fff')};
-
-//     &:hover {
-//         outline: 1px solid ${({ theme }) => (theme === 'light' ? '#007bff' : '#0056b3')};
-//     }
-
-//     @media (min-width: 768px) {
-//         padding: 10px;
-//         font-size: 18px;
-//     }
-// `;
-
-// const PasswordWrap = styled.div`
-//     display: flex;
-//     width: 100%;
-//     justify-content: space-between;
-// `;
-
-// const ButtonContainer = styled.div`
-//     display: flex;
-//     flex-direction: column;
-//     width: 100%;
-
-//     @media (min-width: 768px) {
-//         flex-direction: row;
-//         justify-content: space-between;
-//     }
-// `;
-
-// const Button = styled.button`
-//     padding: 12px;
-//     width: 100%;
-//     background-color: ${({ primary, theme }) => 
-//         primary ? (theme === 'light' ? '#007bff' : '#0056b3') : 
-//         (theme === 'light' ? '#ccc' : '#666')};
-//     color: ${({ primary }) => (primary ? 'white' : 'black')};
-//     border: none;
-//     border-radius: 4px;
-//     font-size: 16px;
-//     cursor: pointer;
-//     margin-bottom: 10px;
-
-//     &:hover {
-//         background-color: ${({ primary, theme }) => 
-//             primary ? (theme === 'light' ? '#004494' : '#003d7a') : 
-//             (theme === 'light' ? '#aaa' : 'gray')};
-//     }
-
-//     @media (min-width: 768px) {
-//         padding: 14px;
-//         font-size: 18px;
-//         margin-bottom: 0;
-//         width: 100%;
-//     }
-// `;
-
-// const Paragraph1 = styled.p`
-//     margin-top: 10px;
-// `;
-
-// const Span1 = styled.span`
-//     color: blue;
-//     cursor: pointer;
-// `;
-
-// export default SignUp;
+const ToggleVisibility = styled.p`
+    background: none;
+    border: none;
+    cursor: pointer;
+    position: absolute;
+    right: 10px; // Adjust as needed
+    top: 25px;
+    transform: translateY(-50%);
+    color: #666; // Adjust based on your theme
+    outline: none;
+    
+`;

@@ -55,9 +55,9 @@ const Footer = () => {
 
   return (
     <FooterContainer theme={theme} style={{ display: location.pathname === "/" ? "none" : '' }}>
-      <Icon theme={theme} onClick={handleClick1}><FaDashcube /></Icon>
+      {location.pathname==="/dashboard"&&<Icon theme={theme} onClick={handleClick1}><FaDashcube /></Icon>}
       <Icon theme={theme}><FaPhone /></Icon>
-      <Icon theme={theme} onClick={handleLogout}><FaSignOutAlt /></Icon> {/* Logout icon */}
+      {location.pathname==="/dashboard"&&<Icon theme={theme} onClick={handleLogout}><FaSignOutAlt /></Icon>} {/* Logout icon */}
     </FooterContainer>
   );
 };

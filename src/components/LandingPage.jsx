@@ -34,7 +34,7 @@ const LandingPage = () => {
                         Paysphere is a payment solution that offers users the platform to make payments and receive payments in a more efficient, innovative, and easy way. With a mobile-first design approach, Paysphere is user-friendly and perfect for fast payments.
                     </Description>
                     <GetStartedButton 
-                        onClick={() => navigate("/login")} 
+                        onClick={() => navigate("/dashboard")} 
                         theme={theme}
                     >
                         Get Started

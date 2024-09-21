@@ -23,10 +23,12 @@ const PaymentLinkQrCode1 = () => {
     const userInfo = useSelector(state =>state.userInfo)
     const [amount, setAmount] = useState('');
     const [url, setUrl] = useState('');
-    const baseUrl = "http://localhost:3000"; // Example base URL
+    const [description,setDescription]=useState("")
+    const baseUrl = window.location.origin; // Example base URL
     const userId = userInfo.uniqueID;  // Example user ID
     const userName = userInfo.firstName;
     const phoneNumber = userInfo.phoneNumber
+    
 
     const generateLink = () => {
         if (amount.trim() === '') {
@@ -35,7 +37,7 @@ const PaymentLinkQrCode1 = () => {
         }
 
         // Encode the userId and amount
-        const encodedData = base64Encode(`${userId}-${amount}-${userName}-${phoneNumber}`);
+        const encodedData = base64Encode(`${userId}-${amount}-${userName}-${phoneNumber}-${description}`);
         const paymentUrl = `${baseUrl}/payment/${encodedData}`;  // Use the encoded data in the URL
         setUrl(paymentUrl);
     };
@@ -91,6 +93,13 @@ const PaymentLinkQrCode1 = () => {
                         placeholder="Enter Amount"
                         value={amount}
                         onChange={(e) => setAmount(e.target.value)}
+                    />
+                    <Input
+                        theme={theme}
+                        type="text"
+                        placeholder="Enter Description"
+                        value={description}
+                        onChange={(e) => setDescription(e.target.value)}
                     />
                     <ButtonContainer>
                         <Button primary theme={theme} onClick={generateLink}>

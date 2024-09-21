@@ -1,6 +1,6 @@
 
 
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import styled from 'styled-components';
 import RequestToPay from './RequestToPay';
 import PaymentLinkQrCode from './PaymentLinkQrCode';
@@ -32,6 +32,11 @@ import BankPayment from './BankPayment';
 
 const DashBoard = () => {
   const { menuSwitch, theme } = useContext(Context);
+
+  useEffect(()=>{
+
+    window.scroll(0,0)
+  },[menuSwitch])
 
   return (
     <Body theme={theme} menuSwitch={menuSwitch}>

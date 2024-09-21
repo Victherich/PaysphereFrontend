@@ -17,7 +17,7 @@ const Login = () => {
 
     // State to manage form inputs
     const [formData, setFormData] = useState({
-        uniqueID: '',
+        walletID: '',
         password: '',
     });
 
@@ -47,7 +47,7 @@ const Login = () => {
 
             // Send POST request to backend for login
             const response = await axios.post('https://paysphere-api.vercel.app/login', {
-                uniqueID: formData.uniqueID,
+                walletID: formData.walletID,
                 password: formData.password,
             }, {
                 headers: {
@@ -69,7 +69,7 @@ const Login = () => {
             console.log(response.data)
             const userInfo = response.data.user
             const userToken = response.data.token
-            console.log(userInfo)
+            // console.log(userInfo)
 
             dispatch(userLogin({userInfo,userToken}))
 
@@ -94,11 +94,11 @@ const Login = () => {
                     <Title theme={theme}>Login</Title>
                     <form onSubmit={handleSubmit}>
                         <Input
-                            name="uniqueID"
+                            name="walletID"
                             theme={theme}
                             type="text"
                             placeholder="Enter User ID"
-                            value={formData.uniqueID}
+                            value={formData.walletID}
                             onChange={handleInputChange}
                             required
                         />

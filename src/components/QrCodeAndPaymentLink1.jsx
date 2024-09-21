@@ -17,7 +17,8 @@ const { encodedData } = useParams();  // 'encodedData' is the Base64 encoded val
     const {userId, setUserId,
         amount2,setAmount2,
         userName,setUserName,
-        userPhoneNumber,setUserPhoneNumber}=useContext(Context)
+        userPhoneNumber,setUserPhoneNumber,
+      description,setDescription}=useContext(Context)
 
     // Base64 decoding function
     const base64Decode = (str) => atob(str);
@@ -26,11 +27,12 @@ const { encodedData } = useParams();  // 'encodedData' is the Base64 encoded val
         if (encodedData) {
             // Decode the Base64 string
             const decodedData = base64Decode(encodedData);  // e.g., 'userId123-2000'
-            const [decodedUserId, decodedAmount,decodedUserName,decodedPhoneNumber] = decodedData.split('-');  // Split by the hyphen
+            const [decodedUserId, decodedAmount,decodedUserName,decodedPhoneNumber,decodedDescription] = decodedData.split('-');  // Split by the hyphen
             setUserId(decodedUserId);  // Set userId state
             setAmount2(decodedAmount);
             setUserName(decodedUserName);
             setUserPhoneNumber(decodedPhoneNumber);  // Set amount state
+            setDescription(decodedDescription)
         }
     }, [encodedData]);
 
@@ -46,6 +48,8 @@ const { encodedData } = useParams();  // 'encodedData' is the Base64 encoded val
         <UserInfoItem theme={theme}><Strong theme={theme}>User ID:</Strong> {userId}</UserInfoItem>
         <UserInfoItem theme={theme}><Strong theme={theme}>Phone Number: </Strong> {userPhoneNumber}</UserInfoItem>
         <UserInfoItem theme={theme}><Strong theme={theme}>Amount:  </Strong> NGN {amount2}</UserInfoItem>
+        <UserInfoItem theme={theme}><Strong theme={theme}>Description:  </Strong>{description}</UserInfoItem>
+      
       </UserInfoSection>
         <GridContainer>
           <GridItem onClick={()=>navigate("/mobilemoneypayment")} theme={theme}>

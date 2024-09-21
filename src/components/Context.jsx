@@ -16,7 +16,9 @@ const ContextProvider = ({ children }) => {
     const [userName,setUserName]=useState('');
     const [userPhoneNumber,setUserPhoneNumber]=useState("")
     const [paymenLinkQrCodeUiswitch,setPaymentLinkQrCodeUiSwitch]=useState(0)
-
+    const [description,setDescription]=useState('')
+    const [createTransactionPinSwitch,setCreateTransactionPinSwitch]=useState(false)
+    
   return (
     <Context.Provider value={{ menuSwitch, 
     setMenuSwitch, 
@@ -26,7 +28,9 @@ const ContextProvider = ({ children }) => {
     amount2,setAmount2,
     userName,setUserName,
     userPhoneNumber,setUserPhoneNumber,
-    paymenLinkQrCodeUiswitch,setPaymentLinkQrCodeUiSwitch }}>
+    paymenLinkQrCodeUiswitch,setPaymentLinkQrCodeUiSwitch,
+    description,setDescription,
+    createTransactionPinSwitch,setCreateTransactionPinSwitch }}>
       {children}
     </Context.Provider>
   );

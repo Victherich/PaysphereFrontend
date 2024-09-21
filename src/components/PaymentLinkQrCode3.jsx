@@ -5,6 +5,7 @@ import { Context } from './Context';
 import { FaCopy, FaLink, FaQrcode, FaShareAlt } from 'react-icons/fa';
 import { QRCodeCanvas } from 'qrcode.react';
 import Swal from 'sweetalert2';
+import {useSelector }from "react-redux"
 
 // Base64 encoding function
 const base64Encode = (str) => {
@@ -17,14 +18,16 @@ const base64Decode = (str) => {
 };
 
 const PaymentLinkQrCode3 = () => {
+    const userInfo = useSelector(state=>state.userInfo);
     
     const { setMenuSwitch, theme,paymenLinkQrCodeUiswitch,setPaymentLinkQrCodeUiSwitch } = useContext(Context);
     const [amount, setAmount] = useState('');
     const [url, setUrl] = useState('');
-    const baseUrl = "http://localhost:3000"; // Example base URL
-    const userId = "userId123";  // Example user ID
-    const userName = "Esther"
-    const phoneNumber = "123456789"
+    const baseUrl = window.location.origin; // Example base URL
+    const userId = userInfo.uniqueID  // Example user ID
+    const userName = userInfo.firstName
+    const phoneNumber = userInfo.phoneNumber;
+    const [description,setDescription]=useState('')
 
     const generateLink = () => {
         if (amount.trim() === '') {
@@ -33,8 +36,8 @@ const PaymentLinkQrCode3 = () => {
         }
 
         // Encode the userId and amount
-        const encodedData = base64Encode(`${userId}-${amount}-${userName}-${phoneNumber}`);
-        const paymentUrl = `${baseUrl}/payment/${encodedData}`;  // Use the encoded data in the URL
+        const encodedData3 = base64Encode(`${userId}-${amount}-${userName}-${phoneNumber}-${description}`);
+        const paymentUrl = `${baseUrl}/payment3/${encodedData3}`;  // Use the encoded data in the URL
         setUrl(paymentUrl);
     };
 
@@ -89,6 +92,13 @@ const PaymentLinkQrCode3 = () => {
                         placeholder="Enter Amount"
                         value={amount}
                         onChange={(e) => setAmount(e.target.value)}
+                    />
+                    <Input
+                        theme={theme}
+                        type="text"
+                        placeholder="Enter Description"
+                        value={description}
+                        onChange={(e) => setDescription(e.target.value)}
                     />
                     <ButtonContainer>
                         <Button primary theme={theme} onClick={generateLink}>
