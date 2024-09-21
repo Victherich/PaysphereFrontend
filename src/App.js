@@ -16,6 +16,11 @@ import QrCodeAndPaymentLink3 from './components/QrCodeAndPaymentLink3'
 import PrivateLogin from './components/PrivateLogin'
 import PrivateSignup from './components/PrivateSignup'
 import ScrollToTop from './components/ScrollToTop'
+import ApprovePayment from './components/ApprovePayment'
+import DeclinePayment from './components/DeclinePayment'
+import PayUser2 from './components/PayUser2'
+import ReceiveCardAndBankPayment2 from './components/ReceiveCardAndBankPayment2'
+import BankPayment2 from './components/BankPayment2'
 
 
 
@@ -43,7 +48,12 @@ const App = () => {
 
             <Route path="/signup" element={<PrivateSignup/>}>
               <Route path="" element={<SignUp/>}/>
-            </Route>
+            </Route>  
+            <Route path="/approve/:transactionId" element={<ApprovePayment />} />
+            <Route path="/deny/:transactionId" element={<DeclinePayment/>} />
+            <Route path="payspheretransfer" element={<PayUser2/>}/>
+            <Route path="/cardbankpayment" element={<ReceiveCardAndBankPayment2/>}/>
+            <Route path="/bankpayment" element={<BankPayment2/>}/>
         </Routes>
         <Footer/>
     </BrowserRouter>

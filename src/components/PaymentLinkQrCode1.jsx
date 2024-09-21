@@ -25,7 +25,7 @@ const PaymentLinkQrCode1 = () => {
     const [url, setUrl] = useState('');
     const [description,setDescription]=useState("")
     const baseUrl = window.location.origin; // Example base URL
-    const userId = userInfo.uniqueID;  // Example user ID
+    const userId = userInfo.walletID;  // Example user ID
     const userName = userInfo.firstName;
     const phoneNumber = userInfo.phoneNumber
     

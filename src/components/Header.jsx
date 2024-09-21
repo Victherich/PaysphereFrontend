@@ -18,7 +18,7 @@ const Header = () => {
       <LogoWrap >
       <Img src={logo} alt="logo" onClick={()=>navigate("/")}/>
       <TitleWrap>
-      <Title onClick={()=>navigate("/")}>PaySphere <FaHome/></Title> {userInfo&&<Title onClick={()=>navigate("/dashboard")}> | <FaUserCircle/> Hi, {userInfo.firstName}</Title>}
+      <Title onClick={()=>navigate("/")}>PaySphere <FaHome/></Title> {userInfo&&!location.pathname.includes("approve")&&!location.pathname.includes("payspheretransfer")&&<Title onClick={()=>navigate("/dashboard")}> | <FaUserCircle/> Hi, {userInfo.firstName}</Title>}
        
       </TitleWrap>
       

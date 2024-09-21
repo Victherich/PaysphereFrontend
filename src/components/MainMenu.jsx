@@ -101,7 +101,7 @@ const MainMenu = () => {
             } else if (response.status === 404) {
                 console.log('User not found.');
             } else {
-                console,log('An error occurred while fetching user details.');
+                console.log('An error occurred while fetching user details.');
             }
         } catch (err) {
             console.error('Fetch error:', err);
@@ -241,7 +241,7 @@ const MainMenu = () => {
       </StorefrontSection>
 
 
-      <Section>
+      {/* <Section>
         <SectionTitle theme={theme}>More Features</SectionTitle>
         <GridContainer>
           <GridItem onClick={() => setMenuSwitch(6)} theme={theme}>
@@ -257,7 +257,7 @@ const MainMenu = () => {
             <ItemText theme={theme}>Mobile Data</ItemText>
           </GridItem>
         </GridContainer>
-      </Section>
+      </Section> */}
     </DashboardContainer>
   );
 };

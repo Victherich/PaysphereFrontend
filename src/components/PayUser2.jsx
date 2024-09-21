@@ -6,28 +6,103 @@ import logo from "../Images/logo.png";
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import { useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
+import { userLogout } from '../Features/Slice';
 
-const PayUser = () => {
+const PayUser2 = () => {
   const { setMenuSwitch, theme } = useContext(Context);
   const [walletID, setWalletID] = useState('');
   const [amount, setAmount] = useState('');
   const [pin, setPin] = useState('');
   const [error, setError] = useState('');
-  const userToken = useSelector(state=>state.userToken)
+//   const userToken = useSelector(state=>state.userToken)
+  const {userId,amount2,}=useContext(Context);
+  const dispatch = useDispatch();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  
+  const [formData, setFormData] = useState({
+    walletID: '',
+    password: '',
+});
+
+// Handle input change
+const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+        ...formData, // Copy existing form data
+        [name]: value, // Update specific field with new value
+    });
+};
+
+   
+// Handle form submission
+const handleLogin = async (event) => {
+    event.preventDefault();
+
+    try {
+        // Display processing message
+        Swal.fire({
+            title: 'Processing...',
+            text: 'Please wait while we process your request.',
+            allowOutsideClick: false,
+            didOpen: () => {
+                Swal.showLoading();
+            },
+        });
+
+        // Send POST request to backend for login
+        const response = await axios.post('https://paysphere-api.vercel.app/login', {
+            walletID: formData.walletID,
+            password: formData.password,
+        }, {
+            headers: {
+                'Content-Type': 'application/json',  // Specify JSON request
+            },
+        });
+
+        // Success feedback and redirect
+        Swal.fire({
+            title: 'Success!',
+            text: 'Processing...',
+            icon: 'success',
+            timer: 2000,
+            showConfirmButton: false,
+        }).then(() => {
+            // Redirect to the dashboard page
+            // navigate('/dashboard');
+        });
+        // console.log(response.data)
+        // const userInfo = response.data.user
+        const userToken = response.data.token
+        // console.log(userInfo)
+        handlePay(userToken)
+        // dispatch(userLogin({userInfo,userToken}))
+
+    } catch (error) {
+        console.error(error);
+        // Handle errors
+        Swal.fire({
+            title: 'Error!',
+            text: error.response?.data?.error || 'failed',
+            icon: 'error',
+        });
+    }
+};
+
+
+  const handlePay = async (userToken) => {
+
     setError('');
 
     // Validate inputs
-    if (!walletID || !amount || !pin) {
-      setError('Please fill in all fields.');
-      return;
-    }
-    if (parseFloat(amount) < 100) {
-      setError('Amount must be ₦100 or more.');
-      return;
-    }
+    // if (!walletID || !amount || !pin) {
+    //   setError('Please fill in all fields.');
+    //   return;
+    // }
+    // if (parseFloat(amount) < 100) {
+    //   setError('Amount must be ₦100 or more.');
+    //   return;
+    // }
 
     try {
       Swal.fire({
@@ -41,7 +116,7 @@ const PayUser = () => {
 
       const response = await axios.post(
         'https://paysphere-api.vercel.app/transfer_to_user', // Replace with your actual API URL
-        { walletID, amount: parseFloat(amount), pin },
+        { walletID:userId, amount: parseFloat(amount2), pin },
         {
           headers: {
             Authorization: `Bearer ${userToken}`, // Replace with your token management
@@ -60,9 +135,11 @@ const PayUser = () => {
       setWalletID('');
       setAmount('');
       setPin('');
-      setMenuSwitch(0);
+      window.history.back();
+      dispatch(userLogout());
       
     } catch (error) {
+        console.error(error)
       let message = 'An error occurred. Please try again.';
       const status = error.response?.status;
 
@@ -93,20 +170,22 @@ const PayUser = () => {
         <Title theme={theme}>
           Paysphere Transfer (P2P) <Img src={logo} alt="logo" />
         </Title>
-        <form onSubmit={handleSubmit}>
+        {/* <form onSubmit={handleSubmit}> */}
           <Input 
             theme={theme} 
-            type="text" 
-            placeholder="Enter Recipient User ID" 
-            value={walletID}
-            onChange={(e) => setWalletID(e.target.value)} 
+            type="text"
+            name="walletID" 
+            placeholder="Enter Your User ID" 
+            value={formData.walletID}
+            onChange={handleInputChange} 
           />
           <Input 
-            theme={theme} 
-            type="number" 
-            placeholder="Enter Amount" 
-            value={amount}
-            onChange={(e) => setAmount(e.target.value)} 
+            theme={theme}
+            name="password" 
+            type="text" 
+            placeholder="Enter your Password" 
+            value={formData.password}
+            onChange={handleInputChange} 
           />
           <Input 
             theme={theme} 
@@ -117,16 +196,16 @@ const PayUser = () => {
           />
           {error && <Error>{error}</Error>}
           <ButtonContainer>
-            <Button primary theme={theme} type="submit">Pay</Button>
-            <Button onClick={() => setMenuSwitch(0)} theme={theme}>Cancel</Button>
+            <Button primary theme={theme} onClick={handleLogin}>Pay</Button>
+            <Button onClick={() => window.history.back()} theme={theme} type="button">Cancel</Button>
           </ButtonContainer>
-        </form>
+
       </PayUserContainer>
     </PayUserContainerA>
   );
 };
 
-export default PayUser;
+export default PayUser2;
 
 const PayUserContainerA = styled.div`
   padding-top: 100px;

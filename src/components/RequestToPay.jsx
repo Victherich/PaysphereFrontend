@@ -1,36 +1,124 @@
-
-
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Context } from './Context';
 import { FaMoneyBillWave } from 'react-icons/fa';
+import Swal from 'sweetalert2'; // Assuming you are using SweetAlert2 for alerts
+import axios from 'axios'; // Using axios for API requests
 import logo from "../Images/logo.png"
+import { useSelector } from 'react-redux';
 
 const RequestToPay = () => {
-    const { setMenuSwitch, theme } = useContext(Context);
+    const { setMenuSwitch, theme,} = useContext(Context); // Assuming userToken is stored in context
+    const [amount, setAmount] = useState('');
+    const [payerId, setPayerId] = useState('');
+    const [loading, setLoading] = useState(false);
+    const userToken = useSelector(state=>state.userToken)
+    console.log(userToken)
+    
+    useEffect(()=>{
+        console.log(userToken)
+    },[])
+
+    // Function to handle Request Payment
+    const handleRequestPayment = async () => {
+        console.log(userToken)
+        if (!amount || !payerId || parseFloat(amount) <= 0) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Invalid Input',
+                text: 'Please enter a valid amount and payer ID.'
+            });
+            return;
+        }
+
+        setLoading(true);
+        const loadingAlert = Swal.fire({text:"Processing..."})
+        Swal.showLoading();
+
+        try {
+            const response = await axios.post(
+                'https://paysphere-api.vercel.app/request_payment',
+                { payerId, amount: parseFloat(amount) },
+                {
+                    headers: {
+                        Authorization: `Bearer ${userToken}`,
+                        'Content-Type': 'application/json',
+                    },
+                }
+            );
+
+            const data = response.data;
+
+            if (response.status === 200) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Request Sent',
+                    text: data.message,
+                });
+                setAmount('');
+                setPayerId('');
+                setMenuSwitch(0)
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: data.message || 'Something went wrong!',
+                });
+            }
+        } catch (error) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Request Failed',
+                text: 'An error occurred while processing your request. Please try again.',
+            });
+            console.error('Error requesting payment:', error);
+        } finally {
+            setLoading(false);
+            loadingAlert.close();
+        }
+    };
 
     return (
         <RequestToPayContainerA>
             <RequestToPayContainer theme={theme}>
                 <Icon theme={theme}>
                     <FaMoneyBillWave />
-                    
                 </Icon>
-                <Title theme={theme}>Request Payment (P2P) <Img src={logo} alt="logo"/></Title>
-                
+                <Title theme={theme}>
+                    Request Payment (P2P) <Img src={logo} alt="logo" />
+                </Title>
 
-                <Input theme={theme} type="text" placeholder="Enter Amount" />
-                <Input theme={theme} type="text" placeholder="Enter Payer User ID" />
+                <Input
+                    theme={theme}
+                    type="text"
+                    placeholder="Enter Amount"
+                    value={amount}
+                    onChange={(e) => setAmount(e.target.value)}
+                />
+                <Input
+                    theme={theme}
+                    type="text"
+                    placeholder="Enter Payer User ID"
+                    value={payerId}
+                    onChange={(e) => setPayerId(e.target.value)}
+                />
                 <ButtonContainer>
-                    <Button primary theme={theme}>Request Payment</Button>
-                    <Button onClick={() => setMenuSwitch(0)} theme={theme}>Cancel</Button>
+                    <Button primary theme={theme} onClick={handleRequestPayment} disabled={loading}>
+                        {loading ? 'Requesting...' : 'Request Payment'}
+                    </Button>
+                    <Button onClick={() => setMenuSwitch(0)} theme={theme}>
+                        Cancel
+                    </Button>
                 </ButtonContainer>
             </RequestToPayContainer>
         </RequestToPayContainerA>
     );
-}
+};
 
 export default RequestToPay;
+
+// Styling (Your existing styled components)
+
 
 const RequestToPayContainerA = styled.div`
     padding-top: 100px;

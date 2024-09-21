@@ -66,7 +66,7 @@ const Login = () => {
                 // Redirect to the dashboard page
                 navigate('/dashboard');
             });
-            console.log(response.data)
+            // console.log(response.data)
             const userInfo = response.data.user
             const userToken = response.data.token
             // console.log(userInfo)
