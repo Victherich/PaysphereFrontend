@@ -21,6 +21,9 @@ import DeclinePayment from './components/DeclinePayment'
 import PayUser2 from './components/PayUser2'
 import ReceiveCardAndBankPayment2 from './components/ReceiveCardAndBankPayment2'
 import BankPayment2 from './components/BankPayment2'
+import BankPayment3 from './components/BankPayment3'
+import PayUser3 from './components/PayUser3'
+import MobileMoneyPayout3 from './components/MobileMoneyPayout3'
 
 
 
@@ -36,7 +39,7 @@ const App = () => {
             <Route path="/payment/:encodedData" element={<QrCodeAndPaymentLink1 />} />
             <Route path="/payment2/:encodedData2" element={<QrCodeAndPaymentLink2 />} />
             <Route path="/payment3/:encodedData3" element={<QrCodeAndPaymentLink3 />} />
-            <Route path="/mobilemoneypayment" element={<MobileMoneyPayment2/>}/>
+            <Route path="/mobilemoneypayout3" element={<MobileMoneyPayout3/>}/>
 
             <Route path="/dashboard" element={<PrivateDashboard/>}>
             <Route path="" element={<DashBoard/>}/>
@@ -54,6 +57,8 @@ const App = () => {
             <Route path="payspheretransfer" element={<PayUser2/>}/>
             <Route path="/cardbankpayment" element={<ReceiveCardAndBankPayment2/>}/>
             <Route path="/bankpayment" element={<BankPayment2/>}/>
+            <Route path="/bankpayout3" element={<BankPayment3/>}/>
+            <Route path="/payuser3" element={<PayUser3/>}/>
         </Routes>
         <Footer/>
     </BrowserRouter>

@@ -28,6 +28,7 @@ import SMSPayment from './SmsPayment';
 import MakeMobileMoneyPayment from './MakeMobileMoneyPayment';
 import ReceiveCardAndBankPayment from './ReceiveCardAndBankPayment';
 import BankPayment from './BankPayment';
+import ProductDashboard from './ProductDashboard';
 
 
 const DashBoard = () => {
@@ -61,6 +62,7 @@ const DashBoard = () => {
       {menuSwitch===15&&<SMSPayment/>}
       {menuSwitch===16&&<MakeMobileMoneyPayment/>}
       {menuSwitch===17&&<ReceiveCardAndBankPayment/>}
+      {menuSwitch===18&&<ProductDashboard/>}
       
 
     </Body>

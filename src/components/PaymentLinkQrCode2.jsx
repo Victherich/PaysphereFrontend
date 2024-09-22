@@ -24,7 +24,7 @@ const PaymentLinkQrCode2 = () => {
     const userInfo = useSelector(state=>state.userInfo)
     const [url, setUrl] = useState('');
     const baseUrl = window.location.origin; // Example base URL
-    const userId = userInfo.uniqueID;  // Example user ID
+    const userId = userInfo.walletID;  // Example user ID
     const userName = userInfo.firstName;
     const phoneNumber = userInfo.phoneNumber
 
@@ -277,6 +277,7 @@ const Button2 = styled.button`
 const CopyIcon = styled(FaCopy)`
     color:${({theme})=>(theme==="light"?"rgba(0,0,255,0.5)":"#bbb")};
     cursor:pointer;
+    font-size:3rem;
 `
 
 const Link = styled.h3`

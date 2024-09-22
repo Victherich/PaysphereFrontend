@@ -18,7 +18,14 @@ const Header = () => {
       <LogoWrap >
       <Img src={logo} alt="logo" onClick={()=>navigate("/")}/>
       <TitleWrap>
-      <Title onClick={()=>navigate("/")}>PaySphere <FaHome/></Title> {userInfo&&!location.pathname.includes("approve")&&!location.pathname.includes("payspheretransfer")&&<Title onClick={()=>navigate("/dashboard")}> | <FaUserCircle/> Hi, {userInfo.firstName}</Title>}
+      <Title1 onClick={()=>navigate("/")}>PaySphere <FaHome/> |
+      </Title1> {userInfo&&!location.pathname.includes("approve")&&
+      !location.pathname.includes("payspheretransfer")&&
+      !location.pathname.includes("payment")&&
+      !location.pathname.includes("bankpayout3")&&
+      !location.pathname.includes("payuser3")&&
+      !location.pathname.includes("mobilemoneypayout3")&&
+      <Title onClick={()=>navigate("/dashboard")}> <FaUserCircle/> Hi, {userInfo.firstName}</Title>}
        
       </TitleWrap>
       
@@ -81,7 +88,7 @@ display:flex;
 align-items:center;
 gap:10px;
 margin-right:10px;
-  font-size: 18px;
+  font-size: 0.9rem;
   margin: 0;
   // color:rgba(0,0,255,0.5);
 
@@ -89,6 +96,25 @@ margin-right:10px;
     font-size: 24px;
   }
 `;
+
+const Title1 = styled.h3`
+display:flex;
+// justify-content:center;
+align-items:center;
+gap:10px;
+margin-right:10px;
+  font-size: 18px;
+  margin: 0;
+  // color:rgba(0,0,255,0.5);
+
+  @media (min-width: 768px) {
+    font-size: 24px;
+  }
+    @media (max-width:600px){
+      display:none;
+    }
+`;
+
 
 // Styled component for the icon
 const MenuIcon = styled(FaHamburger)`

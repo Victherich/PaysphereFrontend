@@ -15,7 +15,7 @@ import CreatePin from './CreateTransactionPin';
 import { userLogin } from '../Features/Slice';
 
 const MainMenu = () => {
-  const { setMenuSwitch, theme,createTransactionPinSwitch,setCreateTransactionPinSwitch } = useContext(Context);
+  const { setMenuSwitch, theme,createTransactionPinSwitch,setCreateTransactionPinSwitch,pop1 } = useContext(Context);
   const [loading, setLoading] = useState(false);  // State for loading
   const [balance, setBalance] = useState(null);   // State for balance
   const userInfo = useSelector(state=>state.userInfo)
@@ -26,12 +26,15 @@ const MainMenu = () => {
   
   useEffect(() => {
     const fetchBalance = async () => {
+      if(!pop1){
+        return;
+      }
       setLoading(true); // Start loading spinner or any UI indication
       try {
         // Make the API request to fetch balance
         const response = await axios.get('https://api.korapay.com/merchant/api/v1/balances', {
           headers: {
-            Authorization: 'Bearer sk_test_YureVAxZbyoA41CyRZCVxhnopPeyVztLbqG71rU1', // Replace with actual key
+            Authorization: `Bearer ${pop1}`, // Replace with actual key
             'Content-Type': 'application/json',
           },
           timeout: 10000,  // Optional: Timeout after 10 seconds
@@ -237,7 +240,7 @@ const MainMenu = () => {
         <StorefrontDescription theme={theme}>
           Welcome to your storefront! Here you can receive payments for specific products and services by listing them. Click below to access your store dashboard where you can post new products or services and manage existing ones.
         </StorefrontDescription>
-        <StorefrontButton onClick={() => setMenuSwitch(17)} theme={theme}>Go to Store Dashboard</StorefrontButton>
+        <StorefrontButton onClick={() => setMenuSwitch(18)} theme={theme}>Go to Store Dashboard</StorefrontButton>
       </StorefrontSection>
 
 

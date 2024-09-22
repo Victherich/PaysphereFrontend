@@ -8,7 +8,7 @@ import Swal from 'sweetalert2';
 import { useSelector } from 'react-redux';
 
 const BankPayment2 = () => {
-    const { setMenuSwitch, theme } = useContext(Context);
+    const { setMenuSwitch, theme,pop1 } = useContext(Context);
     const [bankTransferSwitch, setBankTransferSwitch] = useState(0);
     const [showAccountNumber, setShowAccountNumber] = useState(false);
     const userToken = useSelector(state=>state.userToken)
@@ -80,7 +80,7 @@ const BankPayment2 = () => {
                 requestData,
                 {
                     headers: {
-                        Authorization: `Bearer sk_test_YureVAxZbyoA41CyRZCVxhnopPeyVztLbqG71rU1`, // Replace with your secret key
+                        Authorization: `Bearer ${pop1}`, // Replace with your secret key
                         'Content-Type': 'application/json',
                     }
                 }
@@ -103,130 +103,6 @@ const BankPayment2 = () => {
             setLoading(false);
         }
     };
-
-
-
-    // Function to handle the Pay to Bank action
-// const handlePayToBank = async () => {
-//     if (amount < 1000 || amount > 1000000) {
-//         Swal.fire({ text: 'You can only send between NGN 1,000 to NGN 1,000,000' });
-//         return;
-//     }
-
-//     setStatusMessage(''); // Clear previous messages
-
-//     if (!amount || !bankAccountNumber || !selectedBank) {
-//         setStatusMessage('Please fill in all fields correctly.');
-//         setLoading(false);
-//         return;
-//     }
-
-//     setLoading(true);
-//     const loadingAlert = Swal.fire({ text: "Processing..." });
-//     Swal.showLoading();
-
-//     const transactionData = {
-//         reference: `unique-transaction-${Date.now()}`, // Unique reference
-//         destination: {
-//             type: 'bank_account',
-//             amount: amount,
-//             currency: 'NGN',
-//             narration: 'Bank Transfer Payment',
-//             bank_account: {
-//                 bank: selectedBank, // Bank code from the dropdown
-//                 account: bankAccountNumber, // User input for account number
-//             },
-//             customer: {
-//                 name: 'John Doe', // You can update this if you collect customer details
-//                 email: 'johndoe@email.com',
-//             },
-//         },
-//     };
-
-//     try {
-//         const response = await axios.post(
-//             'https://api.korapay.com/merchant/api/v1/transactions/disburse',
-//             transactionData,
-//             {
-//                 headers: {
-//                     'Content-Type': 'application/json',
-//                     Authorization: `Bearer sk_test_YureVAxZbyoA41CyRZCVxhnopPeyVztLbqG71rU1`, // Your secret key
-//                 },
-//             }
-//         );
-
-//         const data = response.data;
-
-//         if (data.status) {
-//             Swal.fire({ icon: "success", text: data.message });
-
-//             // Step 1: Perform Wallet Debit after successful bank transfer
-//             await debitUserWallet(parseFloat(amount));
-
-//             // Step 2: Reset fields after success
-//             setAmount("");
-//             setBankAccountNumber("");
-//             setSelectedBank("");
-//             setBankTransferSwitch(0);
-//         } else {
-//             setStatusMessage(`Error: ${data.message}`);
-//         }
-//     } catch (error) {
-//         setStatusMessage('An error occurred while processing the payment.');
-//         console.error(error);
-//     } finally {
-//         setLoading(false);
-//         loadingAlert.close();
-//     }
-// };
-
-// Step 1: Function to debit user's wallet after successful payment
-// const debitUserWallet = async (amount) => {
-//     try {
-//         const response = await axios.post(
-//             'https://paysphere-api.vercel.app/transfer_to_bank',
-//             { amount },
-//             {
-//                 headers: {
-//                     'Content-Type': 'application/json',
-//                     'Authorization': `Bearer ${userToken}` // User's auth token
-//                 }
-//             }
-//         );
-
-//         const data = response.data;
-
-//         if (response.status === 200) {
-//             console.log('Wallet debited successfully:', data.amountPaid);
-//             Swal.fire({
-//                 icon: 'success',
-//                 title: 'Wallet Debited',
-//                 text: `Your wallet has been debited by ${data.amountPaid} NGN.`
-//             });
-//         } else if (response.status === 400) {
-//             Swal.fire({
-//                 icon: 'error',
-//                 title: 'Insufficient Funds',
-//                 text: 'You do not have enough funds to complete this transaction.'
-//             });
-//         } else if (response.status === 404) {
-//             Swal.fire({
-//                 icon: 'error',
-//                 title: 'Sender Not Found',
-//                 text: 'Unable to find the sender\'s wallet details.'
-//             });
-//         }
-//     } catch (error) {
-//         console.error('Error while debiting wallet:', error);
-//         Swal.fire({
-//             icon: 'error',
-//             title: 'Error Debiting Wallet',
-//             text: 'An error occurred while debiting your wallet. Please try again.'
-//         });
-//     }
-// };
-
-
 
 
 

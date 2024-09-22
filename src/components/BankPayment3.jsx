@@ -7,12 +7,11 @@ import axios from 'axios'; // Axios for API calls
 import Swal from 'sweetalert2';
 import { useSelector } from 'react-redux';
 
-
-const BankPayment = () => {
-    const { setMenuSwitch, theme,pop1 } = useContext(Context);
+const BankPayment3 = () => {
+    const { setMenuSwitch, theme,userId,amount2,pop1 } = useContext(Context);
     const [bankTransferSwitch, setBankTransferSwitch] = useState(0);
     const [showAccountNumber, setShowAccountNumber] = useState(false);
-    const userToken = useSelector(state=>state.userToken)
+    // const userToken = useSelector(state=>state.userToken)
 
     // State for Pay to Bank
     const [amount, setAmount] = useState('');
@@ -51,74 +50,74 @@ const BankPayment = () => {
     }, []); // Fetch once on component mount
 
     // Function to generate a virtual account for receiving payments
-    const handleGenerateAccountNumber = async () => {
-        setLoading(true);
-        setStatusMessage('');
-        setGeneratedAccount(null); // Clear previous account details
+    // const handleGenerateAccountNumber = async () => {
+    //     setLoading(true);
+    //     setStatusMessage('');
+    //     setGeneratedAccount(null); // Clear previous account details
 
-        // Ensure the amount is valid
-        if (!amount || parseFloat(amount) < 100) {
-            setStatusMessage('Please enter a valid amount (min NGN 100)');
-            setLoading(false);
-            return;
-        }
+    //     // Ensure the amount is valid
+    //     if (!amount || parseFloat(amount) < 100) {
+    //         setStatusMessage('Please enter a valid amount (min NGN 100)');
+    //         setLoading(false);
+    //         return;
+    //     }
 
-        const requestData = {
-            account_name: "Demo account", // You can dynamically set this if required
-            amount: parseFloat(amount),
-            currency: "NGN",
-            reference: `bank-transfer-${Date.now()}`, // Unique reference
-            customer: {
-                name: "John Doe", // You can replace this with actual customer data
-                email: "johndoe@gmail.com"
-            }
-        };
+    //     const requestData = {
+    //         account_name: "Demo account", // You can dynamically set this if required
+    //         amount: parseFloat(amount),
+    //         currency: "NGN",
+    //         reference: `bank-transfer-${Date.now()}`, // Unique reference
+    //         customer: {
+    //             name: "John Doe", // You can replace this with actual customer data
+    //             email: "johndoe@gmail.com"
+    //         }
+    //     };
 
-        try {
-            const response = await axios.post(
-                'https://api.korapay.com/merchant/api/v1/charges/bank-transfer',
-                requestData,
-                {
-                    headers: {
-                        Authorization: `Bearer ${pop1}`, // Replace with your secret key
-                        'Content-Type': 'application/json',
-                    }
-                }
-            );
+    //     try {
+    //         const response = await axios.post(
+    //             'https://api.korapay.com/merchant/api/v1/charges/bank-transfer',
+    //             requestData,
+    //             {
+    //                 headers: {
+    //                     Authorization: `Bearer sk_test_YureVAxZbyoA41CyRZCVxhnopPeyVztLbqG71rU1`, // Replace with your secret key
+    //                     'Content-Type': 'application/json',
+    //                 }
+    //             }
+    //         );
 
-            const data = response.data;
+    //         const data = response.data;
 
-            if (data.status) {
-                // Save the generated account details
-                setGeneratedAccount(data.data.bank_account);
-                setShowAccountNumber(true);
-                // setStatusMessage('Bank transfer initiated successfully');
-            } else {
-                setStatusMessage('Failed to initiate bank transfer.');
-            }
-        } catch (error) {
-            setStatusMessage('An error occurred while generating the bank account.');
-            console.error('Error:', error);
-        } finally {
-            setLoading(false);
-        }
-    };
+    //         if (data.status) {
+    //             // Save the generated account details
+    //             setGeneratedAccount(data.data.bank_account);
+    //             setShowAccountNumber(true);
+    //             // setStatusMessage('Bank transfer initiated successfully');
+    //         } else {
+    //             setStatusMessage('Failed to initiate bank transfer.');
+    //         }
+    //     } catch (error) {
+    //         setStatusMessage('An error occurred while generating the bank account.');
+    //         console.error('Error:', error);
+    //     } finally {
+    //         setLoading(false);
+    //     }
+    // };
 
 
     // Function to handle the Pay to Bank action
 const handlePayToBank = async () => {
-    if (amount < 1000 || amount > 1000000) {
-        Swal.fire({ text: 'You can only send between NGN 1,000 to NGN 1,000,000' });
-        return;
-    }
+    // if (amount < 1000 || amount > 1000000) {
+    //     Swal.fire({ text: 'You can only send between NGN 1,000 to NGN 1,000,000' });
+    //     return;
+    // }
 
-    setStatusMessage(''); // Clear previous messages
+    // setStatusMessage(''); // Clear previous messages
 
-    if (!amount || !bankAccountNumber || !selectedBank) {
-        setStatusMessage('Please fill in all fields correctly.');
-        setLoading(false);
-        return;
-    }
+    // if (!amount || !bankAccountNumber || !selectedBank) {
+    //     setStatusMessage('Please fill in all fields correctly.');
+    //     setLoading(false);
+    //     return;
+    // }
 
     setLoading(true);
     const loadingAlert = Swal.fire({ text: "Processing..." });
@@ -128,7 +127,7 @@ const handlePayToBank = async () => {
         reference: `unique-transaction-${Date.now()}`, // Unique reference
         destination: {
             type: 'bank_account',
-            amount: amount,
+            amount: amount2,
             currency: 'NGN',
             narration: 'Bank Transfer Payment',
             bank_account: {
@@ -160,13 +159,16 @@ const handlePayToBank = async () => {
             Swal.fire({ icon: "success", text: data.message });
 
             // Step 1: Perform Wallet Debit after successful bank transfer
-            await debitUserWallet(parseFloat(amount));
+            // await debitUserWallet(parseFloat(amount2)); 
+            // ******debit our user with debit endpoint without token and set the amount to null in context so it wont work again
+
 
             // Step 2: Reset fields after success
             setAmount("");
             setBankAccountNumber("");
             setSelectedBank("");
             setBankTransferSwitch(0);
+            
         } else {
             setStatusMessage(`Error: ${data.message}`);
         }
@@ -180,50 +182,55 @@ const handlePayToBank = async () => {
 };
 
 // Step 1: Function to debit user's wallet after successful payment
-const debitUserWallet = async (amount) => {
-    try {
-        const response = await axios.post(
-            'https://paysphere-api.vercel.app/transfer_to_bank',
-            { amount },
-            {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${userToken}` // User's auth token
-                }
-            }
-        );
+// const debitUserWallet = async (amount) => {
+//     try {
+//         const response = await axios.post(
+//             'https://paysphere-api.vercel.app/transfer_to_bank',
+//             { amount },
+//             {
+//                 headers: {
+//                     'Content-Type': 'application/json',
+//                     'Authorization': `Bearer ${userToken}` // User's auth token
+//                 }
+//             }
+//         );
 
-        const data = response.data;
+//         const data = response.data;
 
-        if (response.status === 200) {
-            console.log('Wallet debited successfully:', data.amountPaid);
-            Swal.fire({
-                icon: 'success',
-                title: 'Wallet Debited',
-                text: `Your wallet has been debited by ${data.amountPaid} NGN.`
-            });
-        } else if (response.status === 400) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Insufficient Funds',
-                text: 'You do not have enough funds to complete this transaction.'
-            });
-        } else if (response.status === 404) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Sender Not Found',
-                text: 'Unable to find the sender\'s wallet details.'
-            });
-        }
-    } catch (error) {
-        console.error('Error while debiting wallet:', error);
-        Swal.fire({
-            icon: 'error',
-            title: 'Error Debiting Wallet',
-            text: 'An error occurred while debiting your wallet. Please try again.'
-        });
-    }
-};
+//         if (response.status === 200) {
+//             console.log('Wallet debited successfully:', data.amountPaid);
+//             Swal.fire({
+//                 icon: 'success',
+//                 title: 'Wallet Debited',
+//                 text: `Your wallet has been debited by ${data.amountPaid} NGN.`
+//             });
+//         } else if (response.status === 400) {
+//             Swal.fire({
+//                 icon: 'error',
+//                 title: 'Insufficient Funds',
+//                 text: 'You do not have enough funds to complete this transaction.'
+//             });
+//         } else if (response.status === 404) {
+//             Swal.fire({
+//                 icon: 'error',
+//                 title: 'Sender Not Found',
+//                 text: 'Unable to find the sender\'s wallet details.'
+//             });
+//         }
+//     } catch (error) {
+//         console.error('Error while debiting wallet:', error);
+//         Swal.fire({
+//             icon: 'error',
+//             title: 'Error Debiting Wallet',
+//             text: 'An error occurred while debiting your wallet. Please try again.'
+//         });
+//     }
+// };
+
+const debitUser = ()=>{
+    // debit userId with amout2
+    // window ,history .back () on success
+}
 
 
 
@@ -237,73 +244,7 @@ const debitUserWallet = async (amount) => {
                     <Icon theme={theme}>
                         <FaUniversity />
                     </Icon>
-                    <Title theme={theme}>Bank Payment</Title>
-                    <ButtonContainer>
-                        <Button primary theme={theme} onClick={() => setBankTransferSwitch(1)}>
-                            Receive from Bank
-                        </Button>
-                        <Button onClick={() => setMenuSwitch(0)} theme={theme}>
-                            Cancel
-                        </Button>
-                        <Button primary onClick={() => setBankTransferSwitch(2)} theme={theme}>
-                            Pay to Bank
-                        </Button>
-                    </ButtonContainer>
-                </PaymentContainer>
-            )}
-
-            {bankTransferSwitch === 1 && (
-                <PaymentContainer theme={theme}>
-                    <Icon theme={theme}>
-                        <FaUniversity />
-                    </Icon>
-                    <Title theme={theme}>Receive from Bank</Title>
-
-                    {!showAccountNumber && (
-                        <>
-                            <Input
-                                theme={theme}
-                                type="text"
-                                placeholder="Enter Amount"
-                                value={amount}
-                                onChange={(e) => setAmount(e.target.value)}
-                            />
-                            <Button primary onClick={handleGenerateAccountNumber} theme={theme} disabled={loading}>
-                                {loading ? 'Generating...' : 'Generate Account'}
-                            </Button>
-                        </>
-                    )}
-
-                    {showAccountNumber && generatedAccount && (
-                        <>
-                            <H3 theme={theme}>Account Number: {generatedAccount.account_number}</H3>
-                            <H3 theme={theme}>Bank Name: {generatedAccount.bank_name}</H3>
-                            <H3 theme={theme}>Account Name: {generatedAccount.account_name}</H3>
-                            <H3 theme={theme}>Expires On: {new Date(generatedAccount.expiry_date_in_utc).toLocaleString()}</H3>
-                            <H3 theme={theme}>Please transfer the amount of NGN {amount} to the above account.</H3>
-                        </>
-                    )}
-
-                    {statusMessage && <Message>{statusMessage}</Message>}
-
-                    <br />
-                    <ButtonContainer>
-                        <Button primary onClick={() => { setBankTransferSwitch(0); setShowAccountNumber(false); }} theme={theme}>
-                            Back
-                        </Button>
-                        <Button onClick={() => setMenuSwitch(0)} theme={theme}>
-                            Cancel
-                        </Button>
-                    </ButtonContainer>
-                </PaymentContainer>
-            )}
-
-            {bankTransferSwitch === 2 && (
-                <PaymentContainer theme={theme}>
-                    <Icon theme={theme}>
-                        <FaUniversity />
-                    </Icon>
-                    <Title theme={theme}>Pay to Bank</Title>
+                    <Title theme={theme}>Receive to Bank</Title>
 
                      {/* Bank Dropdown */}
                      <Select
@@ -311,7 +252,7 @@ const debitUserWallet = async (amount) => {
                         value={selectedBank}
                         onChange={(e) => setSelectedBank(e.target.value)}
                     >
-                        <option value="">Select Bank</option>
+                        <option value="">Select Your Bank</option>
                         {banks.map((bank) => (
                             <option key={bank.code} value={bank.code}>
                                 {bank.name}
@@ -323,7 +264,7 @@ const debitUserWallet = async (amount) => {
                     <Input
                         theme={theme}
                         type="text"
-                        placeholder="Bank Account Number"
+                        placeholder="Your Bank Account Number"
                         value={bankAccountNumber}
                         onChange={(e) => setBankAccountNumber(e.target.value)}
                     />
@@ -332,8 +273,9 @@ const debitUserWallet = async (amount) => {
                         theme={theme}
                         type="text"
                         placeholder="Enter Amount"
-                        value={amount}
+                        value={amount2}
                         onChange={(e) => setAmount(e.target.value)}
+                        disabled
                     />
                     
 
@@ -341,15 +283,15 @@ const debitUserWallet = async (amount) => {
 
                     {statusMessage && <Message>{statusMessage}</Message>}
                     <Button primary onClick={handlePayToBank} theme={theme} disabled={loading}>
-                        {loading ? 'Processing...' : 'Pay Now'}
+                        {loading ? 'Processing...' : 'Receive Now'}
                     </Button>
 
                     <br />
                     <ButtonContainer>
-                        <Button primary onClick={() => setBankTransferSwitch(0)} theme={theme}>
+                        {/* <Button primary onClick={() => setBankTransferSwitch(0)} theme={theme}>
                             Back
-                        </Button>
-                        <Button onClick={() => setMenuSwitch(0)} theme={theme}>
+                        </Button> */}
+                        <Button onClick={() => window.history.back()} theme={theme}>
                             Cancel
                         </Button>
                     </ButtonContainer>
@@ -359,7 +301,7 @@ const debitUserWallet = async (amount) => {
     );
 };
 
-export default BankPayment;
+export default BankPayment3;
 
 
 
@@ -456,7 +398,7 @@ const Button = styled.button`
         padding: 14px;
         font-size: 18px;
         margin-bottom: 0;
-        width: 48%;
+        width: 100%;
     }
 `;
 
