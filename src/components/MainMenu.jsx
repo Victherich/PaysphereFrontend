@@ -4,7 +4,7 @@
 
 import React, { useContext } from 'react';
 import styled from 'styled-components';
-import { FaMoneyBillWave, FaLink, FaQrcode, FaUserFriends, FaUniversity, FaFileInvoiceDollar, FaMobileAlt, FaWifi, FaCreditCard, FaSms, FaPhoneAlt, FaArrowDown, FaLongArrowAltDown, FaArrowUp } from 'react-icons/fa';
+import { FaMoneyBillWave, FaLink, FaQrcode, FaUserFriends, FaUniversity, FaFileInvoiceDollar, FaMobileAlt, FaWifi, FaCreditCard, FaSms, FaPhoneAlt, FaArrowDown, FaLongArrowAltDown, FaArrowUp, FaCashRegister, FaMoneyBill, FaMailchimp, FaEnvelopeOpen } from 'react-icons/fa';
 import { Context } from './Context';
 import { useEffect,useState } from 'react';
 import axios from 'axios';
@@ -15,71 +15,19 @@ import CreatePin from './CreateTransactionPin';
 import { userLogin } from '../Features/Slice';
 
 const MainMenu = () => {
-  const { setMenuSwitch, theme,createTransactionPinSwitch,setCreateTransactionPinSwitch,pop1 } = useContext(Context);
-  const [loading, setLoading] = useState(false);  // State for loading
-  const [balance, setBalance] = useState(null);   // State for balance
+  const { setMenuSwitch, theme,createTransactionPinSwitch,setCreateTransactionPinSwitch, pop1,balance ,loading, setLoading} = useContext(Context);
+  // const [loading, setLoading] = useState(false); 
+  // const [balance, setBalance] = useState(null); 
   const userInfo = useSelector(state=>state.userInfo)
   const userToken = useSelector(state=>state.userToken)
   const dispatch = useDispatch();
+  const [transactions, setTransactions] = useState([]);
+  const [newTransactions, setNewTransactions] = useState([]);
 
 
+
   
-  useEffect(() => {
-    const fetchBalance = async () => {
-      if(!pop1){
-        return;
-      }
-      setLoading(true); // Start loading spinner or any UI indication
-      try {
-        // Make the API request to fetch balance
-        const response = await axios.get('https://api.korapay.com/merchant/api/v1/balances', {
-          headers: {
-            Authorization: `Bearer ${pop1}`, // Replace with actual key
-            'Content-Type': 'application/json',
-          },
-          timeout: 10000,  // Optional: Timeout after 10 seconds
-        });
-  
-        // Check the status and set balance if request is successful
-        if (response.data.status) {
-          const availableBalance = response.data.data.NGN.available_balance || 0; // Check for available_balance safely
-          setBalance(availableBalance); // Update the state with the balance
-          // console.log('Available Balance:', availableBalance);
-        } else {
-          throw new Error(response.data.message || 'Unknown error'); // Handle API errors
-        }
-  
-      } catch (error) {
-        // Handle network errors, timeouts, or authorization issues
-        let errorMessage = 'Failed to fetch balance.';
-  
-        if (error.response) {
-          // Server responded with a status code outside 2xx
-          errorMessage += ` Server responded with ${error.response.status}: ${error.response.data.message || 'Unknown error'}.`;
-        } else if (error.request) {
-          // No response was received (e.g., timeout)
-          errorMessage += ' No response from server (possible network or timeout issue).';
-        } else {
-          // Other errors (e.g., bad request setup)
-          errorMessage += ` Error: ${error.message}`;
-        }
-  
-        Swal.fire({
-          title: 'Error!',
-          text: errorMessage,
-          icon: 'error',
-          confirmButtonText: 'OK',
-        });
-        console.error('Error fetching balance:', error);
-  
-      } finally {
-        setLoading(false); // Stop loading spinner or any UI indication
-      }
-    };
-  
-    fetchBalance(); // Fetch the balance when the component mounts
-  }, []); // Empty dependency array ensures this runs only once on mount
-  
+
 
   useEffect(() => {
     // Function to fetch user info from the server
@@ -119,9 +67,14 @@ const MainMenu = () => {
 }, []);  // Empty dependency ar
 
 
+
+
+
+
+
   return (
     <DashboardContainer theme={theme}>
-      <UserInfoSection theme={theme}>
+      {userInfo.email==="victherich@gmail.com"&&<UserInfoSection theme={theme}>
         <UserInfoTitle theme={theme}>Paysphere | Admin Area</UserInfoTitle>
         
         {/* Master Balance Section */}
@@ -129,7 +82,7 @@ const MainMenu = () => {
           <Strong theme={theme}>Master Balance: </Strong>
           {loading ? 'Loading...' : balance !== null ? `NGN ${balance}` : 'Failed to load balance'}
         </UserInfoItem>
-      </UserInfoSection>
+      </UserInfoSection>}
 
 
 
@@ -140,10 +93,12 @@ const MainMenu = () => {
         {/* <UserInfoItem theme={theme}><Strong primary theme={theme}>Hi, {userInfo.firstName}</Strong></UserInfoItem> */}
         <UserInfoItem theme={theme}><Strong theme={theme}>User ID:</Strong> {userInfo.walletID}</UserInfoItem>
         <UserInfoItem theme={theme}><Strong theme={theme}>Email:</Strong> {userInfo.email}</UserInfoItem>
-        <UserInfoItem theme={theme}><Strong theme={theme}>Phone Number: </Strong> {userInfo.phoneNumber}</UserInfoItem>
+        {/* <UserInfoItem theme={theme}><Strong theme={theme}>Phone Number: </Strong> {userInfo.phoneNumber}</UserInfoItem> */}
         <UserInfoItem theme={theme}><Strong theme={theme}>Balance: </Strong> NGN {userInfo.wallet}</UserInfoItem>
-        {createTransactionPinSwitch&&<CreatePin/>}
-        <Button onClick={()=>setCreateTransactionPinSwitch(true)}>Create Transaction Pin</Button>
+        
+        {/* <Button onClick={()=>setCreateTransactionPinSwitch(true)}>Create Transaction Pin</Button> */}
+        {/* <Button onClick={()=>setMenuSwitch(20)}>Transaction History</Button> */}
+        {/* <Button onClick={()=>setMenuSwitch(22)}>Transaction Alert</Button> */}
       </UserInfoSection>
       
 
@@ -215,6 +170,10 @@ const MainMenu = () => {
           <GridItem onClick={() => setMenuSwitch(17)} theme={theme}>
             <Icon theme={theme}><FaCreditCard />   <FaUniversity/></Icon>
             <ItemText theme={theme}>Receive Card / Bank Transfer payment</ItemText>
+          </GridItem>
+          <GridItem onClick={() => setMenuSwitch(19)} theme={theme}>
+            <Icon theme={theme}><FaEnvelopeOpen />   </Icon>
+            <ItemText theme={theme}>Pay Via Email</ItemText>
           </GridItem>
         </GridContainer>
       </Section>
@@ -299,8 +258,8 @@ const UserInfoSection = styled.div`
 
 // Styled component for the user info title
 const UserInfoTitle = styled.h2`
-  font-size: 24px;
-  margin-bottom: 15px;
+  font-size: 1.2rem;
+  // margin-bottom: 8px;
   color: ${({ theme }) => (theme === 'light' ? 'rgba(0, 0, 255, 0.8)' : '#ddd')};
 `;
 
@@ -440,4 +399,5 @@ const Button = styled.button`
   cursor:pointer;
   color:blue;
   border:1px solid blue;
+  margin-bottom:10px;
 `

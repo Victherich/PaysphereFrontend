@@ -333,7 +333,7 @@ import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
 
 const MobileMoneyPayment2 = () => {
-    const { setMenuSwitch, theme } = useContext(Context);
+    const { setMenuSwitch, theme, pop1 } = useContext(Context);
     const [phoneNumber, setPhoneNumber] = useState('');
     const [otp, setOtp] = useState('');
     const [openOtp, setOpenOtp] = useState(false);
@@ -374,7 +374,7 @@ const MobileMoneyPayment2 = () => {
                 },
                 {
                     headers: {
-                        Authorization: `Bearer sk_test_YureVAxZbyoA41CyRZCVxhnopPeyVztLbqG71rU1`,
+                        Authorization: `Bearer ${pop1}`,
                         'Content-Type': 'application/json',
                     }
                 }
@@ -417,7 +417,7 @@ const MobileMoneyPayment2 = () => {
                 },
                 {
                     headers: {
-                        Authorization: `Bearer sk_test_YureVAxZbyoA41CyRZCVxhnopPeyVztLbqG71rU1`,
+                        Authorization: `Bearer ${pop1}`,
                         'Content-Type': 'application/json',
                     }
                 }
@@ -452,7 +452,7 @@ const MobileMoneyPayment2 = () => {
                 },
                 {
                     headers: {
-                        Authorization: `Bearer sk_test_YureVAxZbyoA41CyRZCVxhnopPeyVztLbqG71rU1`,
+                        Authorization: `Bearer ${pop1}`,
                         'Content-Type': 'application/json',
                     }
                 }

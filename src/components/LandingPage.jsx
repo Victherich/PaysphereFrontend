@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Context } from './Context';
 import { FaMobileAlt } from 'react-icons/fa';
@@ -14,13 +14,27 @@ import smspayment from "../Images/smspayment.png"
 import qrcode1 from "../Images/qrcode1.png"
 import qrcode2 from "../Images/qrcode2.png"
 import storefront from "../Images/storefront.png"
+import { useSelector } from 'react-redux';
+import emailPayment from "../Images/emailPayment.png"
 
 const LandingPage = () => {
     const { setMenuSwitch, theme } = useContext(Context);
     const navigate = useNavigate();
+    const userToken = useSelector(state=>state.userToken)
+    const [reload,setReload]=useState(true)
+    
+    useEffect(()=>{
+        const id = setTimeout(()=>{
+            setReload(false)
+        },100)
+        const id2 = setTimeout(()=>{
+            setReload(true)
+        },500)
+        return ()=>{clearTimeout(id);clearTimeout(id2)}
+    },[])
 
     return (
-        <Container theme={theme}>
+        reload&&<Container theme={theme}>
           
             <LandingSection theme={theme}>
                 <Content theme={theme}>
@@ -31,14 +45,14 @@ const LandingPage = () => {
                         Paysphere: <br/>Simplifying Payments
                     </LandingTitle>
                     <Description theme={theme}>
-                        Paysphere is a payment solution that offers users the platform to make payments and receive payments in a more efficient, innovative, and easy way. With a mobile-first design approach, Paysphere is user-friendly and perfect for fast payments.
+                        Your solution to making and receiving payments in a more efficient, fast, innovative, and easy way.
                     </Description>
-                    <GetStartedButton 
-                        onClick={() => navigate("/dashboard")} 
+                    {!userToken&&<GetStartedButton 
+                        onClick={() => navigate("/signup")} 
                         theme={theme}
                     >
                         Get Started
-                    </GetStartedButton>
+                    </GetStartedButton>}
                 </Content>
                 <ImageContainer>
                     <LandingImage src={HeroImg} alt="Mobile Payments" />
@@ -48,6 +62,7 @@ const LandingPage = () => {
                 <Intro>
                     PaySphere is a payment solution that offers users the platform to make and receive payments in a more efficient, innovative, and easy way. It goes beyond the regular in-app purchase payments to real-time transactions, enabling users to engage in transactions beyond the regular in-app purchases.
                 </Intro>
+                <H3>UNIQUE FEATURES</H3>
                 <Features > 
                     <Feature theme={theme} >
                     <FeatureImg src={RequestToPay} alt="storefront"/>
@@ -63,25 +78,25 @@ const LandingPage = () => {
                             Make payments without needing internet access. With USSD, you can simply dial a code on your mobile phone to complete transactions. This feature is especially useful in areas with limited internet connectivity.
                         </FeatureDescription>
                     </Feature>
-                    <Feature theme={theme} >
+                    {/* <Feature theme={theme} >
                     <FeatureImg src={smspayment} alt="smspayment"/>
                         <FeatureTitle theme={theme}>SMS Payment</FeatureTitle>
                         <FeatureDescription>
                             Pay via text message. With SMS payments, you can send and receive money using simple text commands. It’s a convenient option for users without smartphones or those who prefer basic text-based transactions.
                         </FeatureDescription>
-                    </Feature>
+                    </Feature> */}
                     <Feature theme={theme}>
                     <FeatureImg src={qrcode1} alt="qrcode1"/>
-                        <FeatureTitle theme={theme}>Payment Link / Dynamic QR Code</FeatureTitle>
+                        <FeatureTitle theme={theme}>Payment Link / QR Code</FeatureTitle>
                         <FeatureDescription>
-                            Generate a Payment Link or Dynamic QR Code with a specific payment amount embedded. Your payer can scan the QR code or click the link to pay the exact amount using various methods like card, bank transfer, USSD, SMS, or crypto.
+                            Receive and make Payments fast and seamlessly via Links and QR Codes with both specific and variable payment amounts.
                         </FeatureDescription>
                     </Feature>
                     <Feature theme={theme}>
-                    <FeatureImg src={qrcode2} alt="qrcode2"/>
-                        <FeatureTitle theme={theme}>Static QR Code</FeatureTitle>
+                    <FeatureImg src={emailPayment} alt="qrcode2"/>
+                        <FeatureTitle theme={theme}>Payments via Email</FeatureTitle>
                         <FeatureDescription>
-                            Create a Static QR Code that doesn’t have a specific amount embedded. The payer scans the QR code and enters the payment amount themselves. This is useful for situations where the payment amount varies for each transaction.
+                            No need to worry if your payee is a Paysphere user, you can send payment to anyone via their email address.
                         </FeatureDescription>
                     </Feature>
                     <Feature theme={theme}>
@@ -136,7 +151,7 @@ const Subtitle = styled.p`
 
 const LandingSection = styled.div`
     display: flex;
-    flex-direction: column;
+    flex-direction: column-reverse;
     align-items: center;
     justify-content: center;
     padding: 50px 20px;
@@ -296,7 +311,7 @@ const FeatureImg = styled.img`
 const FeatureTitle = styled.h3`
     font-size: 18px;
     margin-bottom: 10px;
-    color: ${({ theme }) => (theme === 'light' ? 'rgba(0,0,255,0.5)' : '#bbb')};
+    color: ${({ theme }) => (theme === 'light' ? 'rgba(0,0,255,0.7)' : '#bbb')};
 `;
 
 const FeatureDescription = styled.p`
@@ -320,3 +335,9 @@ const FooterText = styled.p`
 
 
 
+const H3 = styled.h1`
+    color:rgba(0,0,255,0.7);
+    text-align:center;
+    font-size:2.5rem;
+
+`

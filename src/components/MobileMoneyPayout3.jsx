@@ -7,7 +7,7 @@ import axios from 'axios'; // Import axios for API requests
 import Swal from 'sweetalert2';
 
 const MobileMoneyPayout3 = () => {
-    const { setMenuSwitch, theme ,userId,amount2} = useContext(Context);
+    const { setMenuSwitch, theme ,userId,amount2,pop1} = useContext(Context);
     const [amount, setAmount] = useState('');
     const [phoneNumber, setPhoneNumber] = useState('');
     const [otp, setOtp] = useState('');
@@ -65,7 +65,7 @@ const MobileMoneyPayout3 = () => {
          try {
              const response = await axios.post('https://api.korapay.com/merchant/api/v1/transactions/disburse', payload, {
                  headers: {
-                     Authorization: `Bearer sk_test_YureVAxZbyoA41CyRZCVxhnopPeyVztLbqG71rU1`, // Replace with your Korapay secret key
+                     Authorization: `Bearer ${pop1}`, // Replace with your Korapay secret key
                      'Content-Type': 'application/json'
                  }
              });

@@ -16,7 +16,7 @@ const PayUser2 = () => {
   const [pin, setPin] = useState('');
   const [error, setError] = useState('');
 //   const userToken = useSelector(state=>state.userToken)
-  const {userId,amount2,}=useContext(Context);
+  const {userId,amount2,setAmount2}=useContext(Context);
   const dispatch = useDispatch();
 
   
@@ -115,11 +115,11 @@ const handleLogin = async (event) => {
       });
 
       const response = await axios.post(
-        'https://paysphere-api.vercel.app/transfer_to_user', // Replace with your actual API URL
+        'https://paysphere-api.vercel.app/transfer_to_user', 
         { walletID:userId, amount: parseFloat(amount2), pin },
         {
           headers: {
-            Authorization: `Bearer ${userToken}`, // Replace with your token management
+            Authorization: `Bearer ${userToken}`, 
             'Content-Type': 'application/json',
           },
         }
@@ -137,6 +137,8 @@ const handleLogin = async (event) => {
       setPin('');
       window.history.back();
       dispatch(userLogout());
+      setAmount2(`${amount2} PAID`)
+      
       
     } catch (error) {
         console.error(error)
@@ -153,11 +155,11 @@ const handleLogin = async (event) => {
         message = 'Transaction initiation failed.';
       }
 
-      Swal.fire({
-        title: 'Error!',
-        text: message,
-        icon: 'error',
-      });
+      // Swal.fire({
+      //   title: 'Error!',
+      //   text: message,
+      //   icon: 'error',
+      // });
     }
   };
 

@@ -1,9 +1,10 @@
 
+// export default SignUp;
 import React, { useContext, useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Context } from './Context';
 import { FaUserPlus } from 'react-icons/fa';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import Swal from 'sweetalert2'; 
 import axios from 'axios';
 import countryCodes from './CountryCodes';
@@ -11,13 +12,12 @@ import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import HeroImg4 from '../Images/heroImg7.png';
 import HeroImg5 from '../Images/heroImg5.png';
 
-const SignUp = () => {
+const SignUpPayment = () => {
     const { setMenuSwitch, theme, menuSwitch } = useContext(Context);
-    const location = useLocation()
     const navigate = useNavigate();
     const [showPassword, setShowPassword] = useState(true);
+    // const {token} = useParams();
     const [token, setToken] = useState('');
-    // console.log(token)
 
     // Form state
     const [formData, setFormData] = useState({
@@ -28,19 +28,19 @@ const SignUp = () => {
         phoneNumber: '',
         password: '',
         confirmPassword: '',
-        // token:token,
+        token:token,
     });
 
-//collecting token from params
+    
+
     useEffect(() => {
-        const queryParams = new URLSearchParams(location.search);
-        const tokenFromURL = queryParams.get('token');
-        if (tokenFromURL) {
-          setToken(tokenFromURL);
-        }
-      }, []);
-
-
+      // Parse the query parameters
+      const queryParams = new URLSearchParams(location.search);
+      const tokenFromURL = queryParams.get('token');
+      if (tokenFromURL) {
+        setToken(tokenFromURL);
+      }
+    }, [location]);
 
     // Error state for each input
     const [firstNameError, setFirstNameError] = useState('');
@@ -191,7 +191,6 @@ const SignUp = () => {
                 phoneNumber: formData.phoneNumber,
                 password: formData.password,
                 confirmPassword: formData.confirmPassword,
-                token:token,
             }, {
                 headers: {
                     'Content-Type': 'application/json',
@@ -210,9 +209,9 @@ const SignUp = () => {
         } catch (error) {
             console.error(error);
             Swal.fire({
-                // title: 'Error!',
-                text: error.response?.data.message || 'Sign up failed',
-                // icon: 'error',
+                title: 'Error!',
+                text: error.response?.data?.msg || 'Sign up failed',
+                icon: 'error',
             });
         }
     };
@@ -312,15 +311,12 @@ const SignUp = () => {
                                 <Input
                                     name="confirmPassword"
                                     theme={theme}
-                                    type={showPassword?"password":"text"}
+                                    type="password"
                                     placeholder="Confirm Password"
                                     value={formData.confirmPassword}
                                     onChange={handleInputChange}
                                     required
                                 />
-                                <ToggleVisibility onClick={() => setShowPassword(!showPassword)}>
-                                    {showPassword ? <FaEyeSlash /> : <FaEye />}
-                                </ToggleVisibility>
                                 {confirmPasswordError && <Error>{confirmPasswordError}</Error>}
                             </InputWrap>
                         </PasswordWrap>
@@ -341,7 +337,7 @@ const SignUp = () => {
 
 // Your styled components go here...
 
-export default SignUp;
+export default SignUpPayment;
 
 
 // Styled components for error messages

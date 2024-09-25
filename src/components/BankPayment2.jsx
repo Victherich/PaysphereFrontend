@@ -3,7 +3,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Context } from './Context';
 import { FaUniversity } from 'react-icons/fa';
-import axios from 'axios'; // Axios for API calls
+import axios from 'axios'; 
 import Swal from 'sweetalert2';
 import { useSelector } from 'react-redux';
 
@@ -14,30 +14,30 @@ const BankPayment2 = () => {
     const userToken = useSelector(state=>state.userToken)
     const {amount2}=useContext(Context)
 
-    // State for Pay to Bank
+   
     const [amount, setAmount] = useState('');
-    const [generatedAccount, setGeneratedAccount] = useState(null); // To store the generated account details
+    const [generatedAccount, setGeneratedAccount] = useState(null);
     const [bankAccountNumber, setBankAccountNumber] = useState('');
     const [selectedBank, setSelectedBank] = useState('');
-    const [banks, setBanks] = useState([]); // To store bank list
+    const [banks, setBanks] = useState([]); 
     const [statusMessage, setStatusMessage] = useState('');
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        // Fetch bank list for Pay to Bank feature
+     
         const fetchBanks = async () => {
             try {
                 const response = await axios.get(
                     'https://api.korapay.com/merchant/api/v1/misc/banks?countryCode=NG',
                     {
                         headers: {
-                            Authorization: `Bearer pk_test_tSvcVcCCD8YG7ZCsn4nM2Jr1QBVuKRyARvRxJXDy`, // Public key
+                            Authorization: `Bearer pk_test_tSvcVcCCD8YG7ZCsn4nM2Jr1QBVuKRyARvRxJXDy`, 
                             'Content-Type': 'application/json',
                         },
                     }
                 );
                 if (response.data.status) {
-                    setBanks(response.data.data); // Save the bank list to state
+                    setBanks(response.data.data); 
                 } else {
                     setStatusMessage('Failed to fetch bank list.');
                 }
@@ -48,28 +48,23 @@ const BankPayment2 = () => {
         };
 
         fetchBanks();
-    }, []); // Fetch once on component mount
+    }, []); 
 
-    // Function to generate a virtual account for receiving payments
+ 
     const handleGenerateAccountNumber = async () => {
         setLoading(true);
         setStatusMessage('');
-        setGeneratedAccount(null); // Clear previous account details
+        setGeneratedAccount(null); 
 
-        // Ensure the amount is valid
-        // if (!amount || parseFloat(amount) < 100) {
-        //     setStatusMessage('Please enter a valid amount (min NGN 100)');
-        //     setLoading(false);
-        //     return;
-        // }
+
 
         const requestData = {
-            account_name: "Demo account", // You can dynamically set this if required
+            account_name: "Demo account", 
             amount: parseFloat(amount2),
             currency: "NGN",
-            reference: `bank-transfer-${Date.now()}`, // Unique reference
+            reference: `bank-transfer-${Date.now()}`, 
             customer: {
-                name: "John Doe", // You can replace this with actual customer data
+                name: "John Doe", 
                 email: "johndoe@gmail.com"
             }
         };
@@ -80,7 +75,7 @@ const BankPayment2 = () => {
                 requestData,
                 {
                     headers: {
-                        Authorization: `Bearer ${pop1}`, // Replace with your secret key
+                        Authorization: `Bearer ${pop1}`, 
                         'Content-Type': 'application/json',
                     }
                 }
@@ -89,10 +84,10 @@ const BankPayment2 = () => {
             const data = response.data;
 
             if (data.status) {
-                // Save the generated account details
+             
                 setGeneratedAccount(data.data.bank_account);
                 setShowAccountNumber(true);
-                // setStatusMessage('Bank transfer initiated successfully');
+                
             } else {
                 setStatusMessage('Failed to initiate bank transfer.');
             }
@@ -148,9 +143,7 @@ const BankPayment2 = () => {
 
                     <br />
                     <ButtonContainer>
-                        {/* <Button primary onClick={() => { setBankTransferSwitch(0); setShowAccountNumber(false); }} theme={theme}>
-                            Back
-                        </Button> */}
+              
                         <Button onClick={() =>window.history.back()} theme={theme}>
                             Cancel
                         </Button>

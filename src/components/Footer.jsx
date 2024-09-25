@@ -1,11 +1,14 @@
 import React, { useContext } from 'react';
 import styled from 'styled-components';
-import { FaDashcube, FaPhone, FaSignOutAlt } from 'react-icons/fa';
+import { FaChartBar, FaDashcube, FaFileInvoice, FaPhone, FaSignOutAlt, FaTasks } from 'react-icons/fa';
 import { Context } from './Context';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import { useDispatch } from 'react-redux';
 import { userLogout } from '../Features/Slice';
+import { 
+  MdDashboard, MdSettings, MdNotifications, MdPerson, MdExitToApp 
+} from "react-icons/md";
 
 const Footer = () => {
   const { setMenuSwitch, theme } = useContext(Context);
@@ -55,9 +58,9 @@ const Footer = () => {
 
   return (
     <FooterContainer theme={theme} style={{ display: location.pathname === "/" ? "none" : '' }}>
-      {location.pathname==="/dashboard"&&<Icon theme={theme} onClick={handleClick1}><FaDashcube /></Icon>}
+      {location.pathname==="/dashboard"&&<Icon theme={theme} onClick={handleClick1}><MdDashboard /></Icon>}
       <Icon theme={theme}><FaPhone /></Icon>
-      {location.pathname==="/dashboard"&&<Icon theme={theme} onClick={handleLogout}><FaSignOutAlt /></Icon>} {/* Logout icon */}
+      {/* {location.pathname==="/dashboard"&&<Icon theme={theme} onClick={handleLogout}><FaSignOutAlt /></Icon>}  */}
     </FooterContainer>
   );
 };
@@ -71,7 +74,7 @@ const FooterContainer = styled.div`
   justify-content: space-around;
   align-items: center;
   padding: 10px 20px;
-  background-color: ${({ theme }) => (theme === 'light' ? 'rgba(0,0,255,0.5)' : '#333')};
+  background-color: ${({ theme }) => (theme === 'light' ? '#8080FF' : '#333')};
   color: ${({ theme }) => (theme === 'light' ? '#fff' : '#fff')};
   position: fixed;
   bottom: 0;

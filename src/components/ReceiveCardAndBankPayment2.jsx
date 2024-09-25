@@ -7,7 +7,7 @@ import Swal from 'sweetalert2';
 import { useSelector } from 'react-redux';
 
 const ReceiveCardAndBankPayment2 = () => {
-    const { setMenuSwitch, theme } = useContext(Context);
+    const { setMenuSwitch, theme , pop1} = useContext(Context);
     const [amount, setAmount] = useState('');
     const userInfo = useSelector(state => state.userInfo);
     const userToken = useSelector(state => state.userToken);
@@ -113,7 +113,7 @@ const queryChargeAndCreditWallet = async (reference) => {
         const response = await fetch(`https://api.korapay.com/merchant/api/v1/charges/${reference}`, {
             method: 'GET',
             headers: {
-                'Authorization': `Bearer sk_test_YureVAxZbyoA41CyRZCVxhnopPeyVztLbqG71rU1`,
+                'Authorization': `Bearer ${pop1}`,
                 'Content-Type': 'application/json'
             }
         });
@@ -128,7 +128,7 @@ const queryChargeAndCreditWallet = async (reference) => {
             if (!hasCredited[reference]) {
                 // Credit the user's wallet
                 await creditUserWallet(userId, parseFloat(amount_paid));
-                console.log(userId)
+                // console.log(userId)
                 hasCredited[reference] = true; // Set the flag for this reference
             } else {
                 console.log('Wallet has already been credited.');

@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
-import styled from 'styled-components'; // Import styled-components
+import styled from 'styled-components';
 import { Context } from './Context';
 import { useDispatch } from 'react-redux';
 import { userLogout } from '../Features/Slice';
@@ -21,22 +21,22 @@ const ApprovePayment = () => {
     password: '',
 });
 
-// Handle input change
+
 const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({
-        ...formData, // Copy existing form data
-        [name]: value, // Update specific field with new value
+        ...formData, 
+        [name]: value,
     });
 };
 
    
-// Handle form submission
+
 const handleSubmit = async (event) => {
     event.preventDefault();
 
     try {
-        // Display processing message
+        
         Swal.fire({
             title: 'Processing...',
             text: 'Please wait while we process your request.',
@@ -46,17 +46,15 @@ const handleSubmit = async (event) => {
             },
         });
 
-        // Send POST request to backend for login
+        
         const response = await axios.post('https://paysphere-api.vercel.app/login', {
             walletID: formData.walletID,
             password: formData.password,
         }, {
             headers: {
-                'Content-Type': 'application/json',  // Specify JSON request
+                'Content-Type': 'application/json',  
             },
         });
-
-        // Success feedback and redirect
         Swal.fire({
             title: 'Success!',
             text: 'Processing...',
@@ -64,19 +62,17 @@ const handleSubmit = async (event) => {
             timer: 2000,
             showConfirmButton: false,
         }).then(() => {
-            // Redirect to the dashboard page
-            // navigate('/dashboard');
+           
         });
-        // console.log(response.data)
-        // const userInfo = response.data.user
+  
         const userToken = response.data.token
-        // console.log(userInfo)
+
         handleApprovePayment(userToken)
-        // dispatch(userLogin({userInfo,userToken}))
+
 
     } catch (error) {
         console.error(error);
-        // Handle errors
+        
         Swal.fire({
             title: 'Error!',
             text: error.response?.data?.error || 'failed',
@@ -221,11 +217,6 @@ const FormContainer = styled.div`
     }
 `;
 
-// const Icon = styled(FaSignInAlt)`
-//     font-size: 4rem;
-//     color: ${({ theme }) => (theme === 'light' ? 'rgba(0,0,255,0.5)' : '#bbb')};
-//     margin-bottom: 20px;
-// `;
 
 const Title = styled.h2`
     font-size: 24px;

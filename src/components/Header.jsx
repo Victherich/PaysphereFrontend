@@ -1,16 +1,37 @@
 import React, { useContext } from 'react';
 import styled from 'styled-components';
-import { FaHamburger, FaSun, FaMoon , FaUserCircle, FaHome} from 'react-icons/fa';
+import { FaHamburger, FaSun, FaMoon , FaUserCircle, FaHome, FaBell,FaCartPlus} from 'react-icons/fa';
 import { Context } from './Context';
 import { useLocation,useNavigate } from 'react-router-dom';
 import logo from "../Images/logo.png"
 import { useSelector } from 'react-redux';
+import DashPop from './DashPop';
+import { useRef,useEffect } from 'react';
 
 const Header = () => {
-  const { theme, toggleTheme } = useContext(Context);
+  const { theme, toggleTheme ,setMenuSwitch,dashPopSwitch,setDashPopSwitch} = useContext(Context);
   const location = useLocation()
   const navigate = useNavigate();
   const userInfo = useSelector(state=>state.userInfo)
+  const dashPopRef = useRef(null);
+
+  const handleClickOutside = (event) => {
+    // Check if the clicked element is outside the DashPop component
+    if (dashPopRef.current && !dashPopRef.current.contains(event.target)) {
+      setDashPopSwitch(false); // Close the DashPop component
+    }
+  };
+
+  useEffect(() => {
+    // Add event listener for clicks
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      // Clean up the event listener on component unmount
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  
  
 
   return (
@@ -18,27 +39,38 @@ const Header = () => {
       <LogoWrap >
       <Img src={logo} alt="logo" onClick={()=>navigate("/")}/>
       <TitleWrap>
-      <Title1 onClick={()=>navigate("/")}>PaySphere <FaHome/> |
-      </Title1> {userInfo&&!location.pathname.includes("approve")&&
-      !location.pathname.includes("payspheretransfer")&&
-      !location.pathname.includes("payment")&&
-      !location.pathname.includes("bankpayout3")&&
-      !location.pathname.includes("payuser3")&&
-      !location.pathname.includes("mobilemoneypayout3")&&
-      <Title onClick={()=>navigate("/dashboard")}> <FaUserCircle/> Hi, {userInfo.firstName}</Title>}
+      <Title1 onClick={()=>navigate("/")}>PaySphere <FaHome/> 
+      </Title1>
        
       </TitleWrap>
       
       </LogoWrap>
 
-      {location.pathname.includes("payment")?"":<ThemeSwitchWrap>
+      {/* {location.pathname.includes("payment")?"":<ThemeSwitchWrap>
       <Icon1><FaSun/></Icon1>
       <ThemeSwitch onClick={toggleTheme} theme={theme}>
         <Slider theme={theme} />
       </ThemeSwitch> 
       <Icon2><FaMoon/></Icon2>
-      </ThemeSwitchWrap>}
+      </ThemeSwitchWrap>} */}
+      {userInfo&&!location.pathname.includes("approve")&&
+      !location.pathname.includes("payspheretransfer")&&
+      !location.pathname.includes("payment")&&
+      !location.pathname.includes("bankpayout3")&&
+      !location.pathname.includes("payuser3")&&
+      !location.pathname.includes("mobilemoneypayout3")&&
+      !location.pathname.includes("store")&&
+      <TitleA > <Icon onClick={()=>setDashPopSwitch(!dashPopSwitch)}><FaUserCircle/></Icon> <Title onClick={()=>setDashPopSwitch(!dashPopSwitch)} onMouseEnter={()=>setDashPopSwitch(true)}>Hi, {userInfo.firstName}</Title></TitleA>}
       {/* {location.pathname.includes("payment")?"":<MenuIcon />} */}
+      {!userInfo&&!location.pathname.includes("approve")&&
+      !location.pathname.includes("payspheretransfer")&&
+      !location.pathname.includes("payment")&&
+      !location.pathname.includes("bankpayout3")&&
+      !location.pathname.includes("payuser3")&&
+      !location.pathname.includes("mobilemoneypayout3")&&
+      <UserArea> <P onClick={()=>navigate("/login")}>Login</P> <Button onClick={()=>navigate("/signup")}>Get Started</Button></UserArea>}
+      {dashPopSwitch&&<DashPop ref={dashPopRef}/>}
+      {location.pathname.includes("store")&&<FaCartPlus onClick={()=>navigate("/store/cart")}/>}
     </HeaderContainer>
   );
 };
@@ -51,7 +83,7 @@ const HeaderContainer = styled.div`
   justify-content: space-between;
   align-items: center;
   padding: 10px 20px;
-  background-color: ${({ theme }) => (theme === 'light' ? 'rgba(0,0,255,0.4)' : '#333')};
+  background-color: ${({ theme }) => (theme === 'light' ? '#8080FF' : '#333')};
   color: #fff;
   position: fixed;
   width: 100%;
@@ -82,18 +114,19 @@ const TitleWrap = styled.div`
 `
 
 // Styled component for the heading
-const Title = styled.h3`
+const Title = styled.h4`
 display:flex;
 // justify-content:center;
 align-items:center;
+cursor:pointer;
 gap:10px;
 margin-right:10px;
-  font-size: 0.9rem;
+  // font-size: 1.2rem;
   margin: 0;
   // color:rgba(0,0,255,0.5);
 
   @media (min-width: 768px) {
-    font-size: 24px;
+    // font-size: 24px;
   }
 `;
 
@@ -108,7 +141,7 @@ margin-right:10px;
   // color:rgba(0,0,255,0.5);
 
   @media (min-width: 768px) {
-    font-size: 24px;
+    // font-size: 24px;
   }
     @media (max-width:600px){
       display:none;
@@ -170,3 +203,39 @@ const Slider = styled.div`
   
   transition: transform 1s, background-color 0.3s;
 `;
+
+const Icon = styled.div`
+  margin-top:5px;
+`
+const UserArea = styled.div`  
+  display:flex;
+  gap:15px;
+  justify-content:center;
+  align-items:center;
+`
+
+const P =styled.h4`
+cursor:pointer;
+
+`
+
+const Button = styled.button`
+  padding:8px;
+  cursor:pointer;
+  color:blue;
+  background-color:white;
+  border:none;
+  border-radius:10px;
+`
+
+
+const TitleA = styled.div`
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:5px;
+  padding:5px 15px;
+  background-color: rgba(0,0,255,0.1);
+  border-radius:10px;
+  box-shadow:0px 4px 10px rgba(0,0,0,0.5);
+`

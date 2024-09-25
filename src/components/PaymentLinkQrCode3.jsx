@@ -65,7 +65,7 @@ const PaymentLinkQrCode3 = () => {
         if (navigator.share) {
             navigator.share({
                 title: 'Payment Link',
-                text: `Pay ${amount} using this link: ${url}`,
+                text: `Receive NGN ${amount} using this link: ${url}`,
                 url: url,
                 files: qrCodeDataUrl ? [new File([qrCodeDataUrl], 'QRCode.png', { type: 'image/png' })] : null
             })

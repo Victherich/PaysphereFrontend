@@ -29,10 +29,15 @@ import MakeMobileMoneyPayment from './MakeMobileMoneyPayment';
 import ReceiveCardAndBankPayment from './ReceiveCardAndBankPayment';
 import BankPayment from './BankPayment';
 import ProductDashboard from './ProductDashboard';
+import PayViaEmail from './PayViaEmail';
+import TransactionHistory from './TransactionHistory';
+import Notifications from './Notifications';
+import TransactionAlert from './TransactionAlert';
+import CreatePin from './CreateTransactionPin';
 
 
 const DashBoard = () => {
-  const { menuSwitch, theme } = useContext(Context);
+  const { menuSwitch, theme,createTransactionPinSwitch } = useContext(Context);
 
   useEffect(()=>{
 
@@ -63,6 +68,11 @@ const DashBoard = () => {
       {menuSwitch===16&&<MakeMobileMoneyPayment/>}
       {menuSwitch===17&&<ReceiveCardAndBankPayment/>}
       {menuSwitch===18&&<ProductDashboard/>}
+      {menuSwitch===19&&<PayViaEmail/>}
+      {menuSwitch===20&&<TransactionHistory/>}
+      {menuSwitch===21&&<Notifications/>}
+      {menuSwitch===22&&<TransactionAlert/>}
+      {createTransactionPinSwitch&&<CreatePin/>}
       
 
     </Body>

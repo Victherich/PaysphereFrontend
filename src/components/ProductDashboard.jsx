@@ -1,21 +1,26 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import ProductList from './ProductList';
+
 import UploadProduct from './UploadProduct';
-import SearchProduct from './SearchProduct';
+import UserProducts from './UserProducts';
+import UserStoreInfo from './UserStoreInfo';
 
 const DashboardContainer = styled.div`
   padding: 20px;
-  background-color: #f4f4f4;
+  // background-color: #f4f4f4;
   padding-top:70px;
   padding-bottom:70px;
-  
+  @media(max-width:428px){
+    padding:5px;
+     padding-top:70px;
+  padding-bottom:70px;
+  }
 `;
 
 const NavBar = styled.div`
   display: flex;
   justify-content: space-between;
-  background-color:lightgray;
+  background-color:white;
   padding: 10px;
   color: white;
   margin-bottom:20px;
@@ -38,19 +43,20 @@ const NavButton = styled.button`
 `;
 
 const ProductDashboard=()=> {
-  const [currentView, setCurrentView] = useState('list'); // Controls the view
+  const [currentView, setCurrentView] = useState('storeinfo'); 
 
   return (
     <DashboardContainer>
       <NavBar>
+      <NavButton onClick={() => setCurrentView('storeinfo')}>Store Info</NavButton>
         <NavButton onClick={() => setCurrentView('list')}>View Products</NavButton>
         <NavButton onClick={() => setCurrentView('upload')}>Upload Product</NavButton>
-        <NavButton onClick={() => setCurrentView('search')}>Search Products</NavButton>
+        
       </NavBar>
-
-      {currentView === 'list' && <ProductList setCurrentView={setCurrentView}/>}
+      {currentView === 'storeinfo' && <UserStoreInfo setCurrentView={setCurrentView}/>}
+      {currentView === 'list' && <UserProducts setCurrentView={setCurrentView}/>}
       {currentView === 'upload' && <UploadProduct setCurrentView={setCurrentView}/>}
-      {currentView === 'search' && <SearchProduct />}
+  
     </DashboardContainer>
   );
 }

@@ -3,7 +3,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Context } from './Context';
 import { FaUniversity } from 'react-icons/fa';
-import axios from 'axios'; // Axios for API calls
+import axios from 'axios'; 
 import Swal from 'sweetalert2';
 import { useSelector } from 'react-redux';
 
@@ -11,32 +11,32 @@ const BankPayment3 = () => {
     const { setMenuSwitch, theme,userId,amount2,pop1 } = useContext(Context);
     const [bankTransferSwitch, setBankTransferSwitch] = useState(0);
     const [showAccountNumber, setShowAccountNumber] = useState(false);
-    // const userToken = useSelector(state=>state.userToken)
 
-    // State for Pay to Bank
+
+
     const [amount, setAmount] = useState('');
-    const [generatedAccount, setGeneratedAccount] = useState(null); // To store the generated account details
+    const [generatedAccount, setGeneratedAccount] = useState(null); 
     const [bankAccountNumber, setBankAccountNumber] = useState('');
     const [selectedBank, setSelectedBank] = useState('');
-    const [banks, setBanks] = useState([]); // To store bank list
+    const [banks, setBanks] = useState([]); 
     const [statusMessage, setStatusMessage] = useState('');
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        // Fetch bank list for Pay to Bank feature
+    
         const fetchBanks = async () => {
             try {
                 const response = await axios.get(
                     'https://api.korapay.com/merchant/api/v1/misc/banks?countryCode=NG',
                     {
                         headers: {
-                            Authorization: `Bearer pk_test_tSvcVcCCD8YG7ZCsn4nM2Jr1QBVuKRyARvRxJXDy`, // Public key
+                            Authorization: `Bearer pk_test_tSvcVcCCD8YG7ZCsn4nM2Jr1QBVuKRyARvRxJXDy`, 
                             'Content-Type': 'application/json',
                         },
                     }
                 );
                 if (response.data.status) {
-                    setBanks(response.data.data); // Save the bank list to state
+                    setBanks(response.data.data); 
                 } else {
                     setStatusMessage('Failed to fetch bank list.');
                 }
@@ -47,95 +47,29 @@ const BankPayment3 = () => {
         };
 
         fetchBanks();
-    }, []); // Fetch once on component mount
+    }, []); 
 
-    // Function to generate a virtual account for receiving payments
-    // const handleGenerateAccountNumber = async () => {
-    //     setLoading(true);
-    //     setStatusMessage('');
-    //     setGeneratedAccount(null); // Clear previous account details
-
-    //     // Ensure the amount is valid
-    //     if (!amount || parseFloat(amount) < 100) {
-    //         setStatusMessage('Please enter a valid amount (min NGN 100)');
-    //         setLoading(false);
-    //         return;
-    //     }
-
-    //     const requestData = {
-    //         account_name: "Demo account", // You can dynamically set this if required
-    //         amount: parseFloat(amount),
-    //         currency: "NGN",
-    //         reference: `bank-transfer-${Date.now()}`, // Unique reference
-    //         customer: {
-    //             name: "John Doe", // You can replace this with actual customer data
-    //             email: "johndoe@gmail.com"
-    //         }
-    //     };
-
-    //     try {
-    //         const response = await axios.post(
-    //             'https://api.korapay.com/merchant/api/v1/charges/bank-transfer',
-    //             requestData,
-    //             {
-    //                 headers: {
-    //                     Authorization: `Bearer sk_test_YureVAxZbyoA41CyRZCVxhnopPeyVztLbqG71rU1`, // Replace with your secret key
-    //                     'Content-Type': 'application/json',
-    //                 }
-    //             }
-    //         );
-
-    //         const data = response.data;
-
-    //         if (data.status) {
-    //             // Save the generated account details
-    //             setGeneratedAccount(data.data.bank_account);
-    //             setShowAccountNumber(true);
-    //             // setStatusMessage('Bank transfer initiated successfully');
-    //         } else {
-    //             setStatusMessage('Failed to initiate bank transfer.');
-    //         }
-    //     } catch (error) {
-    //         setStatusMessage('An error occurred while generating the bank account.');
-    //         console.error('Error:', error);
-    //     } finally {
-    //         setLoading(false);
-    //     }
-    // };
-
-
-    // Function to handle the Pay to Bank action
+   
+   
 const handlePayToBank = async () => {
-    // if (amount < 1000 || amount > 1000000) {
-    //     Swal.fire({ text: 'You can only send between NGN 1,000 to NGN 1,000,000' });
-    //     return;
-    // }
-
-    // setStatusMessage(''); // Clear previous messages
-
-    // if (!amount || !bankAccountNumber || !selectedBank) {
-    //     setStatusMessage('Please fill in all fields correctly.');
-    //     setLoading(false);
-    //     return;
-    // }
-
+   
     setLoading(true);
     const loadingAlert = Swal.fire({ text: "Processing..." });
     Swal.showLoading();
 
     const transactionData = {
-        reference: `unique-transaction-${Date.now()}`, // Unique reference
+        reference: `unique-transaction-${Date.now()}`, 
         destination: {
             type: 'bank_account',
             amount: amount2,
             currency: 'NGN',
             narration: 'Bank Transfer Payment',
             bank_account: {
-                bank: selectedBank, // Bank code from the dropdown
-                account: bankAccountNumber, // User input for account number
+                bank: selectedBank, 
+                account: bankAccountNumber, 
             },
             customer: {
-                name: 'John Doe', // You can update this if you collect customer details
+                name: 'John Doe', 
                 email: 'johndoe@email.com',
             },
         },
@@ -148,7 +82,7 @@ const handlePayToBank = async () => {
             {
                 headers: {
                     'Content-Type': 'application/json',
-                    Authorization: `Bearer ${pop1}`, // Your secret key
+                    Authorization: `Bearer ${pop1}`, 
                 },
             }
         );
@@ -288,9 +222,7 @@ const debitUser = ()=>{
 
                     <br />
                     <ButtonContainer>
-                        {/* <Button primary onClick={() => setBankTransferSwitch(0)} theme={theme}>
-                            Back
-                        </Button> */}
+                    
                         <Button onClick={() => window.history.back()} theme={theme}>
                             Cancel
                         </Button>

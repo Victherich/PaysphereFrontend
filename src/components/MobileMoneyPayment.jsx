@@ -7,7 +7,7 @@ import axios from 'axios'; // Import axios for API requests
 import Swal from 'sweetalert2';
 
 const MobileMoneyPayment = () => {
-    const { setMenuSwitch, theme } = useContext(Context);
+    const { setMenuSwitch, theme,pop1 } = useContext(Context);
     const [amount, setAmount] = useState('');
     const [phoneNumber, setPhoneNumber] = useState('');
     const [otp, setOtp] = useState('');
@@ -44,7 +44,7 @@ const MobileMoneyPayment = () => {
                 merchant_bears_cost: false,
             }, {
                 headers: {
-                    Authorization: `Bearer sk_test_YureVAxZbyoA41CyRZCVxhnopPeyVztLbqG71rU1`,
+                    Authorization: `Bearer ${pop1}`,
                     'Content-Type': 'application/json'
                 }
             });
@@ -85,7 +85,7 @@ const MobileMoneyPayment = () => {
                 token: otp
             }, {
                 headers: {
-                    Authorization: `Bearer sk_test_YureVAxZbyoA41CyRZCVxhnopPeyVztLbqG71rU1`,
+                    Authorization: `Bearer ${pop1}`,
                     'Content-Type': 'application/json'
                 }
             });
@@ -120,7 +120,7 @@ const MobileMoneyPayment = () => {
                 pin: pin
             }, {
                 headers: {
-                    Authorization: `Bearer sk_test_YureVAxZbyoA41CyRZCVxhnopPeyVztLbqG71rU1`,
+                    Authorization: `Bearer ${pop1}`,
                     'Content-Type': 'application/json'
                 }
             });
@@ -183,7 +183,7 @@ const MobileMoneyPayment = () => {
          try {
              const response = await axios.post('https://api.korapay.com/merchant/api/v1/transactions/disburse', payload, {
                  headers: {
-                     Authorization: `Bearer sk_test_YureVAxZbyoA41CyRZCVxhnopPeyVztLbqG71rU1`, // Replace with your Korapay secret key
+                     Authorization: `Bearer ${pop1}`, // Replace with your Korapay secret key
                      'Content-Type': 'application/json'
                  }
              });

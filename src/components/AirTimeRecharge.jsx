@@ -18,7 +18,7 @@ const AirtimeRecharge = () => {
         <ButtonContainer>
           <Button primary theme={theme}>Recharge</Button>
           <Button onClick={() => setMenuSwitch(0)} theme={theme}>Cancel</Button>
-          {/* <Button onClick={() => setMenuSwitch(0)} theme={theme}>Cancel</Button> */}
+  
         </ButtonContainer>
       </AirtimeRechargeContainer>
     </AirtimeRechargeContainerA>
