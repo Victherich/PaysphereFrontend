@@ -1,8 +1,10 @@
 import axios from 'axios';
 import React, { useEffect } from 'react';
 import { createContext, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
 import Swal from 'sweetalert2';
+import { clearCart } from '../Features/Slice';
 
 export const Context = createContext();
 
@@ -11,6 +13,13 @@ const ContextProvider = ({ children }) => {
   const [theme, setTheme] = useState('light');
   const userToken = useSelector(state=>state.userToken)
   const userInfo = useSelector(state=>state.userInfo)
+  const {userId2}=useParams()
+  const dispatch = useDispatch()
+
+  const cart = useSelector((state) => state.cart);
+  const deliveryDetails = useSelector((state) => state.deliveryDetails);
+  const sellerId = useSelector((state) => state.userInfo?._id);
+  console.log(sellerId)
 
 
   const toggleTheme = () => {
@@ -142,7 +151,8 @@ useEffect(()=>{
       
     }else{
       Swal.fire({
-        title: `New ${userInfo._id===newTransactions[newTransactions.length-1]?.recipient?"Debit":"Credit"} Alert!`,
+        // title: `New ${userInfo._id===newTransactions[newTransactions.length-1]?.recipient?"Debit":"Credit"} Alert!`,
+        title: "New Transaction Alert!",
         text: `Amount: NGN ${newTransactions[newTransactions.length-1]?.amountPaid}`,
         icon: 'info',
         confirmButtonText: 'OK',
@@ -194,7 +204,128 @@ useEffect(()=>{
 
 
 const [dashPopSwitch,setDashPopSwitch]=useState(false)
+
+const [storeUserId,setStoreUserId]=useState("")
+
+
+
+
+
+// order confirmation
+const generateOrderId = () => `ORDER-${Math.random().toString(36).substr(2, 9)}`;
+
+  const handleOrderSubmit = async () => {
+    // Calculate total amount
+    const totalAmount = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
+
+    // Create the order details object
+    const orderDetails = {
+      name: deliveryDetails.name,
+      email: deliveryDetails.email,
+      phoneNumber: deliveryDetails.phoneNumber,
+      cartDetails: cart.map((item) => `${item.product_name} - ${item.quantity} x $${new Intl.NumberFormat().format(item.price)}`),
+      orderId: generateOrderId(),
+      totalAmount,
+      sellerId,
+    };
+
+    // Show loading state with swal
+    Swal.fire({
+      title: 'Processing your order...',
+      text: 'Please wait while we confirm your order.',
+      icon: 'info',
+      allowOutsideClick: false,
+      showConfirmButton: false,
+      didOpen: () => {
+        Swal.showLoading();
+      },
+    });
+
+    try {
+      // Make the POST request to the /orders API
+      const response = await axios.post('https://paysphere-api.onrender.com/orders', orderDetails);
+
+      // Success Alert
+      Swal.fire({
+        title: 'Order Created',
+        text: 'Your order has been successfully created. You will receive an email confirmation soon.',
+        icon: 'success',
+        confirmButtonText: 'Ok',
+      }).then(() => {
+       // Navigate back to the store or wherever after order submission
+      });
+      
+    } catch (error) {
+      // Error Handling Alert
+      const errorMessage = error.response?.data?.message || 'An unexpected error occurred.';
+      Swal.fire({
+        title: 'Error',
+        text: errorMessage,
+        icon: 'error',
+        confirmButtonText: 'Try Again',
+      });
+    }
+  };
+
+   
+  
+  const [afterOrderNav,setAfterOrderNav]=useState(false)
+
+  const handleOrderNow2 = async (reference) => {
+    // setLoading2(true)
+    const loadingAlert= Swal.fire({text:"Creating order..."});
+    Swal.showLoading();
+
+    const getCurrentDateTime = () => {
+      const now = new Date();
+      // Calculate the timezone offset in milliseconds
+      const offset = now.getTimezoneOffset() * 60000;
+      // Adjust the time to the local time
+      const localTime = new Date(now.getTime() - offset);
+      // Convert to a readable format
+      return localTime.toISOString().slice(0, 19).replace("T", " ");
+    };
+
+    const totalAmount = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
     
+    const orderSummary = {
+      date:getCurrentDateTime(),   
+    orderRef:generateOrderId(),
+    name: deliveryDetails.name,
+    email: deliveryDetails.email,
+    phoneNumber: deliveryDetails.phoneNumber,
+
+      cartItems: cart.map((item) => `${item.product_name} - ${item.quantity} x $${new Intl.NumberFormat().format(item.price)}`),
+      total: `$ ${totalAmount} USD`
+    };
+
+try {
+  const response = await axios.post(`https://hotsalesngonboarding.onrender.com/api/send-order-summary`, {
+    buyerEmail: deliveryDetails.email,
+    sellerEmail: 'digitalpremiumtech@gmail.com',
+    orderSummary: JSON.stringify(orderSummary, null, 2)
+    
+  });
+
+  if (response.status === 200) {
+    Swal.fire({ icon: "success", text: "Order confirmed, Please check your email for details" });
+   
+    setAfterOrderNav(true)
+    dispatch(clearCart())
+    
+  } else {
+    Swal.fire({ icon: "error", text: "Failed to send order summary." });
+  }
+} catch (error) {
+  console.error(error)
+  Swal.fire({ icon: "error", text: "An error occurred while sending the order summary." });
+}finally{
+        loadingAlert.close();
+    }
+  };
+  
+
+
   return (
     <Context.Provider value={{ menuSwitch, 
     setMenuSwitch, 
@@ -208,7 +339,11 @@ const [dashPopSwitch,setDashPopSwitch]=useState(false)
     description,setDescription,
     createTransactionPinSwitch,setCreateTransactionPinSwitch,pop1 ,
     balance,setBalance,loading,setLoading,
-    dashPopSwitch,setDashPopSwitch}}>
+    dashPopSwitch,setDashPopSwitch,
+    storeUserId,setStoreUserId,handleOrderSubmit,
+    handleOrderNow2,
+    afterOrderNav,setAfterOrderNav
+    }}>
       {children}
     </Context.Provider>
   );

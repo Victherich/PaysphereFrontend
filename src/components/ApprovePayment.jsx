@@ -318,48 +318,47 @@ const ApprovePayment = () => {
     setPin(e.target.value);
   };
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
+  //   event.preventDefault();
 
-    try {
-      Swal.fire({
-        title: 'Processing...',
-        text: 'Please wait while we process your request.',
-        allowOutsideClick: false,
-        didOpen: () => {
-          Swal.showLoading();
-        },
-      });
+  //   try {
+  //     Swal.fire({
+  //       title: 'Processing...',
+  //       text: 'Please wait while we process your request.',
+  //       allowOutsideClick: false,
+  //       didOpen: () => {
+  //         Swal.showLoading();
+  //       },
+  //     });
 
-      const response = await axios.post(
-        'https://paysphere-api.vercel.app/login', 
-        { pin },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        }
-      );
+  //     const response = await axios.post(
+  //       'https://paysphere-api.vercel.app/login', 
+  //       { pin },
+  //       {
+  //         headers: {
+  //           'Content-Type': 'application/json',
+  //         },
+  //       }
+  //     );
 
-      Swal.fire({
-        title: 'Success!',
-        text: 'Authentication successful, processing payment...',
-        icon: 'success',
-        timer: 2000,
-        showConfirmButton: false,
-      });
+  //     Swal.fire({
+  //       title: 'Success!',
+  //       text: 'Authentication successful, processing payment...',
+  //       icon: 'success',
+  //       timer: 2000,
+  //       showConfirmButton: false,
+  //     });
 
-      const userToken = response.data.token;
-      handleApprovePayment(userToken);
+  //     const userToken = response.data.token;
+  //     handleApprovePayment(userToken);
 
-    } catch (error) {
-      Swal.fire({
-        title: 'Error!',
-        text: error.response?.data?.error || 'Authentication failed',
-        icon: 'error',
-      });
-    }
-  };
+  //   } catch (error) {
+  //     Swal.fire({
+  //       title: 'Error!',
+  //       text: error.response?.data?.error || 'Authentication failed',
+  //       icon: 'error',
+  //     });
+  //   }
+  // };
 
   const handleApprovePayment = async (userToken) => {
     const loadingAlert = Swal.fire({ text: "Processing..." });
@@ -375,10 +374,10 @@ const ApprovePayment = () => {
 
       const response = await axios.post(
         `https://paysphere-api.vercel.app/approve/${transactionId}`,
-        {},
+        {pin},
         {
           headers: {
-            Authorization: `Bearer ${userToken}`,
+            // Authorization: `Bearer ${userToken}`,
             'Content-Type': 'application/json',
           },
         }
@@ -389,9 +388,8 @@ const ApprovePayment = () => {
           title: 'Success!',
           text: `Payment of ${response.data.amountPaid} was approved successfully.`,
           icon: 'success',
-        }).then(() => {
-            dispatch(userLogout());
-        });
+        })
+        navigate("/")
       } else {
         throw new Error(response.data.message || 'Unknown error occurred');
       }
@@ -411,7 +409,7 @@ const ApprovePayment = () => {
       <FormContainerWrapper>
         <FormContainer theme={theme}>
           <Title theme={theme}>Payment Approval</Title>
-          <form onSubmit={handleSubmit}>
+          {/* <form onSubmit={handleSubmit}> */}
             <Input
               name="pin"
               theme={theme}
@@ -422,9 +420,9 @@ const ApprovePayment = () => {
               required
             />
             <ButtonContainer>
-              <Button primary theme={theme} type="submit">Approve</Button>
+              <Button primary theme={theme} onClick={handleApprovePayment}>Approve</Button>
             </ButtonContainer>
-          </form>
+          {/* </form> */}
         </FormContainer>
       </FormContainerWrapper>
     </LoginWrap>

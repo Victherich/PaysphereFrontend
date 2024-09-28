@@ -1,14 +1,21 @@
-import React from 'react';
+import React, { useContext,useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { removeFromCart, addToCart, decreaseQuantity } from '../Features/Slice';
 import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import { Context } from './Context';
 
 const CartPage = () => {
   const cart = useSelector((state) => state.cart);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   console.log(cart)
+  const {storeUserId,setStoreUserId}=useContext(Context)
+  const {userId2}=useParams()
+
+  useEffect(()=>{
+    setStoreUserId(userId2)
+  },[])
 
   const handleRemoveFromCart = (id) => {
     dispatch(removeFromCart(id));
@@ -30,11 +37,17 @@ const CartPage = () => {
         <Container>
       <Title>Your Cart</Title>
       {cart.length === 0 ? (
-        <EmptyCartMessage>Your cart is empty.</EmptyCartMessage>
+        <div>
+          <EmptyCartMessage>Your cart is empty. <SubmitButton onClick={()=>navigate(`/store/${storeUserId}`)}>Start Shopping</SubmitButton></EmptyCartMessage>
+          
+        </div>
       ) : (
         <CartItems>
           {cart.map((item) => (
             <CartItem key={item.id}>
+              <CartImg src={`https://elexdondigitalacademy.com/api3/uploads/${item.product_images[0]}`} alt="Cart Image"/>
+
+              
               <ItemDetails>
                 <ItemName>{item.product_name}</ItemName>
                 <ItemPrice>Price: ${item.price}</ItemPrice>
@@ -55,8 +68,12 @@ const CartPage = () => {
         </CartItems>
         
       )}
-      <SubmitButton onClick={()=>navigate("/store/deliverydetails")}>Proceed to Delivery Details</SubmitButton>
-    </Container>
+      {cart.length!==0&&<div>
+        <SubmitButton onClick={()=>navigate(`/store/${storeUserId}/deliverydetails`)}>Proceed to Delivery Details</SubmitButton>
+      <SubmitButton2 onClick={()=>window.history.back()}>Back</SubmitButton2>
+      </div>
+      }
+    </Container>  
     </ContainerWrap>
 
   );
@@ -66,6 +83,8 @@ export default CartPage;
 
 
 const ContainerWrap = styled.div`
+  padding-top:100px;
+  padding-bottom:100px;
     display:flex;
     justify-content:center;
     align-items:center; 
@@ -182,8 +201,33 @@ const SubmitButton = styled.button`
   font-size: 0.9rem;
   cursor: pointer;
   transition: background-color 0.3s;
+  margin-right:20px;
 
   &:hover {
     background-color: #0056b3;
   }
 `;
+
+
+const SubmitButton2 = styled.button`
+    margin-top:20px;
+  padding: 8px;
+  background-color: white;
+  color: blue;
+  border: 1px solid blue;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  
+
+  &:hover {
+    // background-color: #0056b3;
+  }
+`;
+
+const CartImg = styled.img`
+  width:50px;
+  height:50px;
+  margin-right:20px;
+`

@@ -57,7 +57,7 @@ const Footer = () => {
   };
 
   return (
-    <FooterContainer theme={theme} style={{ display: location.pathname === "/" ? "none" : '' }}>
+    <FooterContainer theme={theme} style={{ display: location.pathname === "/"||location.pathname.includes("store") ? "none" : '' }}>
       {location.pathname.includes('dashboard')&&<Icon theme={theme} onClick={()=>navigate('/dashboard')}><MdDashboard /></Icon>}
       <Icon theme={theme}><FaPhone /></Icon>
       {/* {location.pathname==="/dashboard"&&<Icon theme={theme} onClick={handleLogout}><FaSignOutAlt /></Icon>}  */}

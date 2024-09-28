@@ -1,20 +1,22 @@
 // src/components/OrderSummary.js
-import React from 'react';
+import React, { useContext, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import StorePayments from './StorePayments';
+import { Context } from './Context';
 
 const OrderSummary = () => {
   const cart = useSelector((state) => state.cart);
   const deliveryDetails = useSelector((state) => state.deliveryDetails);
   const navigate = useNavigate();
 
-  const handlePayment = () => {
-    // Add your payment processing logic here
-    console.log("Processing payment...");
-    // For demonstration, let's just navigate to a success page
-    navigate('/payment-success');
-  };
+const {amount2,setAmount2}=useContext(Context) 
+
+
+useEffect(()=>{
+  setAmount2(cart.reduce((acc, item) => acc + item.price * item.quantity, 0))
+},[])
 
   return (
     <ContainerWrap>
@@ -47,8 +49,11 @@ const OrderSummary = () => {
         </Total>
       </Section>
 
-      <PayButton onClick={handlePayment}>Pay Now</PayButton>
+    
     </Container>
+
+    {/* import store payments component */}
+    <StorePayments/>
     </ContainerWrap>
   );
 };
@@ -56,6 +61,7 @@ const OrderSummary = () => {
 export default OrderSummary;
 const ContainerWrap = styled.div`
     display:flex;
+    flex-direction:column;
     justify-content:center;
     align-items:center; 
     width:100%;

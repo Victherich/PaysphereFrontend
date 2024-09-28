@@ -6,6 +6,7 @@ import styled from 'styled-components';
 const UserStoreInfo = ({setCurrentView}) => {
   const userInfo = useSelector(state=>state.userInfo)
   const location = useLocation()
+  // console.log(userInfo)
   return (
     <DashboardContainer>
       <WelcomeMessage> Hi, {userInfo.firstName}! Welcome to Your Store Dashboard</WelcomeMessage>
@@ -17,7 +18,7 @@ const UserStoreInfo = ({setCurrentView}) => {
         </StoreDetail> */}
         <StoreDetail>
           <Label>Store URL:</Label>
-          <Value onClick = {()=>window.open(`${window.location.origin}/store/${userInfo._id}`,"_blank")}>{`${window.location.origin}/store/${userInfo._id}`}</Value>
+          <Value onClick = {()=>window.open(`${window.location.origin}/store/${userInfo.walletID}/${userInfo._id}`,"_blank")}>{`${window.location.origin}/store/${userInfo.walletID}/${userInfo._id}`}</Value>
         </StoreDetail>
         {/* <StoreDetail>
           <Label>Contact Email:</Label>

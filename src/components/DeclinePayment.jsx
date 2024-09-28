@@ -17,79 +17,82 @@ const DeclinePayment = () => {
   
 
  
-  const [formData, setFormData] = useState({
-    walletID: '',
-    password: '',
-});
+//   const [formData, setFormData] = useState({
+//     walletID: '',
+//     password: '',
+// });
 
-// Handle input change
-const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-        ...formData, // Copy existing form data
-        [name]: value, // Update specific field with new value
-    });
-};
+// // Handle input change
+// const handleInputChange = (e) => {
+//     const { name, value } = e.target;
+//     setFormData({
+//         ...formData, // Copy existing form data
+//         [name]: value, // Update specific field with new value
+//     });
+// };
 
    
-// Handle form submission
-const handleSubmit = async (event) => {
-    event.preventDefault();
+// // Handle form submission
+// const handleSubmit = async (event) => {
+//     event.preventDefault();
 
-    try {
-        // Display processing message
-        Swal.fire({
-            title: 'Processing...',
-            text: 'Please wait while we process your request.',
-            allowOutsideClick: false,
-            didOpen: () => {
-                Swal.showLoading();
-            },
-        });
+//     try {
+//         // Display processing message
+//         Swal.fire({
+//             title: 'Processing...',
+//             text: 'Please wait while we process your request.',
+//             allowOutsideClick: false,
+//             didOpen: () => {
+//                 Swal.showLoading();
+//             },
+//         });
 
-        // Send POST request to backend for login
-        const response = await axios.post('https://paysphere-api.vercel.app/login', {
-            walletID: formData.walletID,
-            password: formData.password,
-        }, {
-            headers: {
-                'Content-Type': 'application/json',  // Specify JSON request
-            },
-        });
+//         // Send POST request to backend for login
+//         const response = await axios.post('https://paysphere-api.vercel.app/login', {
+//             walletID: formData.walletID,
+//             password: formData.password,
+//         }, {
+//             headers: {
+//                 'Content-Type': 'application/json',  // Specify JSON request
+//             },
+//         });
 
-        // Success feedback and redirect
-        Swal.fire({
-            title: 'Success!',
-            text: 'Processing...',
-            icon: 'success',
-            timer: 2000,
-            showConfirmButton: false,
-        }).then(() => {
-            // Redirect to the dashboard page
-            // navigate('/dashboard');
-        });
-        // console.log(response.data)
-        // const userInfo = response.data.user
-        const userToken = response.data.token
-        // console.log(userInfo)
-        handleDeclinePayment(userToken)
-        // dispatch(userLogin({userInfo,userToken}))
+//         // Success feedback and redirect
+//         Swal.fire({
+//             title: 'Success!',
+//             text: 'Processing...',
+//             icon: 'success',
+//             timer: 2000,
+//             showConfirmButton: false,
+//         }).then(() => {
+//             // Redirect to the dashboard page
+//             // navigate('/dashboard');
+//         });
+//         // console.log(response.data)
+//         // const userInfo = response.data.user
+//         const userToken = response.data.token
+//         // console.log(userInfo)
+//         handleDeclinePayment(userToken)
+//         // dispatch(userLogin({userInfo,userToken}))
 
-    } catch (error) {
-        console.error(error);
-        // Handle errors
-        Swal.fire({
-            title: 'Error!',
-            text: error.response?.data?.error || 'failed',
-            icon: 'error',
-        });
-    }
-};
-
-
+//     } catch (error) {
+//         console.error(error);
+//         // Handle errors
+//         Swal.fire({
+//             title: 'Error!',
+//             text: error.response?.data?.error || 'failed',
+//             icon: 'error',
+//         });
+//     }
+// };
 
 
-  const handleDeclinePayment = async (userToken) => {
+useEffect(()=>{
+    handleDeclinePayment();
+},[])
+
+
+  const handleDeclinePayment = async () => {
    const loadingAlert = Swal.fire({text:"Processing..."})
     Swal.showLoading();
     
@@ -106,7 +109,7 @@ const handleSubmit = async (event) => {
         {}, 
         {
           headers: {
-            Authorization: `Bearer ${userToken}`,
+            // Authorization: `Bearer ${userToken}`,
             'Content-Type': 'application/json',
           },
         }
@@ -117,9 +120,8 @@ const handleSubmit = async (event) => {
           title: 'Success!',
           text: `Payment was declined successfully.`,
           icon: 'success',
-        }).then(() => {
-            dispatch(userLogout());
-        });
+        })
+        navigate("/")
       } else {
         throw new Error(response.data.message || 'Unknown error occurred');
       }
@@ -139,8 +141,8 @@ const handleSubmit = async (event) => {
     <FormContainerWrapper>
         <FormContainer theme={theme}>
           
-            <Title theme={theme}>Decline Payment</Title>
-            <form onSubmit={handleSubmit}>
+            <Title theme={theme}>Declining Payment...</Title>
+            {/* <form onSubmit={handleSubmit}>
                 <Input
                     name="walletID"
                     theme={theme}
@@ -162,7 +164,7 @@ const handleSubmit = async (event) => {
                 <ButtonContainer>
                     <Button primary theme={theme} type="submit">Decline</Button>
                 </ButtonContainer>
-            </form>
+            </form> */}
         
         </FormContainer>
     </FormContainerWrapper>

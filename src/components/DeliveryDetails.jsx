@@ -1,22 +1,33 @@
 // src/components/DeliveryDetails.js
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { setDeliveryDetails } from '../Features/Slice';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import { Context } from './Context';
+import { useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 
 const DeliveryDetails = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const {storedUserId}=useContext(Context)
   
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
 
+  const {storeUserId,setStoreUserId}=useContext(Context)
+  const {userId2}=useParams()
+
+  useEffect(()=>{
+    setStoreUserId(userId2)
+  },[])
+
   const handleSubmit = (e) => {
     e.preventDefault();
     dispatch(setDeliveryDetails({ name, email, phoneNumber }));
-    navigate('/store/ordersummary'); // Navigate to order summary after submitting
+    navigate(`/store/${storeUserId}/ordersummary`); // Navigate to order summary after submitting
   };
 
   return (
@@ -54,6 +65,7 @@ const DeliveryDetails = () => {
         <SubmitButton type="submit">Save Delivery Details</SubmitButton>
       </Form>
     </Container>
+    
    </ContainerWrap>
   );
 };
@@ -67,6 +79,8 @@ const ContainerWrap = styled.div`
     align-items:center; 
     width:100%;
     padding-top:80px;
+
+    padding-bottom:80px;
     // height:100vh;
    
 `

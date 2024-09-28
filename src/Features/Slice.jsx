@@ -172,7 +172,112 @@
 // // Export the reducer
 // export default MySlice.reducer;
 
-// src/Features/Slice.js
+// // src/Features/Slice.js
+// import { createSlice } from "@reduxjs/toolkit";
+
+// const MySlice = createSlice({
+//   name: "user",
+//   initialState: {
+//     cart: [],
+//     wishlist: [],
+//     userInfo: null,
+//     userToken: null,
+//     userAllOrder: [],
+//     productDetail: {},
+//     deliveryDetails: {
+//       name: "",
+//       email: "",
+//       phoneNumber: "",
+//     },
+//     myCourses: [],
+//     currentProduct: null, // Initialize currentProduct
+//   },
+//   reducers: {
+//     setProductDetail: (state, { payload }) => {
+//       state.productDetail = payload; // Assign the object from the payload to the state
+//     },
+//     addToCart: (state, { payload }) => {
+//       const itemIndex = state.cart.findIndex((item) => item.id === payload.id);
+//       if (itemIndex === -1) {
+//         state.cart.push({ ...payload, quantity: 1 }); // Initialize quantity to 1
+//       } else {
+//         state.cart[itemIndex].quantity += 1; // Increase quantity if item already exists
+//       }
+//     },
+//     removeFromCart: (state, { payload }) => {
+//       state.cart = state.cart.filter((item) => item.id !== payload);
+//     },
+//     decreaseQuantity: (state, { payload }) => {
+//       const itemIndex = state.cart.findIndex((item) => item.id === payload);
+//       if (itemIndex !== -1 && state.cart[itemIndex].quantity > 1) {
+//         state.cart[itemIndex].quantity -= 1; // Decrease quantity if more than 1
+//       } else {
+//         state.cart = state.cart.filter((item) => item.id !== payload); // Remove if quantity is 0
+//       }
+//     },
+//     addToWishlist: (state, { payload }) => {
+//       const itemIndex = state.wishlist.findIndex((item) => item.id === payload.id);
+//       if (itemIndex === -1) {
+//         state.wishlist.push({ ...payload });
+//       }
+//     },
+//     removeFromWishlist: (state, { payload }) => {
+//       state.wishlist = state.wishlist.filter((item) => item.id !== payload);
+//     },
+//     userLogin: (state, { payload }) => {
+//       state.userInfo = payload.userInfo;
+//       state.userToken = payload.userToken;
+//     },
+//     userLogout: (state) => {
+//       state.userInfo = null;
+//       state.userToken = null;
+//     },
+//     handleUserAllOrder: (state, { payload }) => {
+//       state.userAllOrder.unshift({ ...payload }); // Add new order to the beginning
+//     },
+//     setDeliveryDetails: (state, { payload }) => {
+//       state.deliveryDetails = payload;
+//     },
+//     addToMyCourses: (state) => {
+//       state.myCourses.push(...state.cart);
+//     },
+//     clearCart: (state) => {
+//       state.cart = [];
+//     },
+//     setCurrentProduct: (state, { payload }) => {
+//       state.currentProduct = payload; // Set current product details
+//     },
+//     clearCurrentProduct: (state) => {
+//       state.currentProduct = null; // Clear current product details
+//     },
+//   },
+// });
+
+// // Export the actions
+// export const {
+//   addToCart,
+//   removeFromCart,
+//   decreaseQuantity,
+//   addToWishlist,
+//   removeFromWishlist,
+//   userLogin,
+//   userLogout,
+//   handleUserAllOrder,
+//   setDeliveryDetails,
+//   addToMyCourses,
+//   clearCart,
+//   setCurrentProduct,
+//   clearCurrentProduct,
+//   setProductDetail,
+// } = MySlice.actions;
+
+// // Export the reducer
+// export default MySlice.reducer;
+
+
+
+// src/Features/MySlice.js
+
 import { createSlice } from "@reduxjs/toolkit";
 
 const MySlice = createSlice({
@@ -191,17 +296,25 @@ const MySlice = createSlice({
     },
     myCourses: [],
     currentProduct: null, // Initialize currentProduct
+    userId: null,
+    walletId:null,         // Add userId to the initial state
   },
   reducers: {
     setProductDetail: (state, { payload }) => {
-      state.productDetail = payload; // Assign the object from the payload to the state
+      state.productDetail = payload;
+    },
+    setUserId: (state, { payload }) => {     // New reducer to set userId
+      state.userId = payload;
+    },
+    setWalletId: (state, { payload }) => {     // New reducer to set userId
+      state.walletId = payload;
     },
     addToCart: (state, { payload }) => {
       const itemIndex = state.cart.findIndex((item) => item.id === payload.id);
       if (itemIndex === -1) {
-        state.cart.push({ ...payload, quantity: 1 }); // Initialize quantity to 1
+        state.cart.push({ ...payload, quantity: 1 });
       } else {
-        state.cart[itemIndex].quantity += 1; // Increase quantity if item already exists
+        state.cart[itemIndex].quantity += 1;
       }
     },
     removeFromCart: (state, { payload }) => {
@@ -210,9 +323,9 @@ const MySlice = createSlice({
     decreaseQuantity: (state, { payload }) => {
       const itemIndex = state.cart.findIndex((item) => item.id === payload);
       if (itemIndex !== -1 && state.cart[itemIndex].quantity > 1) {
-        state.cart[itemIndex].quantity -= 1; // Decrease quantity if more than 1
+        state.cart[itemIndex].quantity -= 1;
       } else {
-        state.cart = state.cart.filter((item) => item.id !== payload); // Remove if quantity is 0
+        state.cart = state.cart.filter((item) => item.id !== payload);
       }
     },
     addToWishlist: (state, { payload }) => {
@@ -233,7 +346,7 @@ const MySlice = createSlice({
       state.userToken = null;
     },
     handleUserAllOrder: (state, { payload }) => {
-      state.userAllOrder.unshift({ ...payload }); // Add new order to the beginning
+      state.userAllOrder.unshift({ ...payload });
     },
     setDeliveryDetails: (state, { payload }) => {
       state.deliveryDetails = payload;
@@ -245,10 +358,10 @@ const MySlice = createSlice({
       state.cart = [];
     },
     setCurrentProduct: (state, { payload }) => {
-      state.currentProduct = payload; // Set current product details
+      state.currentProduct = payload;
     },
     clearCurrentProduct: (state) => {
-      state.currentProduct = null; // Clear current product details
+      state.currentProduct = null;
     },
   },
 });
@@ -269,7 +382,8 @@ export const {
   setCurrentProduct,
   clearCurrentProduct,
   setProductDetail,
+  setUserId,
+  setWalletId,   
 } = MySlice.actions;
 
-// Export the reducer
 export default MySlice.reducer;

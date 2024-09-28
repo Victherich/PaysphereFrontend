@@ -1,19 +1,27 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import styled from 'styled-components';
 import { FaHamburger, FaSun, FaMoon , FaUserCircle, FaHome, FaBell,FaCartPlus} from 'react-icons/fa';
 import { Context } from './Context';
-import { useLocation,useNavigate } from 'react-router-dom';
+import { useLocation,useNavigate, useParams } from 'react-router-dom';
 import logo from "../Images/logo.png"
 import { useSelector } from 'react-redux';
 import DashPop from './DashPop';
 import { useRef,useEffect } from 'react';
 
 const Header = () => {
-  const { theme, toggleTheme ,setMenuSwitch,dashPopSwitch,setDashPopSwitch} = useContext(Context);
+  const { theme, toggleTheme ,setMenuSwitch,dashPopSwitch,setDashPopSwitch, afterOrderNav,setAfterOrderNav} = useContext(Context);
   const location = useLocation()
   const navigate = useNavigate();
   const userInfo = useSelector(state=>state.userInfo)
   const dashPopRef = useRef(null);
+  const cart = useSelector(state=>state.cart)
+  const [totalItems,setTotalItems]=useState(0)
+  const {userId2}=useParams();
+  const walletID = useSelector(state=>state.walletId)
+  
+  // const {storeUserId,setStoreUserId}=useContext(Context)
+  const storeUserId = useSelector(state=>state.userId)
+  // console.log(userId)
 
   const handleClickOutside = (event) => {
     // Check if the clicked element is outside the DashPop component
@@ -31,7 +39,17 @@ const Header = () => {
     };
   }, []);
 
-  
+  useEffect(() => {
+    const total = cart.reduce((accumulator, item) => accumulator + item.quantity, 0);
+    setTotalItems(total);
+  }, [cart])
+
+  useEffect(()=>{
+    if(afterOrderNav===true){
+      navigate(`/store/${walletID}/${storeUserId}`)
+    }
+
+  },[afterOrderNav])
  
 
   return (
@@ -68,9 +86,12 @@ const Header = () => {
       !location.pathname.includes("bankpayout3")&&
       !location.pathname.includes("payuser3")&&
       !location.pathname.includes("mobilemoneypayout3")&&
+      !location.pathname.includes("store")&&
       <UserArea> <P onClick={()=>navigate("/login")}>Login</P> <Button onClick={()=>navigate("/signup")}>Get Started</Button></UserArea>}
       {dashPopSwitch&&<DashPop ref={dashPopRef}/>}
-      {location.pathname.includes("store")&&<FaCartPlus onClick={()=>navigate("/store/cart")}/>}
+      {location.pathname.includes("store")&&<CartWrap onClick={()=>navigate(`/store/${walletID}/${storeUserId}`)}><strong>Store Home</strong><Icon><FaHome/></Icon></CartWrap>}
+      {location.pathname.includes("store")&&<CartWrap onClick={()=>navigate(`/store/${storeUserId}/cart`)}><Icon><FaCartPlus /></Icon>({totalItems})</CartWrap>}
+
     </HeaderContainer>
   );
 };
@@ -205,7 +226,7 @@ const Slider = styled.div`
 `;
 
 const Icon = styled.div`
-  margin-top:5px;
+  margin-top:8px;
 `
 const UserArea = styled.div`  
   display:flex;
@@ -238,4 +259,13 @@ const TitleA = styled.div`
   background-color: rgba(0,0,255,0.1);
   border-radius:10px;
   box-shadow:0px 4px 10px rgba(0,0,0,0.5);
+`
+
+const CartWrap=styled.div`
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:10px;
+  font-size:1.2rem;
+  cursor:pointer;
 `

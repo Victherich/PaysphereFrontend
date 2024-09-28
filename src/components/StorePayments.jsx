@@ -7,6 +7,7 @@ import axios from 'axios';
 import Swal from 'sweetalert2';
 import { useNavigate,useParams } from 'react-router-dom';
 import Footer from './Footer';
+import OrderSummary from './OrderSummary';
 
 const StorePayments = () => {
   const { setMenuSwitch, theme } = useContext(Context);
@@ -39,10 +40,11 @@ const { encodedData } = useParams();  // 'encodedData' is the Base64 encoded val
 
   return (
     <DashboardContainer theme={theme}>
+        
        {/* Main Menu Sections */}
       <Section>
         <SectionTitle theme={theme}>Please select your preferred payment method</SectionTitle>
-        <UserInfoSection theme={theme}>
+        {/* <UserInfoSection theme={theme}>
     
         <UserInfoItem theme={theme}><Strong theme={theme}>Beneficiary Name:</Strong> {userName}</UserInfoItem>
         <UserInfoItem theme={theme}><Strong theme={theme}>Wallet ID:</Strong> {userId}</UserInfoItem>
@@ -50,9 +52,9 @@ const { encodedData } = useParams();  // 'encodedData' is the Base64 encoded val
         <UserInfoItem theme={theme}><Strong theme={theme}>Amount:  </Strong> ${amount2} USD</UserInfoItem>
         <UserInfoItem theme={theme}><Strong theme={theme}>Description:  </Strong>{description}</UserInfoItem>
       
-      </UserInfoSection>
+      </UserInfoSection> */}
         <GridContainer>
-          <GridItem onClick={()=>navigate("/mobilemoneypayment")} theme={theme}>
+          <GridItem onClick={()=>navigate("/mobilemoneypaymentstore")} theme={theme}>
             <Icon theme={theme}><FaMobileAlt /></Icon>
             <ItemText theme={theme}>Mobile Money (GHS, KES)</ItemText>
           </GridItem>
@@ -60,18 +62,18 @@ const { encodedData } = useParams();  // 'encodedData' is the Base64 encoded val
             <Icon theme={theme}><FaMobileAlt /></Icon>
             <ItemText theme={theme}>Ussd (USD)</ItemText>
           </GridItem>
-          <GridItem onClick={() => navigate("/payspheretransfer")} theme={theme}>
+          <GridItem onClick={() => navigate("/payspheretransferstore")} theme={theme}>
             <Icon theme={theme}><FaUserFriends /> </Icon>
             <ItemText theme={theme}>Paysphere Transfer (P2P) (USD)</ItemText>
          
           </GridItem>
           
-          <GridItem onClick={() => navigate("/bankpayment")} theme={theme}>
+          <GridItem onClick={() => navigate("/bankpayment2store")} theme={theme}>
             <Icon theme={theme}><FaUniversity /></Icon>
             <ItemText theme={theme}>Bank Transfer (NGN) </ItemText>
           </GridItem>
     
-          <GridItem onClick={() => navigate("/cardbankpayment")} theme={theme}>
+          <GridItem onClick={() => navigate("/cardbankpaymentstore")} theme={theme}>
             <Icon theme={theme}><FaCreditCard /></Icon>
             <Icon theme={theme}><FaUniversity /></Icon>
             <ItemText theme={theme}>Card / Bank Transfer (NGN) </ItemText>
@@ -106,7 +108,7 @@ export default StorePayments;
 
 const DashboardContainer = styled.div`
   padding: 20px;
-  padding-top: 80px;
+  // padding-top: 80px;
   width: 100%;
   padding-bottom: 100px;
   
