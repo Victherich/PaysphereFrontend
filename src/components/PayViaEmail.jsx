@@ -5,6 +5,9 @@ import { FaEnvelope } from 'react-icons/fa';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import HeroImg4 from "../Images/heroImg7.png";
+import HeroImg5 from "../Images/heroImg5.png";
 
 const PayViaEmail = () => {
   const { setMenuSwitch, theme } = useContext(Context);
@@ -12,9 +15,38 @@ const PayViaEmail = () => {
   const [amount, setAmount] = useState('');
   const [statusMessage, setStatusMessage] = useState('');
   const userToken = useSelector(state=>state.userToken)
+  const navigate = useNavigate()
 
-  // Function to handle payment via email
+ 
+  const handlePayment = () => {
+    if (!amount || isNaN(amount) || parseFloat(amount) <= 0) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Invalid Amount',
+            text: 'Please enter a valid amount.'
+        });
+        return;
+    }
+
+
+    
+    Swal.fire({
+        title: 'Confirm Payment',
+        text: `You are sending $${amount} USD.`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'OK',
+        cancelButtonText: 'Cancel'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            handleSendMoney();
+        }
+    });
+};
+
+
   const handleSendMoney = async () => {
+
 
     try {
       
@@ -36,6 +68,7 @@ const PayViaEmail = () => {
       });
       setStatusMessage(response.data.message);
       setMenuSwitch(0)
+      navigate('/dashboard')
       Swal.fire({text:`Payment initiation ${response.data.message}. Please inform the recipeint to check his email and claim the payment`,icon:"success"})
     } catch (error) {
         
@@ -48,7 +81,8 @@ const PayViaEmail = () => {
   };
 
   return (
-    <SendMoneyContainer>
+   <Body theme={theme}>
+       <SendMoneyContainer>
       <SendMoneyForm theme={theme}>
         <Icon theme={theme}>
           <FaEnvelope />
@@ -64,28 +98,60 @@ const PayViaEmail = () => {
         <Input 
           theme={theme} 
           type="number" 
-          placeholder="Enter Amount" 
+          placeholder="Enter Amount in USD" 
           value={amount} 
           onChange={(e) => setAmount(e.target.value)} 
         />
         {statusMessage && <StatusMessage theme={theme}>{statusMessage}</StatusMessage>}
         <ButtonContainer>
-          <Button primary theme={theme} onClick={handleSendMoney}>Send Money</Button>
-          <Button onClick={() => setMenuSwitch(0)} theme={theme}>Cancel</Button>
+          <Button primary theme={theme} onClick={handlePayment}>Send Money</Button>
+          <Button onClick={() => navigate("/dashboard")} theme={theme}>Cancel</Button>
         </ButtonContainer>
       </SendMoneyForm>
     </SendMoneyContainer>
+   </Body>
   );
 };
 
 export default PayViaEmail;
 
-// Container for the entire component
+
+
+const Body = styled.div`
+  width: 100%;
+  position: relative; 
+  color: ${({ theme }) => (theme === 'light' ? '#000' : '#fff')};
+  min-height: 100vh;
+  background-image: url(${({ theme }) => (theme === 'light' ? HeroImg4 : HeroImg5)});
+  background-size: cover;
+  background-position: center;
+  z-index: 1; 
+
+ 
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: ${({theme})=>theme==="light"?"rgba(255,255,255,0.8)":"rgba(0, 0, 0, 0.8)"}; 
+    z-index: -1; 
+  }
+
+  @media (max-width: 320px) {
+    padding-bottom: 100px;
+  }
+`;
+
+
+
+
 const SendMoneyContainer = styled.div`
   padding-top: 100px;
 `;
 
-// Main styled container for the form
+
 const SendMoneyForm = styled.div`
   display: flex;
   flex-direction: column;
@@ -103,14 +169,13 @@ const SendMoneyForm = styled.div`
   }
 `;
 
-// Icon style for email icon
+
 const Icon = styled(FaEnvelope)`
   font-size: 4rem;
   color: ${({ theme }) => (theme === 'light' ? 'rgba(0,0,255,0.5)' : '#bbb')};
   margin-bottom: 20px;
 `;
 
-// Title style
 const Title = styled.h2`
   font-size: 24px;
   color: ${({ theme }) => (theme === 'light' ? 'rgba(0,0,255,0.5)' : '#bbb')};
@@ -121,7 +186,7 @@ const Title = styled.h2`
   }
 `;
 
-// Input field style
+
 const Input = styled.input`
   width: 100%;
   padding: 10px;
@@ -143,14 +208,14 @@ const Input = styled.input`
   }
 `;
 
-// Status message style for error or success messages
+
 const StatusMessage = styled.p`
   color: ${({ theme }) => (theme === 'light' ? 'green' : 'lightgreen')};
   margin-bottom: 15px;
   font-size: 14px;
 `;
 
-// Button container styling
+
 const ButtonContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -162,7 +227,7 @@ const ButtonContainer = styled.div`
   }
 `;
 
-// Button style
+
 const Button = styled.button`
   padding: 12px;
   width: 100%;

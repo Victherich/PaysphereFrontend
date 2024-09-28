@@ -5,6 +5,7 @@ import { Context } from './Context';
 import { FaCreditCard, FaUniversity } from 'react-icons/fa'; 
 import Swal from 'sweetalert2';
 import { useSelector } from 'react-redux';
+import axios from 'axios';
 
 const ReceiveCardAndBankPayment2 = () => {
     const { setMenuSwitch, theme , pop1} = useContext(Context);
@@ -14,10 +15,38 @@ const ReceiveCardAndBankPayment2 = () => {
     const [amountPaid,setAmountPaid]=useState(null)
     const {userId,amount2}=useContext(Context)
 
+    const amountInNGN = (parseFloat(amount2) * 1660).toFixed(2);
+
+    const handlePayment = () => {
+        // if (!amount2 || isNaN(amount) || parseFloat(amount) <= 0) {
+        //     Swal.fire({
+        //         icon: 'error',
+        //         title: 'Invalid Amount',
+        //         text: 'Please enter a valid amount.'
+        //     });
+        //     return;
+        // }
+
+        
+        
+        Swal.fire({
+            title: 'Confirm Payment',
+            text: `You are paying $${amount2} USD which is ${amountInNGN} in NGN`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'OK',
+            cancelButtonText: 'Cancel'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                initiatePayment();
+            }
+        });
+    };
+
    
 let paymentInProgress = false; // Global variable to track the payment state
 
-const handlePayment = () => {
+const initiatePayment = () => {
     // if (!amount || isNaN(amount) || parseFloat(amount) <= 0) {
     //     Swal.fire({
     //         icon: 'error',
@@ -32,7 +61,7 @@ const handlePayment = () => {
         return;
     }
 
-    paymentInProgress = true; // Set flag to true to prevent multiple triggers
+    paymentInProgress = true; 
 
     const loadingAlert = Swal.fire({
         title: 'Processing...',
@@ -45,7 +74,7 @@ const handlePayment = () => {
         window.Korapay.initialize({
             key: "pk_test_tSvcVcCCD8YG7ZCsn4nM2Jr1QBVuKRyARvRxJXDy",
             reference: key,
-            amount: parseFloat(amount2), // Convert to smallest currency unit (e.g., kobo for NGN)
+            amount: parseFloat(amountInNGN), 
             currency: "NGN",
             customer: {
                 name: "Esther",
@@ -127,7 +156,7 @@ const queryChargeAndCreditWallet = async (reference) => {
             // Check if the wallet has already been credited for this specific reference
             if (!hasCredited[reference]) {
                 // Credit the user's wallet
-                await creditUserWallet(userId, parseFloat(amount_paid));
+                await creditUserWallet(userId, parseFloat(amount_paid)/1660);
                 // console.log(userId)
                 hasCredited[reference] = true; // Set the flag for this reference
             } else {
@@ -159,51 +188,61 @@ const queryChargeAndCreditWallet = async (reference) => {
 
 
 
+
+
+
 const creditUserWallet = async (walletID, amount) => {
-    const loadingAlert = Swal.fire({ text: "Crediting wallet..." });
+  try {
+    Swal.fire({
+      title: 'Processing...',
+    //   text: 'Crediting user, please wait...',
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
+      },
+    });
 
-    Swal.showLoading();
+    const response = await axios.post('https://paysphere-api.vercel.app/credit/user', {
+      walletID,
+      amount,
+    }, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
 
-    try {
-        const response = await fetch('https://paysphere-api.vercel.app/credit_wallet/bank', {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${userToken}`,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ walletID, amount })
-        });
-
-        const data = await response.json();
-
-        if (response.ok) {
-            console.log('Wallet credited successfully:', data.wallet);
-            Swal.fire({
-                icon: 'success',
-                title: 'Wallet Credited',
-                text: `Your wallet has been credited. New Balance: ${data.wallet}`
-            });
-            setAmountPaid(null)
-            setMenuSwitch(0);
-        } else {
-            console.error('Failed to credit wallet:', data);
-            Swal.fire({
-                icon: 'error',
-                title: 'Failed to Credit Wallet',
-                text: data.message || 'An error occurred.'
-            });
-        }
-    } catch (error) {
-        console.error('Error while crediting wallet:', error);
-        Swal.fire({
-            icon: 'error',
-            title: 'Network Error',
-            text: 'Failed to credit your wallet. Please try again.'
-        });
-    } finally {
-        loadingAlert.close();
+    if (response.status === 200) {
+      Swal.fire({
+        title: 'Success!',
+        // text: `User credited successfully. New wallet balance: ${response.data.wallet}`,
+        icon: 'success',
+      });
     }
+    window.history.back();
+  } catch (error) {
+    console.error(error)
+    if (error.response?.status === 404) {
+      Swal.fire({
+        title: 'Error!',
+        text: 'Recipient not found',
+        icon: 'error',
+      });
+    } else if (error.response?.status === 500) {
+      Swal.fire({
+        title: 'Error!',
+        text: error.response.data.error || 'Internal Server Error',
+        icon: 'error',
+      });
+    } else {
+      Swal.fire({
+        title: 'Error!',
+        text: 'Something went wrong',
+        icon: 'error',
+      });
+    }
+  }
 };
+
 
 
     return (
@@ -214,13 +253,14 @@ const creditUserWallet = async (walletID, amount) => {
                     <FaUniversity />
                 </Icon>
                 <Title theme={theme}>Pay by Card / Bank </Title>
-                <Input
+                {/* <Input
                     theme={theme}
                     value={amount2}
                     onChange={(e) => setAmount(e.target.value)}
                     type="text"
                     placeholder="Enter Amount"
-                />
+                /> */}
+                <P>`You are paying ${amount2} USD which is {amountInNGN} in NGN`</P>
                 <ButtonContainer>
                     <Button primary theme={theme} onClick={handlePayment}>Pay</Button>
                     <Button onClick={() => window.history.back()} theme={theme}>Cancel</Button>
@@ -333,3 +373,7 @@ const Button = styled.button`
         width: 48%;
     }
 `;
+
+const P = styled.p`
+    margin-bottom:10px;
+`

@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react';
 import styled from 'styled-components';
 import { Context } from './Context';
-import { FaSignInAlt } from 'react-icons/fa';
+import { FaSignInAlt,FaEye,FaEyeSlash } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2'; // Import SweetAlert2
 import axios from 'axios';
@@ -14,6 +14,7 @@ const Login = () => {
     const { theme, menuSwitch } = useContext(Context);
     const dispatch=useDispatch();
     const navigate = useNavigate();
+    const [showPassword,setShowPassword]=useState(false)
 
     // State to manage form inputs
     const [formData, setFormData] = useState({
@@ -78,8 +79,8 @@ const Login = () => {
             // Handle errors
             Swal.fire({
                 title: 'Error!',
-                text: error.response?.data?.error || 'Login failed',
-                icon: 'error',
+                text: error.response?.data?.error || 'please try again',
+                // icon: 'error',
             });
         }
     };
@@ -102,15 +103,20 @@ const Login = () => {
                             onChange={handleInputChange}
                             required
                         />
+                        <InputWrap>
                         <Input
                             name="password"
                             theme={theme}
-                            type="password"
+                            type={showPassword?"password":"text"}
                             placeholder="Enter Password"
                             value={formData.password}
                             onChange={handleInputChange}
                             required
                         />
+                        <ToggleVisibility onClick={() => setShowPassword(!showPassword)}>
+                                    {showPassword ? <FaEyeSlash /> : <FaEye />}
+                                </ToggleVisibility>
+                        </InputWrap>
                         <ButtonContainer>
                             <Button primary theme={theme} type="submit">Login</Button>
                         </ButtonContainer>
@@ -144,13 +150,13 @@ export default Login;
 
 const LoginWrap = styled.div`
   width: 100%;
-  position: relative; // Ensure proper positioning for the pseudo-element
+  position: relative; 
   color: ${({ theme }) => (theme === 'light' ? '#000' : '#fff')};
-  min-height: 100vh; // Ensure it takes up at least the full viewport height
+  min-height: 100vh; 
   background-image: url(${({ theme }) => (theme === 'light' ? HeroImg4 : HeroImg5)});
   background-size: cover;
   background-position: center;
-  z-index: 1; // Ensure content sits above the overlay
+  z-index: 1; 
 
   // Add the transparent black overlay
   &::before {
@@ -188,6 +194,7 @@ const FormContainer = styled.div`
     @media (min-width: 768px) {
         padding: 30px;
         max-width: 600px;
+    
     }
 `;
 
@@ -274,4 +281,27 @@ const Paragraph1 = styled.p`
 const Span1 = styled.span`
     color:blue;
     cursor:pointer;
+`
+
+const ToggleVisibility = styled.p`
+    background: none;
+    border: none;
+    cursor: pointer;
+    position: absolute;
+    right: 10px; // Adjust as needed
+    top: 25px;
+    transform: translateY(-50%);
+    color: #666; // Adjust based on your theme
+    outline: none;
+    
+`;
+
+
+const InputWrap = styled.div`
+    display:flex;
+    width:100%;
+    flex-direction:column;
+    // justify-content:center;
+    margin-bottom:10px;
+    position:relative;
 `

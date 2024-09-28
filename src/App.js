@@ -30,6 +30,17 @@ import ProductDetail from './components/ProductDetailPage'; // Make sure the imp
 import CartPage from './components/CartPage';
 import OrderSummary from './components/OrderSummary';
 import DeliveryDetails from './components/DeliveryDetails';
+import RequestToPay from './components/RequestToPay';
+import PayUser from './components/PayUser';
+import RecieveUssdPayment from './components/RecieveUssdPayment';
+import BankPayment from './components/BankPayment';
+import MobileMoneyPayment from './components/MobileMoneyPayment';
+import PaymentLinkQrCode from './components/PaymentLinkQrCode';
+import ReceiveCardAndBankPayment from './components/ReceiveCardAndBankPayment';
+import PayViaEmail from './components/PayViaEmail';
+import ProductDashboard from './components/ProductDashboard';
+import TransactionHistory from './components/TransactionHistory';
+import RecieveUssdPayment2 from './components/RecieveUssdPayment2';
 
 const App = () => {
   return (
@@ -71,6 +82,24 @@ const App = () => {
         <Route path="/store/cart" element={<CartPage />} />
         <Route path="/store/ordersummary" element={<OrderSummary/>}/>
         <Route path="/store/deliverydetails" element={<DeliveryDetails/>}/>
+
+      {/* private route dashbaord pages  */}
+        <Route path="/dashboard/requesttopay" element={<RequestToPay/>}/>
+        <Route path="/dashboard/transfertopaysphereuser" element={<PayUser/>}/>
+        <Route path="/dashboard/paywithussd" element={<RecieveUssdPayment/>}/>
+        <Route path='/dashboard/payandgetpaidbybank' element={<BankPayment/>}/>
+        <Route path='/dashboard/mobilemoney' element={<MobileMoneyPayment/>}/>
+        <Route path='/dashboard/getpaidandpaybylinkqrcode' element= {<PaymentLinkQrCode/>}/>
+        <Route path='/dashboard/getpaidbycardandbank' element={<ReceiveCardAndBankPayment/>}/>
+        <Route path='/dashboard/payviaemail' element={<PayViaEmail/>}/>
+        <Route path ='/dashboard/productdashboard' element={<ProductDashboard/>}/>
+        <Route path='/dashboard/transactionhistory' element= {<TransactionHistory/>}/>
+
+
+        <Route path="/ussdpayment" element={<RecieveUssdPayment2/>}/>
+
+
+        <Route path="mobilemoneypayment" element={<MobileMoneyPayment2/>}/>
       </Routes>
       <Footer />
     </BrowserRouter>

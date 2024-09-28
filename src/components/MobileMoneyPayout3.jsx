@@ -20,11 +20,40 @@ const MobileMoneyPayout3 = () => {
     const [openPin,setOpenPin]=useState(false)
     const [mainInput,setMainInput]=useState(true)
     const [momoUiSwitch,setMomoUiSwitch]=useState(0)
+    const [currency,setCurrency]=useState("")
 
 
 
 
     //MOBILE MONEY PAYOUT
+
+    const amountInGHS = (parseFloat(amount2) * 15.77).toFixed(2);
+    
+    const handlePayment = () => {
+        if (currency===""||currency==="KES") {
+            Swal.fire({
+                icon: 'error',
+                text: 'Please select the right currency for your mobile money wallet',
+                // text: 'P'
+            });
+            return;
+        }
+
+        
+        
+        Swal.fire({
+            title: 'Confirm Payment',
+            text: `You will receive is ${amountInGHS} GHS`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'OK',
+            cancelButtonText: 'Cancel'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                handlePayout();
+            }
+        });
+    };
      // Helper to generate a unique reference
      const generateReference = () => `ref-${Date.now()}`;
 
@@ -48,15 +77,15 @@ const MobileMoneyPayout3 = () => {
              reference: generateReference(),
              destination: {
                  type: "mobile_money",
-                 amount: amount2,
-                 currency: "KES", // Update currency to the required one
+                 amount: amountInGHS,
+                 currency: "GHS", 
                  narration: "Test Transfer Payment",
                  mobile_money: {
-                     operator: "safaricom-ke", // Assuming Safaricom for this example
+                     operator: "airtel-gh", 
                      mobile_number: phoneNumber,
                  },
                  customer: {
-                     name: "John Doe", // Assuming sample data
+                     name: "John Doe", 
                      email: "johndoe@email.com"
                  }
              }
@@ -73,13 +102,15 @@ const MobileMoneyPayout3 = () => {
              const data = response.data;
 
              if (data.status) {
-                //  setMessage("Payout initiated successfully!");
+           
                  setTransactionReference(data.data.reference);
-                 Swal.fire({ icon: 'success', text: data.message });
+                //  Swal.fire({ icon: 'success', text: data.message });
                  console.log(data)
-                 setAmount("");
+                 setAmount(""); 
                  setPhoneNumber("");
                  setMomoUiSwitch(0);
+                debitUser(userId,parseFloat(amount2))
+                window.history.back();
              } else {
                  setError("Failed to initiate payout. Try again.");
                  Swal.fire({ icon: 'error', text: "Payout initiation failed" });
@@ -93,10 +124,62 @@ const MobileMoneyPayout3 = () => {
          }
      };
 
-     const handleDebitUser = ()=>{
-        // debit the user with userId of amount2 on success payout to mobile money and set amount to null
-        // and wwindow . history .back()
-     }
+   const debitUser = async (walletID, amount) => {
+    try {
+      Swal.fire({
+        title: 'Processing...',
+        text: 'Debiting user, please wait...',
+        allowOutsideClick: false,
+        didOpen: () => {
+          Swal.showLoading();
+        },
+      });
+  
+      const response = await axios.post('https://paysphere-api.vercel.app/debit/user', {
+        walletID,
+        amount,
+      }, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+  
+      if (response.status === 200) {
+        Swal.fire({
+          title: 'Success!',
+        //   text: `Transfer successful. Amount debited: ${response.data.amountPaid}`,
+          icon: 'success',
+        });
+      
+      }
+    } catch (error) {
+      if (error.response?.status === 400) {
+        Swal.fire({
+          title: 'Error!',
+          text: 'Insufficient funds for the transfer',
+          icon: 'error',
+        });
+      } else if (error.response?.status === 404) {
+        Swal.fire({
+          title: 'Error!',
+          text: 'Sender not found',
+          icon: 'error',
+        });
+      } else if (error.response?.status === 500) {
+        Swal.fire({
+          title: 'Error!',
+          text: error.response.data.error || 'Internal Server Error',
+          icon: 'error',
+        });
+      } else {
+        Swal.fire({
+          title: 'Error!',
+          text: 'Something went wrong',
+          icon: 'error',
+        });
+      }
+    }
+  };
 
 
 
@@ -112,14 +195,19 @@ const MobileMoneyPayout3 = () => {
                     <Title theme={theme}>Receive with Mobile Money</Title>
                     {mainInput && (
                         <>
-                            <Input
+                            {/* <Input
                                 theme={theme}
                                 type="text"
                                 placeholder="Enter Amount"
                                 value={amount2}
                                 onChange={(e) => setAmount(e.target.value)}
                                 disabled
-                            />
+                            /> */}
+                            <Select onChange={(e)=>setCurrency(e.target.value)}>
+                        <option >Select currency</option>
+                        <option value="GHS">GHS</option>
+                        <option value="KES">KES</option>
+                    </Select>
                             <Input
                                 theme={theme}
                                 type="text"
@@ -135,7 +223,7 @@ const MobileMoneyPayout3 = () => {
 
                     {mainInput && (
                         <ButtonContainer>
-                            <Button primary theme={theme} onClick={handlePayout} disabled={loading}>
+                            <Button primary theme={theme} onClick={handlePayment} disabled={loading}>
                                 {loading ? 'Processing...' : 'Make Payment'}
                             </Button>
                             <Button onClick={() => window.history.back()} theme={theme}>Cancel</Button>
@@ -257,3 +345,10 @@ const Message = styled.p`
     margin-bottom: 15px;
     text-align:center;
 `;
+const Select = styled.select`
+    padding:8px;
+    margin-bottom:10px;
+    width:100%;
+    cursor:pointer;
+    outline:none;
+`

@@ -16,18 +16,18 @@ const Footer = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch()
 
-  const handleClick1 = () => {
-    if (location.pathname === "/dashboard") {
-      setMenuSwitch(0);
-    } else {
-      Swal.fire({
-        title: "Please Login",
-        timer: 2000,
-        showConfirmButton: false,
-        allowOutsideClick: false,
-      });
-    }
-  };
+  // const handleClick1 = () => {
+  //   if (location.pathname === "/dashboard") {
+  //     setMenuSwitch(0);
+  //   } else {
+  //     Swal.fire({
+  //       title: "Please Login",
+  //       timer: 2000,
+  //       showConfirmButton: false,
+  //       allowOutsideClick: false,
+  //     });
+  //   }
+  // };
 
   // Logout function with confirmation
   const handleLogout = () => {
@@ -58,7 +58,7 @@ const Footer = () => {
 
   return (
     <FooterContainer theme={theme} style={{ display: location.pathname === "/" ? "none" : '' }}>
-      {location.pathname==="/dashboard"&&<Icon theme={theme} onClick={handleClick1}><MdDashboard /></Icon>}
+      {location.pathname.includes('dashboard')&&<Icon theme={theme} onClick={()=>navigate('/dashboard')}><MdDashboard /></Icon>}
       <Icon theme={theme}><FaPhone /></Icon>
       {/* {location.pathname==="/dashboard"&&<Icon theme={theme} onClick={handleLogout}><FaSignOutAlt /></Icon>}  */}
     </FooterContainer>

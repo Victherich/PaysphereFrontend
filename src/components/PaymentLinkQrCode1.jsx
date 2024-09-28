@@ -66,7 +66,7 @@ const PaymentLinkQrCode1 = () => {
         if (navigator.share) {
             navigator.share({
                 title: 'Payment Link',
-                text: `Pay ${amount} using this link: ${url}`,
+                text: `Pay $${amount} using this link: ${url}`,
                 url: url,
                 files: qrCodeDataUrl ? [new File([qrCodeDataUrl], 'QRCode.png', { type: 'image/png' })] : null
             })
@@ -90,7 +90,7 @@ const PaymentLinkQrCode1 = () => {
                     <Input
                         theme={theme}
                         type="text"
-                        placeholder="Enter Amount"
+                        placeholder="Enter Amount in USD"
                         value={amount}
                         onChange={(e) => setAmount(e.target.value)}
                     />
@@ -105,7 +105,7 @@ const PaymentLinkQrCode1 = () => {
                         <Button primary theme={theme} onClick={generateLink}>
                             Generate Link / QR Code
                         </Button>
-                        <Button onClick={() => {setMenuSwitch(0);setPaymentLinkQrCodeUiSwitch(0)}} theme={theme}>Cancel</Button>
+                        {/* <Button onClick={() => {setMenuSwitch(0);setPaymentLinkQrCodeUiSwitch(0)}} theme={theme}>Cancel</Button> */}
                         <Button primary onClick={() => setPaymentLinkQrCodeUiSwitch(0)} theme={theme}>Back</Button>
                     </ButtonContainer>
                 </PaymentLinkContainer>

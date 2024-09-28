@@ -23,8 +23,8 @@ const PaymentLinkQrCode3 = () => {
     const { setMenuSwitch, theme,paymenLinkQrCodeUiswitch,setPaymentLinkQrCodeUiSwitch } = useContext(Context);
     const [amount, setAmount] = useState('');
     const [url, setUrl] = useState('');
-    const baseUrl = window.location.origin; // Example base URL
-    const userId = userInfo.walletID  // Example user ID
+    const baseUrl = window.location.origin; 
+    const userId = userInfo.walletID 
     const userName = userInfo.firstName
     const phoneNumber = userInfo.phoneNumber;
     const [description,setDescription]=useState('')
@@ -65,7 +65,7 @@ const PaymentLinkQrCode3 = () => {
         if (navigator.share) {
             navigator.share({
                 title: 'Payment Link',
-                text: `Receive NGN ${amount} using this link: ${url}`,
+                text: `Receive USD ${amount} using this link: ${url}`,
                 url: url,
                 files: qrCodeDataUrl ? [new File([qrCodeDataUrl], 'QRCode.png', { type: 'image/png' })] : null
             })
@@ -89,7 +89,7 @@ const PaymentLinkQrCode3 = () => {
                     <Input
                         theme={theme}
                         type="text"
-                        placeholder="Enter Amount"
+                        placeholder="Enter Amount in USD"
                         value={amount}
                         onChange={(e) => setAmount(e.target.value)}
                     />
@@ -104,7 +104,7 @@ const PaymentLinkQrCode3 = () => {
                         <Button primary theme={theme} onClick={generateLink}>
                             Generate Link / QR Code
                         </Button>
-                        <Button onClick={() => {setMenuSwitch(0);setPaymentLinkQrCodeUiSwitch(0)}} theme={theme}>Cancel</Button>
+                        {/* <Button onClick={() => {setMenuSwitch(0);setPaymentLinkQrCodeUiSwitch(0)}} theme={theme}>Cancel</Button> */}
                         <Button primary onClick={() => setPaymentLinkQrCodeUiSwitch(0)} theme={theme}>Back</Button>
                     </ButtonContainer>
                 </PaymentLinkContainer>

@@ -6,6 +6,9 @@ import Swal from 'sweetalert2'; // Assuming you are using SweetAlert2 for alerts
 import axios from 'axios'; // Using axios for API requests
 import logo from "../Images/logo.png"
 import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import HeroImg4 from "../Images/heroImg7.png";
+import HeroImg5 from "../Images/heroImg5.png";
 
 const RequestToPay = () => {
     const { setMenuSwitch, theme,} = useContext(Context); // Assuming userToken is stored in context
@@ -13,6 +16,7 @@ const RequestToPay = () => {
     const [payerId, setPayerId] = useState('');
     const [loading, setLoading] = useState(false);
     const userToken = useSelector(state=>state.userToken)
+    const navigate = useNavigate()
     console.log(userToken)
     
     useEffect(()=>{
@@ -58,6 +62,7 @@ const RequestToPay = () => {
                 setAmount('');
                 setPayerId('');
                 setMenuSwitch(0)
+                navigate('/dashboard')
             } else {
                 Swal.fire({
                     icon: 'error',
@@ -79,7 +84,8 @@ const RequestToPay = () => {
     };
 
     return (
-        <RequestToPayContainerA>
+      <Body theme={theme}>
+              <RequestToPayContainerA>
             <RequestToPayContainer theme={theme}>
                 <Icon theme={theme}>
                     <FaMoneyBillWave />
@@ -91,14 +97,14 @@ const RequestToPay = () => {
                 <Input
                     theme={theme}
                     type="text"
-                    placeholder="Enter Amount"
+                    placeholder="Enter Amount in USD"
                     value={amount}
                     onChange={(e) => setAmount(e.target.value)}
                 />
                 <Input
                     theme={theme}
                     type="text"
-                    placeholder="Enter Payer User ID"
+                    placeholder="Enter Payer wallet ID"
                     value={payerId}
                     onChange={(e) => setPayerId(e.target.value)}
                 />
@@ -106,18 +112,50 @@ const RequestToPay = () => {
                     <Button primary theme={theme} onClick={handleRequestPayment} disabled={loading}>
                         {loading ? 'Requesting...' : 'Request Payment'}
                     </Button>
-                    <Button onClick={() => setMenuSwitch(0)} theme={theme}>
+                    <Button onClick={() => navigate("/dashboard")} theme={theme}>
                         Cancel
                     </Button>
                 </ButtonContainer>
             </RequestToPayContainer>
         </RequestToPayContainerA>
+      </Body>
     );
 };
 
 export default RequestToPay;
 
 // Styling (Your existing styled components)
+
+
+
+const Body = styled.div`
+  width: 100%;
+  position: relative; 
+  color: ${({ theme }) => (theme === 'light' ? '#000' : '#fff')};
+  min-height: 100vh;
+  background-image: url(${({ theme }) => (theme === 'light' ? HeroImg4 : HeroImg5)});
+  background-size: cover;
+  background-position: center;
+  z-index: 1; 
+
+ 
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: ${({theme})=>theme==="light"?"rgba(255,255,255,0.8)":"rgba(0, 0, 0, 0.8)"}; 
+    z-index: -1; 
+  }
+
+  @media (max-width: 320px) {
+    padding-bottom: 100px;
+  }
+`;
+
+
 
 
 const RequestToPayContainerA = styled.div`

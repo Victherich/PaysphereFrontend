@@ -93,7 +93,7 @@ const PaymentLinkQrCode2 = () => {
                         <Button primary theme={theme} onClick={generateLink}>
                             Generate Link / QR Code
                         </Button>
-                        <Button onClick={() => {setMenuSwitch(0);setPaymentLinkQrCodeUiSwitch(0)}} theme={theme}>Cancel</Button>
+                        {/* <Button onClick={() => {setMenuSwitch(0);setPaymentLinkQrCodeUiSwitch(0)}} theme={theme}>Cancel</Button> */}
                         <Button primary onClick={() => setPaymentLinkQrCodeUiSwitch(0)} theme={theme}>Back</Button>
                     </ButtonContainer>
                 </PaymentLinkContainer>

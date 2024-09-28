@@ -8,7 +8,7 @@ import Swal from 'sweetalert2';
 import { useNavigate,useParams } from 'react-router-dom';
 import Footer from './Footer';
 
-const QrCodeAndPaymentLink1 = () => {
+const StorePayments = () => {
   const { setMenuSwitch, theme } = useContext(Context);
   const [loading, setLoading] = useState(false);  
   const [balance, setBalance] = useState(null);   
@@ -101,7 +101,7 @@ const { encodedData } = useParams();  // 'encodedData' is the Base64 encoded val
   );
 };
 
-export default QrCodeAndPaymentLink1;
+export default StorePayments;
 
 
 const DashboardContainer = styled.div`
@@ -270,7 +270,7 @@ const Icon = styled.div`
   }
 `;
 
-// Styled component for the item text
+
 const ItemText = styled.p`
   font-size: 16px;
   margin: 0;

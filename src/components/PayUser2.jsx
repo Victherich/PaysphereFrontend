@@ -34,13 +34,30 @@ const handleInputChange = (e) => {
     });
 };
 
+const handlePayment = () => {
+  
+  
+  Swal.fire({
+      title: 'Confirm Payment',
+      text: `You are paying $${amount2} USD.`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'OK',
+      cancelButtonText: 'Cancel'
+  }).then((result) => {
+      if (result.isConfirmed) {
+          handleLogin();
+      }
+  });
+};
+
    
 // Handle form submission
-const handleLogin = async (event) => {
-    event.preventDefault();
+const handleLogin = async () => {
+ 
 
     try {
-        // Display processing message
+     
         Swal.fire({
             title: 'Processing...',
             text: 'Please wait while we process your request.',
@@ -50,17 +67,17 @@ const handleLogin = async (event) => {
             },
         });
 
-        // Send POST request to backend for login
+
         const response = await axios.post('https://paysphere-api.vercel.app/login', {
             walletID: formData.walletID,
             password: formData.password,
         }, {
             headers: {
-                'Content-Type': 'application/json',  // Specify JSON request
+                'Content-Type': 'application/json', 
             },
         });
 
-        // Success feedback and redirect
+     
         Swal.fire({
             title: 'Success!',
             text: 'Processing...',
@@ -68,19 +85,17 @@ const handleLogin = async (event) => {
             timer: 2000,
             showConfirmButton: false,
         }).then(() => {
-            // Redirect to the dashboard page
-            // navigate('/dashboard');
+  
         });
-        // console.log(response.data)
-        // const userInfo = response.data.user
+
         const userToken = response.data.token
-        // console.log(userInfo)
+
         handlePay(userToken)
-        // dispatch(userLogin({userInfo,userToken}))
+
 
     } catch (error) {
         console.error(error);
-        // Handle errors
+  
         Swal.fire({
             title: 'Error!',
             text: error.response?.data?.error || 'failed',
@@ -94,15 +109,6 @@ const handleLogin = async (event) => {
 
     setError('');
 
-    // Validate inputs
-    // if (!walletID || !amount || !pin) {
-    //   setError('Please fill in all fields.');
-    //   return;
-    // }
-    // if (parseFloat(amount) < 100) {
-    //   setError('Amount must be ₦100 or more.');
-    //   return;
-    // }
 
     try {
       Swal.fire({
@@ -131,7 +137,7 @@ const handleLogin = async (event) => {
         icon: 'success',
       });
       
-      // Reset fields
+   
       setWalletID('');
       setAmount('');
       setPin('');
@@ -172,12 +178,12 @@ const handleLogin = async (event) => {
         <Title theme={theme}>
           Paysphere Transfer (P2P) <Img src={logo} alt="logo" />
         </Title>
-        {/* <form onSubmit={handleSubmit}> */}
+    
           <Input 
             theme={theme} 
             type="text"
             name="walletID" 
-            placeholder="Enter Your User ID" 
+            placeholder="Enter Your wallet ID" 
             value={formData.walletID}
             onChange={handleInputChange} 
           />
@@ -198,7 +204,7 @@ const handleLogin = async (event) => {
           />
           {error && <Error>{error}</Error>}
           <ButtonContainer>
-            <Button primary theme={theme} onClick={handleLogin}>Pay</Button>
+            <Button primary theme={theme} onClick={handlePayment}>Pay</Button>
             <Button onClick={() => window.history.back()} theme={theme} type="button">Cancel</Button>
           </ButtonContainer>
 

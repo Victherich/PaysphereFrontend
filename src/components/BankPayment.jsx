@@ -6,6 +6,9 @@ import { FaUniversity } from 'react-icons/fa';
 import axios from 'axios'; 
 import Swal from 'sweetalert2';
 import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import HeroImg4 from "../Images/heroImg7.png";
+import HeroImg5 from "../Images/heroImg5.png";
 
 
 const BankPayment = () => {
@@ -13,6 +16,7 @@ const BankPayment = () => {
     const [bankTransferSwitch, setBankTransferSwitch] = useState(0);
     const [showAccountNumber, setShowAccountNumber] = useState(false);
     const userToken = useSelector(state=>state.userToken)
+    const navigate = useNavigate()
 
     // State for Pay to Bank
     const [amount, setAmount] = useState('');
@@ -51,60 +55,156 @@ const BankPayment = () => {
     }, []); 
 
     
+
+    const NGN_TO_USD_RATE = 1660; 
+    
     const handleGenerateAccountNumber = async () => {
         setLoading(true);
         setStatusMessage('');
         setGeneratedAccount(null); 
-
+    
         if (!amount || parseFloat(amount) < 100) {
             setStatusMessage('Please enter a valid amount (min NGN 100)');
             setLoading(false);
             return;
         }
-
-        const requestData = {
-            account_name: "Demo account",
-            amount: parseFloat(amount),
-            currency: "NGN",
-            reference: `bank-transfer-${Date.now()}`, 
-            customer: {
-                name: "John Doe", 
-                email: "johndoe@gmail.com"
-            }
-        };
-
-        try {
-            const response = await axios.post(
-                'https://api.korapay.com/merchant/api/v1/charges/bank-transfer',
-                requestData,
-                {
-                    headers: {
-                        Authorization: `Bearer ${pop1}`, 
-                        'Content-Type': 'application/json',
-                    }
-                }
-            );
-
-            const data = response.data;
-
-            if (data.status) {
-                
-                setGeneratedAccount(data.data.bank_account);
-                setShowAccountNumber(true);
-                
-            } else {
-                setStatusMessage('Failed to initiate bank transfer.');
-            }
-        } catch (error) {
-            setStatusMessage('An error occurred while generating the bank account.');
-            console.error('Error:', error);
-        } finally {
-            setLoading(false);
-        }
-    };
-
-
     
+        const amountInNGN = parseFloat(amount);
+        const amountInUSD = (amountInNGN / NGN_TO_USD_RATE).toFixed(2); 
+     
+        Swal.fire({
+            title: 'Confirm Amount',
+            text: `You are about to generate an account for NGN ${amountInNGN}. The equivalent in USD you will receive is $${amountInUSD}. Proceed?`,
+            icon: 'info',
+            showCancelButton: true,
+            confirmButtonText: 'OK',
+            cancelButtonText: 'Cancel',
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+              
+                const requestData = {
+                    account_name: "Demo account",
+                    amount: amountInNGN,
+                    currency: "NGN",
+                    reference: `bank-transfer-${Date.now()}`, 
+                    customer: {
+                        name: "John Doe", 
+                        email: "johndoe@gmail.com"
+                    }
+                };
+    
+                try {
+                    const response = await axios.post(
+                        'https://api.korapay.com/merchant/api/v1/charges/bank-transfer',
+                        requestData,
+                        {
+                            headers: {
+                                Authorization: `Bearer ${pop1}`, 
+                                'Content-Type': 'application/json',
+                            }
+                        }
+                    );
+    
+                    const data = response.data;
+    
+                    if (data.status) {
+                        setGeneratedAccount(data.data.bank_account);
+                        setShowAccountNumber(true);
+                    } else {
+                        setStatusMessage('Failed to initiate bank transfer.');
+                    }
+                } catch (error) {
+                    setStatusMessage('An error occurred while generating the bank account.');
+                    console.error('Error:', error);
+                } finally {
+                    setLoading(false);
+                }
+            } else {
+               
+                setLoading(false);
+            }
+        });
+    };
+    
+    
+// const handlePayToBank = async () => {
+//     if (amount < 1000 || amount > 1000000) {
+//         Swal.fire({ text: 'You can only send between NGN 1,000 to NGN 1,000,000' });
+//         return;
+//     }
+
+//     setStatusMessage(''); 
+
+//     if (!amount || !bankAccountNumber || !selectedBank) {
+//         setStatusMessage('Please fill in all fields correctly.');
+//         setLoading(false);
+//         return;
+//     }
+
+//     setLoading(true);
+//     const loadingAlert = Swal.fire({ text: "Processing..." });
+//     Swal.showLoading();
+
+//     const transactionData = {
+//         reference: `unique-transaction-${Date.now()}`,
+//         destination: {
+//             type: 'bank_account',
+//             amount: amount,
+//             currency: 'NGN',
+//             narration: 'Bank Transfer Payment',
+//             bank_account: {
+//                 bank: selectedBank, 
+//                 account: bankAccountNumber,
+//             },
+//             customer: {
+//                 name: 'John Doe', 
+//                 email: 'johndoe@email.com',
+//             },
+//         },
+//     };
+
+//     try {
+//         const response = await axios.post(
+//             'https://api.korapay.com/merchant/api/v1/transactions/disburse',
+//             transactionData,
+//             {
+//                 headers: {
+//                     'Content-Type': 'application/json',
+//                     Authorization: `Bearer ${pop1}`, 
+//                 },
+//             }
+//         );
+
+//         const data = response.data;
+
+//         if (data.status) {
+//             Swal.fire({ icon: "success", text: data.message });
+
+       
+//             await debitUserWallet(parseFloat(amount));
+
+           
+//             setAmount("");
+//             setBankAccountNumber("");
+//             setSelectedBank("");
+//             setBankTransferSwitch(0);
+//         } else {
+//             setStatusMessage(`Error: ${data.message}`);
+//         }
+//     } catch (error) {
+//         setStatusMessage('An error occurred while processing the payment.');
+//         console.error(error);
+//     } finally {
+//         setLoading(false);
+//         loadingAlert.close();
+//     }
+// };
+
+
+
+
+// const NGN_TO_USD_RATE2 = 750; // Assuming 1 USD = 750 NGN (Adjust according to the current rate)
+
 const handlePayToBank = async () => {
     if (amount < 1000 || amount > 1000000) {
         Swal.fire({ text: 'You can only send between NGN 1,000 to NGN 1,000,000' });
@@ -123,59 +223,79 @@ const handlePayToBank = async () => {
     const loadingAlert = Swal.fire({ text: "Processing..." });
     Swal.showLoading();
 
-    const transactionData = {
-        reference: `unique-transaction-${Date.now()}`,
-        destination: {
-            type: 'bank_account',
-            amount: amount,
-            currency: 'NGN',
-            narration: 'Bank Transfer Payment',
-            bank_account: {
-                bank: selectedBank, 
-                account: bankAccountNumber,
-            },
-            customer: {
-                name: 'John Doe', 
-                email: 'johndoe@email.com',
-            },
-        },
-    };
+    const amountInNGN = parseFloat(amount);
+    const amountInUSD = (amountInNGN / NGN_TO_USD_RATE).toFixed(2); 
 
-    try {
-        const response = await axios.post(
-            'https://api.korapay.com/merchant/api/v1/transactions/disburse',
-            transactionData,
-            {
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${pop1}`, 
+    
+    Swal.fire({
+        title: 'Confirm Amount',
+        text: `You are about to send NGN ${amountInNGN}. The equivalent in USD is $${amountInUSD}. Proceed?`,
+        icon: 'info',
+        showCancelButton: true,
+        confirmButtonText: 'OK',
+        cancelButtonText: 'Cancel',
+    }).then(async (result) => {
+        if (result.isConfirmed) {
+            
+            const transactionData = {
+                reference: `unique-transaction-${Date.now()}`,
+                destination: {
+                    type: 'bank_account',
+                    amount: amountInNGN,
+                    currency: 'NGN',
+                    narration: 'Bank Transfer Payment',
+                    bank_account: {
+                        bank: selectedBank, 
+                        account: bankAccountNumber,
+                    },
+                    customer: {
+                        name: 'John Doe', 
+                        email: 'johndoe@email.com',
+                    },
                 },
+            };
+
+            try {
+                const response = await axios.post(
+                    'https://api.korapay.com/merchant/api/v1/transactions/disburse',
+                    transactionData,
+                    {
+                        headers: {
+                            'Content-Type': 'application/json',
+                            Authorization: `Bearer ${pop1}`, 
+                        },
+                    }
+                );
+
+                const data = response.data;
+
+                if (data.status) {
+                    Swal.fire({ icon: "success", text: data.message });
+
+                 
+                    await debitUserWallet(parseFloat(amountInUSD));
+
+                 
+                    setAmount("");
+                    setBankAccountNumber("");
+                    setSelectedBank("");
+                    setBankTransferSwitch(0);
+                } else {
+                    setStatusMessage(`Error: ${data.message}`);
+                }
+            } catch (error) {
+                setStatusMessage('An error occurred while processing the payment.');
+                console.error(error);
+            } finally {
+                setLoading(false);
+                loadingAlert.close();
             }
-        );
-
-        const data = response.data;
-
-        if (data.status) {
-            Swal.fire({ icon: "success", text: data.message });
-
-       
-            await debitUserWallet(parseFloat(amount));
-
-           
-            setAmount("");
-            setBankAccountNumber("");
-            setSelectedBank("");
-            setBankTransferSwitch(0);
         } else {
-            setStatusMessage(`Error: ${data.message}`);
+        
+            setLoading(false);
+            loadingAlert.close();
         }
-    } catch (error) {
-        setStatusMessage('An error occurred while processing the payment.');
-        console.error(error);
-    } finally {
-        setLoading(false);
-        loadingAlert.close();
-    }
+    });
 };
 
 
@@ -199,7 +319,7 @@ const debitUserWallet = async (amount) => {
             Swal.fire({
                 icon: 'success',
                 title: 'Wallet Debited',
-                text: `Your wallet has been debited by ${data.amountPaid} NGN.`
+                text: `Your wallet has been debited by ${data.amountPaid} USD.`
             });
         } else if (response.status === 400) {
             Swal.fire({
@@ -230,7 +350,8 @@ const debitUserWallet = async (amount) => {
 
 
     return (
-        <PaymentContainerA>
+        <Body theme={theme}>
+            <PaymentContainerA>
             {bankTransferSwitch === 0 && (
                 <PaymentContainer theme={theme}>
                     <Icon theme={theme}>
@@ -241,7 +362,7 @@ const debitUserWallet = async (amount) => {
                         <Button primary theme={theme} onClick={() => setBankTransferSwitch(1)}>
                             Receive from Bank
                         </Button>
-                        <Button onClick={() => setMenuSwitch(0)} theme={theme}>
+                        <Button onClick={() =>navigate('/dashboard')} theme={theme}>
                             Cancel
                         </Button>
                         <Button primary onClick={() => setBankTransferSwitch(2)} theme={theme}>
@@ -263,7 +384,7 @@ const debitUserWallet = async (amount) => {
                             <Input
                                 theme={theme}
                                 type="text"
-                                placeholder="Enter Amount"
+                                placeholder="Enter Amount in NGN"
                                 value={amount}
                                 onChange={(e) => setAmount(e.target.value)}
                             />
@@ -290,7 +411,7 @@ const debitUserWallet = async (amount) => {
                         <Button primary onClick={() => { setBankTransferSwitch(0); setShowAccountNumber(false); }} theme={theme}>
                             Back
                         </Button>
-                        <Button onClick={() => setMenuSwitch(0)} theme={theme}>
+                        <Button onClick={() => navigate('/dashboard')} theme={theme}>
                             Cancel
                         </Button>
                     </ButtonContainer>
@@ -330,7 +451,7 @@ const debitUserWallet = async (amount) => {
                     <Input
                         theme={theme}
                         type="text"
-                        placeholder="Enter Amount"
+                        placeholder="Enter Amount in NGN"
                         value={amount}
                         onChange={(e) => setAmount(e.target.value)}
                     />
@@ -348,17 +469,49 @@ const debitUserWallet = async (amount) => {
                         <Button primary onClick={() => setBankTransferSwitch(0)} theme={theme}>
                             Back
                         </Button>
-                        <Button onClick={() => setMenuSwitch(0)} theme={theme}>
+                        <Button onClick={() => navigate('/dashboard')} theme={theme}>
                             Cancel
                         </Button>
                     </ButtonContainer>
                 </PaymentContainer>
             )}
         </PaymentContainerA>
+        </Body>
     );
 };
 
 export default BankPayment;
+
+
+
+
+const Body = styled.div`
+  width: 100%;
+  position: relative; 
+  color: ${({ theme }) => (theme === 'light' ? '#000' : '#fff')};
+  min-height: 100vh;
+  background-image: url(${({ theme }) => (theme === 'light' ? HeroImg4 : HeroImg5)});
+  background-size: cover;
+  background-position: center;
+  z-index: 1; 
+
+ 
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: ${({theme})=>theme==="light"?"rgba(255,255,255,0.8)":"rgba(0, 0, 0, 0.8)"}; 
+    z-index: -1; 
+  }
+
+  @media (max-width: 320px) {
+    padding-bottom: 100px;
+  }
+`;
+
 
 
 

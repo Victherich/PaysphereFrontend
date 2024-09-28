@@ -11,48 +11,130 @@ import { userLogout } from '../Features/Slice';
 
 const PayUser3 = () => {
   const { setMenuSwitch, theme,userId,amount2} = useContext(Context);
-  const [walletID, setWalletID] = useState('');
-  const [amount, setAmount] = useState('');
+  const [walletID2, setWalletID2] = useState('');
+  // const [amount, setAmount] = useState('');
   const [pin, setPin] = useState('');
   const [error, setError] = useState('');
-//   const userToken = useSelector(state=>state.userToken)
   const dispatch = useDispatch();
 
 
+  const handleTransaction=()=>{
+    debitUser(userId,parseFloat(amount2))
+  }
+
   
-  const [formData, setFormData] = useState({
-    walletID: '',
-    // password: '',
-});
+  const debitUser = async (walletID, amount) => {
+    try {
+      Swal.fire({
+        title: 'Processing...',
+        text: 'Debiting user, please wait...',
+        allowOutsideClick: false,
+        didOpen: () => {
+          Swal.showLoading();
+        },
+      });
+  
+      const response = await axios.post('https://paysphere-api.vercel.app/debit/user', {
+        walletID,
+        amount,
+      }, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+  
+      if (response.status === 200) {
+        // Swal.fire({
+        //   title: 'Success!',
+        //   text: `Transfer successful. Amount debited: ${response.data.amountPaid}`,
+        //   icon: 'success',
+        // });
+        creditUser(walletID2,amount)
+      }
+    } catch (error) {
+      if (error.response?.status === 400) {
+        Swal.fire({
+          title: 'Error!',
+          text: 'Insufficient funds for the transfer',
+          icon: 'error',
+        });
+      } else if (error.response?.status === 404) {
+        Swal.fire({
+          title: 'Error!',
+          text: 'Sender not found',
+          icon: 'error',
+        });
+      } else if (error.response?.status === 500) {
+        Swal.fire({
+          title: 'Error!',
+          text: error.response.data.error || 'Internal Server Error',
+          icon: 'error',
+        });
+      } else {
+        Swal.fire({
+          title: 'Error!',
+          text: 'Something went wrong',
+          icon: 'error',
+        });
+      }
+    }
+  };
+  
 
-// Handle input change
-const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-        ...formData, // Copy existing form data
-        [name]: value, // Update specific field with new value
-    });
-};
 
-   
+  
+  const creditUser = async (walletID, amount) => {
+    try {
+      Swal.fire({
+        title: 'Processing...',
+        text: 'Crediting user, please wait...',
+        allowOutsideClick: false,
+        didOpen: () => {
+          Swal.showLoading();
+        },
+      });
+  
+      const response = await axios.post('https://paysphere-api.vercel.app/credit/user', {
+        walletID,
+        amount,
+      }, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+  
+      if (response.status === 200) {
+        Swal.fire({
+          title: 'Success!',
+          // text: `User credited successfully. New wallet balance: ${response.data.wallet}`,
+          icon: 'success',
+        });
+        window.history.back();
+      }
+    } catch (error) {
+      if (error.response?.status === 404) {
+        Swal.fire({
+          title: 'Error!',
+          text: 'Recipient not found',
+          icon: 'error',
+        });
+      } else if (error.response?.status === 500) {
+        Swal.fire({
+          title: 'Error!',
+          text: error.response.data.error || 'Internal Server Error',
+          icon: 'error',
+        });
+      } else {
+        Swal.fire({
+          title: 'Error!',
+          text: 'Something went wrong',
+          icon: 'error',
+        });
+      }
+    }
+  };
+  
 
-
-  const handleDebitPayer = ()=>{
-// debit the amount user with 
-// amount2
-// from the user 
-// userId 
-// handle CreditReceier on success
-  }
-
-  const handleCreditReceiver=()=>{
-// credit the amount 
-// amount2
-// to receiver
-// walletID
-//set amount to null on success.
-//window .hostory .back( on success)
-  }
 
   return (
     <PayUserContainerA>
@@ -63,33 +145,19 @@ const handleInputChange = (e) => {
         <Title theme={theme}>
           Receive to Paysphere Account <Img src={logo} alt="logo" />
         </Title>
-        {/* <form onSubmit={handleSubmit}> */}
+      
           <Input 
             theme={theme} 
             type="text"
             name="walletID" 
             placeholder="Enter Your User ID" 
-            value={formData.walletID}
-            onChange={handleInputChange} 
+            value={walletID2}
+            onChange={(e)=>setWalletID2(e.target.value)} 
           />
-          {/* <Input 
-            theme={theme}
-            name="password" 
-            type="text" 
-            placeholder="Enter your Password" 
-            value={formData.password}
-            onChange={handleInputChange} 
-          /> */}
-          {/* <Input 
-            theme={theme} 
-            type="password" 
-            placeholder="Enter your transaction PIN" 
-            value={pin}
-            onChange={(e) => setPin(e.target.value)} 
-          /> */}
+        
           {error && <Error>{error}</Error>}
           <ButtonContainer>
-            <Button primary theme={theme} onClick={handleDebitPayer}>Receive</Button>
+            <Button primary theme={theme} onClick={handleTransaction}>Receive</Button>
             <Button onClick={() => window.history.back()} theme={theme} type="button">Cancel</Button>
           </ButtonContainer>
 

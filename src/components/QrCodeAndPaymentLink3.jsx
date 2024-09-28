@@ -54,15 +54,15 @@ const { encodedData3 } = useParams();  // 'encodedData' is the Base64 encoded va
         <GridContainer>
           <GridItem onClick={()=>navigate("/mobilemoneypayout3")} theme={theme}>
             <Icon theme={theme}><FaMobileAlt /></Icon>
-            <ItemText theme={theme}>Mobile Money</ItemText>
+            <ItemText theme={theme}>Mobile Money (GHS,KES)</ItemText>
           </GridItem>
           <GridItem onClick={() => navigate("/bankpayout3")} theme={theme}>
             <Icon theme={theme}><FaUniversity /></Icon>
-            <ItemText theme={theme}>Bank</ItemText>
+            <ItemText theme={theme}>Bank (NGN)</ItemText>
           </GridItem>
           <GridItem onClick={() => navigate("/payuser3")} theme={theme}>
             <Icon theme={theme}><FaMobileAlt /></Icon>
-            <ItemText theme={theme}>Payshpere</ItemText>
+            <ItemText theme={theme}>Payshpere (USD)</ItemText>
           </GridItem>
           {/* <GridItem onClick={() => setMenuSwitch(12)} theme={theme}>
             <Icon theme={theme}><FaMobileAlt /></Icon>

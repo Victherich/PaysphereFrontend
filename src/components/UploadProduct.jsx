@@ -325,7 +325,7 @@ function UploadProduct({ setCurrentView }) {
       <UploadForm onSubmit={handleSubmit}>
         <Input type="text" name="productName" placeholder="Product Name" onChange={handleInputChange} />
         <Input type="text" name="description" placeholder="Description" onChange={handleInputChange} />
-        <Input type="number" name="price" placeholder="Price" onChange={handleInputChange} />
+        <Input type="number" name="price" placeholder="Price in USD" onChange={handleInputChange} />
         <Input type="number" name="availableStock" placeholder="Available Stock" onChange={handleInputChange} />
 
         {/* Dropdown for Type */}

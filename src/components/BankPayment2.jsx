@@ -115,14 +115,16 @@ const BankPayment2 = () => {
 
                     {!showAccountNumber && (
                         <>
-                            <Input
+                            {/* <Input
                                 theme={theme}
                                 type="text"
                                 placeholder="Enter Amount"
                                 value={amount2}
                                 disabled
                                 onChange={(e) => setAmount(e.target.value)}
-                            />
+                            /> */}
+
+                            <P>You are paying ${amount2} USD, which is ₦{amount2*1660} NGN</P>
                             <Button primary onClick={handleGenerateAccountNumber} theme={theme} disabled={loading}>
                                 {loading ? 'Generating...' : 'Generate Account'}
                             </Button>
@@ -135,7 +137,7 @@ const BankPayment2 = () => {
                             <H3 theme={theme}>Bank Name: {generatedAccount.bank_name}</H3>
                             <H3 theme={theme}>Account Name: {generatedAccount.account_name}</H3>
                             <H3 theme={theme}>Expires On: {new Date(generatedAccount.expiry_date_in_utc).toLocaleString()}</H3>
-                            <H3 theme={theme}>Please transfer the amount of NGN {amount2} to the above account.</H3>
+                            <H3 theme={theme}>Please transfer the amount of NGN {amount2*1660} to the above account.</H3>
                         </>
                     )}
 
@@ -281,4 +283,7 @@ const Select = styled.select`
 
    
 
+`
+const P = styled.p`
+    margin-bottom:10px;
 `

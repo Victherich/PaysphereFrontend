@@ -22,8 +22,6 @@ import RecieveUssdPayment from './RecieveUssdPayment';
 import ReceiveCardTapPayment from './ReceiveCardTapPayment';
 import ReceivePhoneTapPayment from './ReceivePhoneTapPayment';
 import ManualCardPayment from './ReceiveManualCardPayment';
-// import BankTransferPayment from './ReceiveBankTransferPayment'; //chedck later
-// import BankPayment from './BankPayment';
 import SMSPayment from './SmsPayment';
 import MakeMobileMoneyPayment from './MakeMobileMoneyPayment';
 import ReceiveCardAndBankPayment from './ReceiveCardAndBankPayment';
@@ -34,10 +32,15 @@ import TransactionHistory from './TransactionHistory';
 import Notifications from './Notifications';
 import TransactionAlert from './TransactionAlert';
 import CreatePin from './CreateTransactionPin';
+import { useNavigate } from 'react-router-dom';
 
 
 const DashBoard = () => {
-  const { menuSwitch, theme,createTransactionPinSwitch } = useContext(Context);
+  const { menuSwitch, theme,createTransactionPinSwitch,setMenuSwitch } = useContext(Context);
+  const navigate = useNavigate()
+
+
+
 
   useEffect(()=>{
 
@@ -50,26 +53,26 @@ const DashBoard = () => {
 
  
       {menuSwitch === 0 && <MainMenu />}
-      {menuSwitch === 1 && <RequestToPay />}
-      {menuSwitch === 2 && <PaymentLinkQrCode />}
+      {/* {menuSwitch === 1 && <RequestToPay />} */}
+      {/* {menuSwitch === 2 && <PaymentLinkQrCode />} */}
       {menuSwitch === 3 && <StaticQrCode />}
-      {menuSwitch === 4 && <PayUser />}
+      {/* {menuSwitch === 4 && <PayUser />} */}
       {menuSwitch === 5 && <PayBank />}
       {menuSwitch === 6 && <PayBills />}
       {menuSwitch === 7 && <AirtimeRecharge />}
       {menuSwitch === 8 && <MobileData />}
-      {menuSwitch===9&&<MobileMoneyPayment/>}
-      {menuSwitch===10&&<RecieveUssdPayment/>}
+      {/* {menuSwitch===9&&<MobileMoneyPayment/>} */}
+      {/* {menuSwitch===10&&<RecieveUssdPayment/>} */}
       {menuSwitch===11&&<ReceiveCardTapPayment/>}
       {menuSwitch===12&&<ReceivePhoneTapPayment/>}
       {menuSwitch===13&&<ManualCardPayment/>}
-      {menuSwitch===14&&<BankPayment/>}
+      {/* {menuSwitch===14&&<BankPayment/>} */}
       {menuSwitch===15&&<SMSPayment/>}
       {menuSwitch===16&&<MakeMobileMoneyPayment/>}
-      {menuSwitch===17&&<ReceiveCardAndBankPayment/>}
-      {menuSwitch===18&&<ProductDashboard/>}
-      {menuSwitch===19&&<PayViaEmail/>}
-      {menuSwitch===20&&<TransactionHistory/>}
+      {/* {menuSwitch===17&&<ReceiveCardAndBankPayment/>} */}
+      {/* {menuSwitch===18&&<ProductDashboard/>} */}
+      {/* {menuSwitch===19&&<PayViaEmail/>} */}
+      {/* {menuSwitch===20&&<TransactionHistory/>} */}
       {menuSwitch===21&&<Notifications/>}
       {menuSwitch===22&&<TransactionAlert/>}
       {createTransactionPinSwitch&&<CreatePin/>}
@@ -81,41 +84,20 @@ const DashBoard = () => {
 
 export default DashBoard;
 
-// Styled component for the main container
-// const Body = styled.div`
-//   width: 100%;
-//   background-color: ${({ theme, menuSwitch }) =>
-//     theme === 'light'
-//       ? menuSwitch === 0
-//         ? '#fff'
-//         : '#fff'
-//       : '#111'};
-//   color: ${({ theme }) => (theme === 'light' ? '#000' : '#fff')};
-//   min-height: 100vh; // Ensure it takes up at least the full viewport height
-//   background:rgba(0,0,0,0.9);
-//   background-image:url(${({theme})=>theme==="light"?HeroImg4:HeroImg5});
-//   background-size:cover;
-  
-
-//   @media (max-width: 320px) {
-//     padding-bottom: 100px;
-//   }
-// `;
-
 
 
 
 const Body = styled.div`
   width: 100%;
-  position: relative; // Ensure proper positioning for the pseudo-element
+  position: relative; 
   color: ${({ theme }) => (theme === 'light' ? '#000' : '#fff')};
-  min-height: 100vh; // Ensure it takes up at least the full viewport height
+  min-height: 100vh;
   background-image: url(${({ theme }) => (theme === 'light' ? HeroImg4 : HeroImg5)});
   background-size: cover;
   background-position: center;
-  z-index: 1; // Ensure content sits above the overlay
+  z-index: 1; 
 
-  // Add the transparent black overlay
+ 
   &::before {
     content: '';
     position: absolute;
@@ -124,7 +106,7 @@ const Body = styled.div`
     width: 100%;
     height: 100%;
     background: ${({theme})=>theme==="light"?"rgba(255,255,255,0.8)":"rgba(0, 0, 0, 0.8)"}; 
-    z-index: -1; // Ensure the overlay is behind the content
+    z-index: -1; 
   }
 
   @media (max-width: 320px) {

@@ -142,7 +142,7 @@ useEffect(()=>{
       
     }else{
       Swal.fire({
-        title: `New ${userInfo._id===newTransactions[newTransactions.length-1]?.user?"Debit":"Credit"} Alert!`,
+        title: `New ${userInfo._id===newTransactions[newTransactions.length-1]?.recipient?"Debit":"Credit"} Alert!`,
         text: `Amount: NGN ${newTransactions[newTransactions.length-1]?.amountPaid}`,
         icon: 'info',
         confirmButtonText: 'OK',

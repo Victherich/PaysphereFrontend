@@ -6,6 +6,9 @@ import logo from "../Images/logo.png";
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import HeroImg4 from "../Images/heroImg7.png";
+import HeroImg5 from "../Images/heroImg5.png";
 
 const PayUser = () => {
   const { setMenuSwitch, theme } = useContext(Context);
@@ -14,6 +17,7 @@ const PayUser = () => {
   const [pin, setPin] = useState('');
   const [error, setError] = useState('');
   const userToken = useSelector(state=>state.userToken)
+  const navigate = useNavigate()
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -61,6 +65,7 @@ const PayUser = () => {
       setAmount('');
       setPin('');
       setMenuSwitch(0);
+    navigate('/dashboard')
       
     } catch (error) {
       let message = 'An error occurred. Please try again.';
@@ -85,7 +90,8 @@ const PayUser = () => {
   };
 
   return (
-    <PayUserContainerA>
+   <Body theme={theme}>
+       <PayUserContainerA>
       <PayUserContainer theme={theme}>
         <Icon theme={theme}>
           <FaUserFriends />
@@ -97,14 +103,14 @@ const PayUser = () => {
           <Input 
             theme={theme} 
             type="text" 
-            placeholder="Enter Recipient User ID" 
+            placeholder="Enter Recipient wallet ID" 
             value={walletID}
             onChange={(e) => setWalletID(e.target.value)} 
           />
           <Input 
             theme={theme} 
             type="number" 
-            placeholder="Enter Amount" 
+            placeholder="Enter Amount in USD" 
             value={amount}
             onChange={(e) => setAmount(e.target.value)} 
           />
@@ -118,15 +124,46 @@ const PayUser = () => {
           {error && <Error>{error}</Error>}
           <ButtonContainer>
             <Button primary theme={theme} type="submit">Pay</Button>
-            <Button onClick={() => setMenuSwitch(0)} theme={theme}>Cancel</Button>
+            <Button onClick={() => navigate("/dashboard")} theme={theme}>Cancel</Button>
           </ButtonContainer>
         </form>
       </PayUserContainer>
     </PayUserContainerA>
+   </Body>
   );
 };
 
 export default PayUser;
+
+
+
+const Body = styled.div`
+  width: 100%;
+  position: relative; 
+  color: ${({ theme }) => (theme === 'light' ? '#000' : '#fff')};
+  min-height: 100vh;
+  background-image: url(${({ theme }) => (theme === 'light' ? HeroImg4 : HeroImg5)});
+  background-size: cover;
+  background-position: center;
+  z-index: 1; 
+
+ 
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: ${({theme})=>theme==="light"?"rgba(255,255,255,0.8)":"rgba(0, 0, 0, 0.8)"}; 
+    z-index: -1; 
+  }
+
+  @media (max-width: 320px) {
+    padding-bottom: 100px;
+  }
+`;
+
 
 const PayUserContainerA = styled.div`
   padding-top: 100px;

@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import HeroImg4 from "../Images/heroImg7.png";
 import HeroImg5 from "../Images/heroImg5.png";
 
-const RecieveUssdPayment = () => {
+const RecieveUssdPayment2 = () => {
     const { setMenuSwitch, theme } = useContext(Context);
     const navigate = useNavigate()
 
@@ -21,8 +21,6 @@ const RecieveUssdPayment = () => {
                 </Icon>
                 <Title theme={theme}>USSD Payment</Title>
                 <p>Dial the corresponding code for your payment requirement:</p>
-        
-
 
 
 <H4 theme={theme}>Start by dialing *384*4751# on your mobile phone.
@@ -46,8 +44,8 @@ Simple, fast, and secure!
 </P>
 
                 <ButtonContainer>
-                    {/* <Button primary theme={theme}>Receive Payment</Button> */}
-                    <Button onClick={() => navigate("/dashboard")} theme={theme}>Cancel</Button>
+          
+                    <Button onClick={() => window.history.back()} theme={theme}>Cancel</Button>
                 </ButtonContainer>
             </PaymentContainer>
         </PaymentContainerA>
@@ -56,7 +54,7 @@ Simple, fast, and secure!
     );
 }
 
-export default RecieveUssdPayment;
+export default RecieveUssdPayment2;
 
 
 
@@ -197,8 +195,8 @@ const P = styled.p`
     overflow-wrap: break-word; 
     max-width: 100%; 
     white-space: normal; 
-    padding: 10px;  
-    border-radius: 4px; 
+    padding: 10px; 
+    border-radius: 4px;  
     word-wrap: break-word;  
 `
 

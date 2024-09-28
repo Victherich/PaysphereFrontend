@@ -45,7 +45,7 @@ const DashPop = React.forwardRef((props,ref) => {
     <DashPopWrap ref={ref}>
         <P onClick={()=>{navigate("/dashboard");setMenuSwitch(0);setDashPopSwitch(false)}}>Dashboard</P>
         <Line></Line>
-        <P onClick={()=>{setMenuSwitch(20);setDashPopSwitch(false)}}>Transaction History</P>
+        <P onClick={()=>{navigate("/dashboard/transactionhistory");setDashPopSwitch(false)}}>Transaction History</P>
         <Line></Line>
         <P onClick={()=>{setCreateTransactionPinSwitch(true);setDashPopSwitch(false)}}>Create Transaction Pin</P>
         <Line></Line>

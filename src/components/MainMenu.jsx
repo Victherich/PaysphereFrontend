@@ -13,16 +13,17 @@ import logo from "../Images/logo.png"
 import { useDispatch, useSelector } from 'react-redux';
 import CreatePin from './CreateTransactionPin';
 import { userLogin } from '../Features/Slice';
+import { useNavigate } from 'react-router-dom';
 
 const MainMenu = () => {
   const { setMenuSwitch, theme,createTransactionPinSwitch,setCreateTransactionPinSwitch, pop1,balance ,loading, setLoading} = useContext(Context);
-  // const [loading, setLoading] = useState(false); 
-  // const [balance, setBalance] = useState(null); 
+
   const userInfo = useSelector(state=>state.userInfo)
   const userToken = useSelector(state=>state.userToken)
   const dispatch = useDispatch();
   const [transactions, setTransactions] = useState([]);
   const [newTransactions, setNewTransactions] = useState([]);
+  const navigate = useNavigate();
 
 
 
@@ -30,22 +31,20 @@ const MainMenu = () => {
 
 
   useEffect(() => {
-    // Function to fetch user info from the server
+ 
     const fetchUserInfo = async () => {
         try {
             const response = await fetch('https://paysphere-api.vercel.app/get_user', {
                 method: 'GET',
                 headers: {
-                    'Authorization': `Bearer ${userToken}`, // Replace userToken with actual token
+                    'Authorization': `Bearer ${userToken}`, 
                     'Content-Type': 'application/json'
                 }
             });
 
-            // Handle the response based on the status code
             if (response.ok) {
                 const data = await response.json();
-                // setUserInfo(data);  // Store user data in state
-                // console.log(data)
+
                 const userInfo = data.user
 
                 dispatch(userLogin({userInfo,userToken}))
@@ -56,15 +55,15 @@ const MainMenu = () => {
             }
         } catch (err) {
             console.error('Fetch error:', err);
-            // setError('Network error. Please try again later.');
+   
         } finally {
-            setLoading(false);  // Stop the loading state
+            setLoading(false);  
         }
     };
 
-    fetchUserInfo();  // Fetch user info when component mounts
+    fetchUserInfo(); 
 
-}, []);  // Empty dependency ar
+}, []);  
 
 
 
@@ -89,17 +88,10 @@ const MainMenu = () => {
 
       {/* User Information Section */}
       <UserInfoSection theme={theme}>
-        <UserInfoTitle theme={theme}>Hi, {userInfo.firstName}</UserInfoTitle>
-        {/* <UserInfoItem theme={theme}><Strong primary theme={theme}>Hi, {userInfo.firstName}</Strong></UserInfoItem> */}
-        <UserInfoItem theme={theme}><Strong theme={theme}>User ID:</Strong> {userInfo.walletID}</UserInfoItem>
-        <UserInfoItem theme={theme}><Strong theme={theme}>Email:</Strong> {userInfo.email}</UserInfoItem>
-        {/* <UserInfoItem theme={theme}><Strong theme={theme}>Phone Number: </Strong> {userInfo.phoneNumber}</UserInfoItem> */}
-        <UserInfoItem theme={theme}><Strong theme={theme}>Balance: </Strong> NGN {userInfo.wallet}</UserInfoItem>
-        
-        {/* <Button onClick={()=>setCreateTransactionPinSwitch(true)}>Create Transaction Pin</Button> */}
-        {/* <Button onClick={()=>setMenuSwitch(20)}>Transaction History</Button> */}
-        {/* <Button onClick={()=>setMenuSwitch(22)}>Transaction Alert</Button> */}
-      </UserInfoSection>
+        <UserInfoTitle theme={theme}>User Info</UserInfoTitle>
+        <UserInfoItem theme={theme}><Strong theme={theme}>Wallet ID:</Strong> {userInfo.walletID}</UserInfoItem>
+        <UserInfoItem theme={theme}><Strong theme={theme}>Balance: </Strong> USD {userInfo.wallet}</UserInfoItem>
+         </UserInfoSection>
       
 
 
@@ -107,19 +99,25 @@ const MainMenu = () => {
       <Section>
         <SectionTitle theme={theme}>Main Menu</SectionTitle>
         <GridContainer>
-          <GridItem onClick={() => setMenuSwitch(1)} theme={theme}>
-            <Icon theme={theme}><FaMoneyBillWave /><FaArrowDown/></Icon>
-            <ItemText theme={theme}>Paysphere Payment Request (P2P) </ItemText>
+          <GridItem onClick={() => navigate("/dashboard/requesttopay")} theme={theme}>
+            <Icon theme={theme}><FaMoneyBillWave />
+    
+            </Icon>
+            <ItemText theme={theme}>Paysphere Payment Request (P2P) (USD)</ItemText>
          
           </GridItem>
-          <GridItem onClick={() => setMenuSwitch(4)} theme={theme}>
-            <Icon theme={theme}><FaUserFriends /> <FaArrowDown/><FaArrowUp/></Icon>
-            <ItemText theme={theme}>Paysphere Transfer (P2P)</ItemText>
+          <GridItem onClick={() => navigate("/dashboard/transfertopaysphereuser")} theme={theme}>
+            <Icon theme={theme}><FaUserFriends /> 
+
+            </Icon>
+            <ItemText theme={theme}>Paysphere Transfer (P2P) (USD)</ItemText>
          
           </GridItem>
-          <GridItem onClick={() => setMenuSwitch(10)} theme={theme}>
-            <Icon theme={theme}><FaMobileAlt /> <FaArrowDown/><FaArrowUp/></Icon>
-            <ItemText theme={theme}>Ussd Payment</ItemText>
+          <GridItem onClick={() => navigate('/dashboard/paywithussd')} theme={theme}>
+            <Icon theme={theme}><FaMobileAlt />
+     
+             </Icon>
+            <ItemText theme={theme}>Ussd Payment (P2P) (USD)</ItemText>
           </GridItem>
 
           {/* <GridItem onClick={() => setMenuSwitch(13)} theme={theme}>
@@ -127,18 +125,29 @@ const MainMenu = () => {
             <ItemText theme={theme}>Manual Card Payment</ItemText>
           </GridItem> */}
 
-          <GridItem onClick={() => setMenuSwitch(14)} theme={theme}>
-            <Icon theme={theme}><FaUniversity /> <FaArrowDown/><FaArrowUp/></Icon>
-            <ItemText theme={theme}>Bank Payment</ItemText>
+          <GridItem onClick={() => navigate("/dashboard/payandgetpaidbybank")} theme={theme}>
+            <Icon theme={theme}><FaUniversity /> 
+            {/* <FaArrowDown/> */}
+            {/* <FaArrowUp/> */}
+            </Icon>
+            <ItemText theme={theme}>Bank Payment (NGN) </ItemText>
           </GridItem>
 
-          <GridItem onClick={() => setMenuSwitch(9)} theme={theme}>
-            <Icon theme={theme}><FaMobileAlt /><FaArrowDown/><FaArrowUp/></Icon>
-            <ItemText theme={theme}>Mobile Money </ItemText>
+          <GridItem onClick={() => navigate('/dashboard/mobilemoney')} theme={theme}>
+            <Icon theme={theme}><FaMobileAlt />
+            {/* <FaArrowDown/> */}
+            {/* <FaArrowUp/> */}
+            </Icon>
+            <ItemText theme={theme}>Mobile Money (KES, GHS)</ItemText>
           </GridItem>
-          <GridItem onClick={() => setMenuSwitch(2)} theme={theme}>
-            <Icon theme={theme}><FaLink /><FaQrcode/><FaArrowDown/><FaArrowUp/></Icon>
-            <ItemText theme={theme}>Payment Link / QR Code</ItemText>
+          <GridItem onClick={() => navigate('/dashboard/getpaidandpaybylinkqrcode')} theme={theme}>
+            <Icon theme={theme}>
+              {/* <FaLink /> */}
+            <FaQrcode/>
+            {/* <FaArrowDown/> */}
+            {/* <FaArrowUp/> */}
+            </Icon>
+            <ItemText theme={theme}>Payment Link / QR Code (USD, NGN, GHS, KES)</ItemText>
           </GridItem>
 
 
@@ -167,13 +176,13 @@ const MainMenu = () => {
             <Icon theme={theme}><FaSms /></Icon>
             <ItemText theme={theme}>Receive Sms Payment</ItemText>
           </GridItem> */}
-          <GridItem onClick={() => setMenuSwitch(17)} theme={theme}>
+          <GridItem onClick={() => navigate('/dashboard/getpaidbycardandbank')} theme={theme}>
             <Icon theme={theme}><FaCreditCard />   <FaUniversity/></Icon>
-            <ItemText theme={theme}>Receive Card / Bank Transfer payment</ItemText>
+            <ItemText theme={theme}>Receive Card / Bank Transfer payment (NGN)</ItemText>
           </GridItem>
-          <GridItem onClick={() => setMenuSwitch(19)} theme={theme}>
+          <GridItem onClick={() => navigate('/dashboard/payviaemail')} theme={theme}>
             <Icon theme={theme}><FaEnvelopeOpen />   </Icon>
-            <ItemText theme={theme}>Pay Via Email</ItemText>
+            <ItemText theme={theme}>Pay Via Email (USD)</ItemText>
           </GridItem>
         </GridContainer>
       </Section>
@@ -199,7 +208,7 @@ const MainMenu = () => {
         <StorefrontDescription theme={theme}>
           Welcome to your storefront! Here you can receive payments for specific products and services by listing them. Click below to access your store dashboard where you can post new products or services and manage existing ones.
         </StorefrontDescription>
-        <StorefrontButton onClick={() => setMenuSwitch(18)} theme={theme}>Go to Store Dashboard</StorefrontButton>
+        <StorefrontButton onClick={() => navigate('/dashboard/productdashboard')} theme={theme}>Go to Store Dashboard</StorefrontButton>
       </StorefrontSection>
 
 

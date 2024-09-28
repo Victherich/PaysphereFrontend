@@ -346,9 +346,42 @@ const MobileMoneyPayment2 = () => {
     const [mainInput, setMainInput] = useState(true);
     const { userId, amount2 } = useContext(Context);
     const navigate = useNavigate();
+    const [currency,setCurrency]=useState("")
+
+
+    const KES_TO_USD_RATE = 129; 
+    const GHS_TO_USD_RATE = 15.77; 
+    const amountInGHS = (parseFloat(amount2) * 15.77).toFixed(2);
+
+    const handlePayment = () => {
+        if (currency===""||currency==="KES") {
+            Swal.fire({
+                icon: 'error',
+                text: 'Please select the right currency for your mobile money wallet',
+                // text: 'P'
+            });
+            return;
+        }
+
+        
+        
+        Swal.fire({
+            title: 'Confirm Payment',
+            text: `You are paying $${amount2} USD which is ${amountInGHS} in GHS`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'OK',
+            cancelButtonText: 'Cancel'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                initiatePayment();
+            }
+        });
+    };
+
 
     // Handle payment initiation
-    const handlePayment = async () => {
+    const initiatePayment = async () => {
         const loadingAlert = Swal.fire({ title: "Processing..." });
         setLoading(true);
         setError('');
@@ -359,7 +392,7 @@ const MobileMoneyPayment2 = () => {
             const response = await axios.post(
                 'https://api.korapay.com/merchant/api/v1/charges/mobile-money', 
                 {
-                    amount: parseFloat(amount2),
+                    amount: parseFloat(amountInGHS),
                     currency: "GHS",
                     reference: `ref-${Date.now()}`, // Unique payment reference
                     customer: {
@@ -461,7 +494,7 @@ const MobileMoneyPayment2 = () => {
             setMessage(response.data.message);
             Swal.fire({ icon: "success", text: response.data.message });
             setMenuSwitch(0);
-            navigate("/"); // Redirect after success
+            creditUserWallet(userId,parseFloat(amount2))
         } catch (error) {
             setError('Failed to authorize payment with PIN. Please try again.');
         } finally {
@@ -469,6 +502,62 @@ const MobileMoneyPayment2 = () => {
             loadingAlert.close();
         }
     };
+
+
+    const creditUserWallet = async (walletID, amount) => {
+        try {
+          Swal.fire({
+            title: 'Processing...',
+          //   text: 'Crediting user, please wait...',
+            allowOutsideClick: false,
+            didOpen: () => {
+              Swal.showLoading();
+            },
+          });
+      
+          const response = await axios.post('https://paysphere-api.vercel.app/credit/user', {
+            walletID,
+            amount,
+          }, {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          });
+      
+          if (response.status === 200) {
+            Swal.fire({
+              title: 'Success!',
+              // text: `User credited successfully. New wallet balance: ${response.data.wallet}`,
+              icon: 'success',
+            });
+          }
+          window.history.back();
+        } catch (error) {
+          console.error(error)
+          if (error.response?.status === 404) {
+            Swal.fire({
+              title: 'Error!',
+              text: 'Recipient not found',
+              icon: 'error',
+            });
+          } else if (error.response?.status === 500) {
+            Swal.fire({
+              title: 'Error!',
+              text: error.response.data.error || 'Internal Server Error',
+              icon: 'error',
+            });
+          } else {
+            Swal.fire({
+              title: 'Error!',
+              text: 'Something went wrong',
+              icon: 'error',
+            });
+          }
+        }
+      };
+      
+
+
 
     return (
         <PaymentContainerA>
@@ -480,10 +569,15 @@ const MobileMoneyPayment2 = () => {
                 
                 {mainInput && (
                     <>
+                    <Select onChange={(e)=>setCurrency(e.target.value)}>
+                        <option >Select currency</option>
+                        <option value="GHS">GHS</option>
+                        <option value="KES">KES</option>
+                    </Select>
                         <Input
                             theme={theme}
                             type="text"
-                            placeholder="Enter Your Phone Number"
+                            placeholder="Enter Your Mobile Number"
                             value={phoneNumber}
                             onChange={(e) => setPhoneNumber(e.target.value)}
                         />
@@ -649,3 +743,11 @@ const Message = styled.p`
     margin-bottom: 15px;
     text-align:center;
 `;
+
+const Select = styled.select`
+    padding:8px;
+    margin-bottom:10px;
+    width:100%;
+    cursor:pointer;
+    outline:none;
+`

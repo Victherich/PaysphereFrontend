@@ -49,7 +49,35 @@ const BankPayment3 = () => {
         fetchBanks();
     }, []); 
 
-   
+    const amountInNGN = (parseFloat(amount2) * 1660).toFixed(2);
+
+    const handleTransaction = () => {
+        // if (!amount || isNaN(amount) || parseFloat(amount) <= 0) {
+        //     Swal.fire({
+        //         icon: 'error',
+        //         title: 'Invalid Amount',
+        //         text: 'Please enter a valid amount.'
+        //     });
+        //     return;
+        // }
+
+        
+        
+        Swal.fire({
+            title: 'Confirm Payment',
+            text: `You will receive approximately $${amountInNGN} NGN.`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'OK',
+            cancelButtonText: 'Cancel'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                handlePayToBank();
+            }
+        });
+    };
+
+
    
 const handlePayToBank = async () => {
    
@@ -61,7 +89,7 @@ const handlePayToBank = async () => {
         reference: `unique-transaction-${Date.now()}`, 
         destination: {
             type: 'bank_account',
-            amount: amount2,
+            amount: amountInNGN,
             currency: 'NGN',
             narration: 'Bank Transfer Payment',
             bank_account: {
@@ -92,16 +120,12 @@ const handlePayToBank = async () => {
         if (data.status) {
             Swal.fire({ icon: "success", text: data.message });
 
-            // Step 1: Perform Wallet Debit after successful bank transfer
-            // await debitUserWallet(parseFloat(amount2)); 
-            // ******debit our user with debit endpoint without token and set the amount to null in context so it wont work again
-
-
-            // Step 2: Reset fields after success
+            debitUser(userId,parseFloat(amount2))
             setAmount("");
             setBankAccountNumber("");
             setSelectedBank("");
             setBankTransferSwitch(0);
+            window.history.back();
             
         } else {
             setStatusMessage(`Error: ${data.message}`);
@@ -115,58 +139,64 @@ const handlePayToBank = async () => {
     }
 };
 
-// Step 1: Function to debit user's wallet after successful payment
-// const debitUserWallet = async (amount) => {
-//     try {
-//         const response = await axios.post(
-//             'https://paysphere-api.vercel.app/transfer_to_bank',
-//             { amount },
-//             {
-//                 headers: {
-//                     'Content-Type': 'application/json',
-//                     'Authorization': `Bearer ${userToken}` // User's auth token
-//                 }
-//             }
-//         );
-
-//         const data = response.data;
-
-//         if (response.status === 200) {
-//             console.log('Wallet debited successfully:', data.amountPaid);
-//             Swal.fire({
-//                 icon: 'success',
-//                 title: 'Wallet Debited',
-//                 text: `Your wallet has been debited by ${data.amountPaid} NGN.`
-//             });
-//         } else if (response.status === 400) {
-//             Swal.fire({
-//                 icon: 'error',
-//                 title: 'Insufficient Funds',
-//                 text: 'You do not have enough funds to complete this transaction.'
-//             });
-//         } else if (response.status === 404) {
-//             Swal.fire({
-//                 icon: 'error',
-//                 title: 'Sender Not Found',
-//                 text: 'Unable to find the sender\'s wallet details.'
-//             });
-//         }
-//     } catch (error) {
-//         console.error('Error while debiting wallet:', error);
-//         Swal.fire({
-//             icon: 'error',
-//             title: 'Error Debiting Wallet',
-//             text: 'An error occurred while debiting your wallet. Please try again.'
-//         });
-//     }
-// };
-
-const debitUser = ()=>{
-    // debit userId with amout2
-    // window ,history .back () on success
-}
 
 
+const debitUser = async (walletID, amount) => {
+    try {
+      Swal.fire({
+        title: 'Processing...',
+        text: 'Debiting user, please wait...',
+        allowOutsideClick: false,
+        didOpen: () => {
+          Swal.showLoading();
+        },
+      });
+  
+      const response = await axios.post('https://paysphere-api.vercel.app/debit/user', {
+        walletID,
+        amount,
+      }, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+  
+      if (response.status === 200) {
+        Swal.fire({
+          title: 'Success!',
+        //   text: `Transfer successful. Amount debited: ${response.data.amountPaid}`,
+          icon: 'success',
+        });
+      
+      }
+    } catch (error) {
+      if (error.response?.status === 400) {
+        Swal.fire({
+          title: 'Error!',
+          text: 'Insufficient funds for the transfer',
+          icon: 'error',
+        });
+      } else if (error.response?.status === 404) {
+        Swal.fire({
+          title: 'Error!',
+          text: 'Sender not found',
+          icon: 'error',
+        });
+      } else if (error.response?.status === 500) {
+        Swal.fire({
+          title: 'Error!',
+          text: error.response.data.error || 'Internal Server Error',
+          icon: 'error',
+        });
+      } else {
+        Swal.fire({
+          title: 'Error!',
+          text: 'Something went wrong',
+          icon: 'error',
+        });
+      }
+    }
+  };
 
 
 
@@ -203,20 +233,20 @@ const debitUser = ()=>{
                         onChange={(e) => setBankAccountNumber(e.target.value)}
                     />
 
-                    <Input
+                    {/* <Input
                         theme={theme}
                         type="text"
                         placeholder="Enter Amount"
                         value={amount2}
                         onChange={(e) => setAmount(e.target.value)}
                         disabled
-                    />
+                    /> */}
                     
 
                    
 
                     {statusMessage && <Message>{statusMessage}</Message>}
-                    <Button primary onClick={handlePayToBank} theme={theme} disabled={loading}>
+                    <Button primary onClick={handleTransaction} theme={theme} disabled={loading}>
                         {loading ? 'Processing...' : 'Receive Now'}
                     </Button>
 

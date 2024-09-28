@@ -9,6 +9,9 @@ import PaymentLinkQrCode1 from './PaymentLinkQrCode1';
 import PaymentLinkQrCode2 from './PaymentLinkQrCode2';
 import PaymentLinkQrCode3 from './PaymentLinkQrCode3';
 import PaymentLinkQrCode4 from './PaymentLinkQrCode4';
+import { useNavigate } from 'react-router-dom';
+import HeroImg4 from "../Images/heroImg7.png";
+import HeroImg5 from "../Images/heroImg5.png";
 
 // Base64 encoding function
 const base64Encode = (str) => {
@@ -21,6 +24,7 @@ const base64Decode = (str) => {
 };
 
 const PaymentLinkQrCode = () => {
+    const navigate = useNavigate();
     
     const { setMenuSwitch, theme,paymenLinkQrCodeUiswitch,setPaymentLinkQrCodeUiSwitch } = useContext(Context);
     const [amount, setAmount] = useState('');
@@ -78,7 +82,8 @@ const PaymentLinkQrCode = () => {
     };
 
     return (
-        <PaymentLinkContainerA>
+       <Body theme={theme}>
+             <PaymentLinkContainerA>
            {paymenLinkQrCodeUiswitch===0&&<div>
            {!url ? (
                 <PaymentLinkContainer theme={theme}>
@@ -100,7 +105,7 @@ const PaymentLinkQrCode = () => {
                         </Button2> */}
                     <ButtonContainer>
                         
-                        <Button onClick={() => {setMenuSwitch(0);setPaymentLinkQrCodeUiSwitch(0)}} theme={theme}>Cancel</Button>
+                        <Button onClick={() => {navigate('/dashboard');setPaymentLinkQrCodeUiSwitch(0)}} theme={theme}>Cancel</Button>
                          </ButtonContainer>
                 </PaymentLinkContainer>
             ) : (
@@ -126,10 +131,40 @@ const PaymentLinkQrCode = () => {
            {paymenLinkQrCodeUiswitch===3&&<PaymentLinkQrCode3/>}
            {paymenLinkQrCodeUiswitch===4&&<PaymentLinkQrCode4/>}
         </PaymentLinkContainerA>
+       </Body>
     );
 };
 
 export default PaymentLinkQrCode;
+
+
+const Body = styled.div`
+  width: 100%;
+  position: relative; 
+  color: ${({ theme }) => (theme === 'light' ? '#000' : '#fff')};
+  min-height: 100vh;
+  background-image: url(${({ theme }) => (theme === 'light' ? HeroImg4 : HeroImg5)});
+  background-size: cover;
+  background-position: center;
+  z-index: 1; 
+
+ 
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: ${({theme})=>theme==="light"?"rgba(255,255,255,0.8)":"rgba(0, 0, 0, 0.8)"}; 
+    z-index: -1; 
+  }
+
+  @media (max-width: 320px) {
+    padding-bottom: 100px;
+  }
+`;
+
 
 
 

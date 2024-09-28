@@ -52,47 +52,28 @@ const { encodedData2 } = useParams();  // 'encodedData' is the Base64 encoded va
       
       </UserInfoSection>
         <GridContainer>
-          {/* <GridItem onClick={()=>navigate("/mobilemoneypayment")} theme={theme}>
+          <GridItem onClick={()=>navigate("/mobilemoneypayment")} theme={theme}>
             <Icon theme={theme}><FaMobileAlt /></Icon>
-            <ItemText theme={theme}>Mobile Money</ItemText>
-          </GridItem> */}
-          <GridItem onClick={() => setMenuSwitch(10)} theme={theme}>
+            <ItemText theme={theme}>Mobile Money (GHS, KES)</ItemText>
+          </GridItem>
+          <GridItem onClick={() => navigate('/ussdpayment')} theme={theme}>
             <Icon theme={theme}><FaMobileAlt /></Icon>
-            <ItemText theme={theme}>Ussd</ItemText>
+            <ItemText theme={theme}>Ussd (USD)</ItemText>
           </GridItem>
           <GridItem onClick={() => navigate("/payspheretransfer")} theme={theme}>
             <Icon theme={theme}><FaUserFriends /> </Icon>
-            <ItemText theme={theme}>Paysphere Transfer (P2P)</ItemText>
+            <ItemText theme={theme}>Paysphere Transfer (P2P) (USD)</ItemText>
          
           </GridItem>
-          {/* <GridItem onClick={() => setMenuSwitch(11)} theme={theme}>
-            <Icon theme={theme}><FaCreditCard /></Icon>
-            <ItemText theme={theme}>Card Tap</ItemText>
-          </GridItem> */}
-          {/* <GridItem onClick={() => setMenuSwitch(12)} theme={theme}>
-            <Icon theme={theme}><FaMobileAlt /></Icon>
-            <ItemText theme={theme}>Phone Tap</ItemText>
-          </GridItem> */}
-          {/* <GridItem onClick={() => setMenuSwitch(13)} theme={theme}>
-            <Icon theme={theme}><FaCreditCard /></Icon>
-            <ItemText theme={theme}>Receive Manual Card Payment</ItemText>
-          </GridItem> */}
-          {/* <GridItem onClick={() => setMenuSwitch(14)} theme={theme}>
-            <Icon theme={theme}><FaUniversity /></Icon>
-            <ItemText theme={theme}>Receive Bank Transfer</ItemText>
-          </GridItem> */}
-          {/* <GridItem onClick={() => setMenuSwitch(15)} theme={theme}>
-            <Icon theme={theme}><FaSms /></Icon>
-            <ItemText theme={theme}>Receive Sms Payment</ItemText>
-          </GridItem> */}
+        
           <GridItem onClick={() =>  navigate("/cardbankpayment")} theme={theme}>
             <Icon theme={theme}><FaCreditCard /></Icon>
             <Icon theme={theme}><FaUniversity /></Icon>
-            <ItemText theme={theme}>Card / Bank Transfer</ItemText>
+            <ItemText theme={theme}>Card / Bank Transfer (NGN)</ItemText>
           </GridItem>
           <GridItem onClick={() => navigate("/bankpayment")} theme={theme}>
             <Icon theme={theme}><FaUniversity /></Icon>
-            <ItemText theme={theme}>Bank Transfer</ItemText>
+            <ItemText theme={theme}>Bank Transfer (NGN)</ItemText>
           </GridItem>
         </GridContainer>
       </Section>
