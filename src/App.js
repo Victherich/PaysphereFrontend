@@ -41,6 +41,7 @@ import PayViaEmail from './components/PayViaEmail';
 import ProductDashboard from './components/ProductDashboard';
 import TransactionHistory from './components/TransactionHistory';
 import RecieveUssdPayment2 from './components/RecieveUssdPayment2';
+import StorePayments from './components/StorePayments';
 
 const App = () => {
   return (
@@ -100,6 +101,7 @@ const App = () => {
 
 
         <Route path="mobilemoneypayment" element={<MobileMoneyPayment2/>}/>
+        <Route path="store/storepayments" element={<StorePayments/>}/>
       </Routes>
       <Footer />
     </BrowserRouter>
