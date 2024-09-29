@@ -98,7 +98,7 @@ const Login = () => {
                             name="walletID"
                             theme={theme}
                             type="text"
-                            placeholder="Enter User ID"
+                            placeholder="Enter wallet ID"
                             value={formData.walletID}
                             onChange={handleInputChange}
                             required

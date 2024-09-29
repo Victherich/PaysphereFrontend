@@ -1348,7 +1348,7 @@ const EditProductModal = ({ product, onClose, onUpdate }) => {
             <PreviewImage key={index} src={image} alt={`Preview ${index + 1}`} />
           ))}
         </PreviewContainer>
-        <Button type="submit">Update Product</Button>
+        <Button type="submit">Update</Button>
         <Button2 type="button" onClick={onClose}>Cancel</Button2>
       </form>
     </ModalContainer>
@@ -1362,7 +1362,7 @@ const ModalContainer = styled.div`
   position: fixed;
   top: 0;
   left: 0;
-  background-color: rgba(255, 255, 255, 0.8);
+  background-color: white;
   width: 100%;
   height: 100%;
   padding-top: 100px;

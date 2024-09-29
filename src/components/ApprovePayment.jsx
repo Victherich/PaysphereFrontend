@@ -414,7 +414,7 @@ const ApprovePayment = () => {
               name="pin"
               theme={theme}
               type="password"
-              placeholder="Enter your PIN"
+              placeholder="Enter your transaction PIN"
               value={pin}
               onChange={handleInputChange}
               required

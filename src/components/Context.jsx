@@ -153,7 +153,7 @@ useEffect(()=>{
       Swal.fire({
         // title: `New ${userInfo._id===newTransactions[newTransactions.length-1]?.recipient?"Debit":"Credit"} Alert!`,
         title: "New Transaction Alert!",
-        text: `Amount: NGN ${newTransactions[newTransactions.length-1]?.amountPaid}`,
+        text: `Amount: $ ${newTransactions[newTransactions.length-1]?.amountPaid}`,
         icon: 'info',
         confirmButtonText: 'OK',
       }).then((result) => {

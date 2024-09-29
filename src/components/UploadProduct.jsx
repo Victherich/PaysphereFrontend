@@ -329,7 +329,8 @@ function UploadProduct({ setCurrentView }) {
         <Input type="number" name="availableStock" placeholder="Available Stock" onChange={handleInputChange} />
 
         {/* Dropdown for Type */}
-        <Select name="type" value={productData.type} onChange={handleInputChange}>
+        <Select name="type" value={productData.type} onChange={handleInputChange} required>
+          <option>--Select type--</option>
           <option value="product">Product</option>
           <option value="service">Service</option>
         </Select>
@@ -348,7 +349,7 @@ function UploadProduct({ setCurrentView }) {
           </ImagePreviewContainer>
         )}
 
-        <SubmitButton type="submit">Upload Product</SubmitButton>
+        <SubmitButton type="submit">Post</SubmitButton>
       </UploadForm>
     </UploadFormWrap>
   );

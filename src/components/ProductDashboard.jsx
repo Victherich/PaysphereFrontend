@@ -21,7 +21,7 @@ const ProductDashboard=()=> {
       <NavBar>
       <NavButton onClick={() => setCurrentView('storeinfo')}>Store Info</NavButton>
         <NavButton onClick={() => setCurrentView('list')}>View Products</NavButton>
-        <NavButton onClick={() => setCurrentView('upload')}>Upload Product</NavButton>
+        <NavButton onClick={() => setCurrentView('upload')}>Post Product / Service</NavButton>
         <NavButton onClick={() => navigate("/dashboard")}>Back</NavButton>
         
       </NavBar>

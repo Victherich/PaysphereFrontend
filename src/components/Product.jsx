@@ -64,8 +64,8 @@ const Product = () => {
                 />
               </div>
               <p>
-                {product.product_name} <br />
-                {product.description}
+                {product.product_name.slice(0,22)}... <br />
+                {/* {product.description} */}
               </p>
               <h3>${product.price}</h3>
             </article>

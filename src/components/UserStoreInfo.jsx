@@ -26,7 +26,7 @@ const UserStoreInfo = ({setCurrentView}) => {
         </StoreDetail> */}
       </StoreInfo>
       <ActionButton onClick={() => setCurrentView('upload')}>
-        Post a Product
+        Post Product / Service
       </ActionButton>
     </DashboardContainer>
   );

@@ -90,8 +90,11 @@ const MainMenu = () => {
       <UserInfoSection theme={theme}>
         <UserInfoTitle theme={theme}>User Info</UserInfoTitle>
         <UserInfoItem theme={theme}><Strong theme={theme}>Wallet ID:</Strong> {userInfo.walletID}</UserInfoItem>
-        <UserInfoItem theme={theme}><Strong theme={theme}>Balance: </Strong> USD {userInfo.wallet}</UserInfoItem>
-         </UserInfoSection>
+        <UserInfoItem theme={theme}>
+  <Strong theme={theme}>Balance: </Strong> USD {userInfo.wallet.toFixed(2)}
+</UserInfoItem>
+
+ </UserInfoSection>
       
 
 

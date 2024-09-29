@@ -10,8 +10,10 @@ const CartPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   console.log(cart)
-  const {storeUserId,setStoreUserId}=useContext(Context)
+  const {setStoreUserId}=useContext(Context)
   const {userId2}=useParams()
+  const walletID = useSelector(state=>state.walletId)
+  const storeUserId = useSelector(state=>state.userId)
 
   useEffect(()=>{
     setStoreUserId(userId2)
@@ -38,7 +40,7 @@ const CartPage = () => {
       <Title>Your Cart</Title>
       {cart.length === 0 ? (
         <div>
-          <EmptyCartMessage>Your cart is empty. <SubmitButton onClick={()=>navigate(`/store/${storeUserId}`)}>Start Shopping</SubmitButton></EmptyCartMessage>
+          <EmptyCartMessage>Your cart is empty. <SubmitButton onClick={()=>navigate(`/store/${walletID}/${storeUserId}`)}>Start Shopping</SubmitButton></EmptyCartMessage>
           
         </div>
       ) : (

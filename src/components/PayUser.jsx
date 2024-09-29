@@ -28,10 +28,10 @@ const PayUser = () => {
       setError('Please fill in all fields.');
       return;
     }
-    if (parseFloat(amount) < 100) {
-      setError('Amount must be ₦100 or more.');
-      return;
-    }
+    // if (parseFloat(amount) < 100) {
+    //   setError('Amount must be $10 or more.');
+    //   return;
+    // }
 
     try {
       Swal.fire({
@@ -44,11 +44,12 @@ const PayUser = () => {
       });
 
       const response = await axios.post(
-        'https://paysphere-api.vercel.app/transfer_to_user', // Replace with your actual API URL
+        'https://paysphere-api.vercel.app/transfer_to_user', 
+        
         { walletID, amount: parseFloat(amount), pin },
         {
           headers: {
-            Authorization: `Bearer ${userToken}`, // Replace with your token management
+            Authorization: `Bearer ${userToken}`, 
             'Content-Type': 'application/json',
           },
         }

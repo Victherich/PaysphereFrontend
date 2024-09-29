@@ -59,7 +59,7 @@ const TransactionHistory = () => {
         <TransactionCard key={transaction._id}>
           <TransactionInfo>
             <P><Strong>ID:</Strong> {transaction._id}</P>
-            <P><Strong>Amount:</Strong> NGN {transaction.amountPaid}</P>
+            <P><Strong>Amount:</Strong> $ {transaction.amountPaid} USD</P>
             <P><Strong>Date:</Strong> {transaction.date}</P>
             <P><Strong>Recipient:</Strong> {transaction.receiptDetails}</P>
             <P><Strong>Status:</Strong> {transaction.message}</P>

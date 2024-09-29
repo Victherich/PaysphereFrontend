@@ -220,8 +220,8 @@ const creditUserWallet = async (walletID, amount) => {
         icon: 'success',
       });
     }
-    handleOrderSubmit()
-    // handleOrderNow2()
+    // handleOrderSubmit()
+    handleOrderNow2()
   } catch (error) {
     console.error(error)
     if (error.response?.status === 404) {
