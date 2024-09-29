@@ -18,6 +18,7 @@ const PayUser = () => {
   const [error, setError] = useState('');
   const userToken = useSelector(state=>state.userToken)
   const navigate = useNavigate()
+  console.log(userToken)
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -44,8 +45,9 @@ const PayUser = () => {
       });
 
       const response = await axios.post(
-        'https://paysphere-api.vercel.app/transfer_to_user', 
-        
+        // 'https://paysphere-api.vercel.app/transfer_to_user', 
+        'https://paysphere-api-utkm.onrender.com/transfer_to_user', 
+
         { walletID, amount: parseFloat(amount), pin },
         {
           headers: {

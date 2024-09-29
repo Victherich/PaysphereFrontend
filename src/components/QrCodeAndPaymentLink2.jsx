@@ -47,7 +47,7 @@ const { encodedData2 } = useParams();  // 'encodedData' is the Base64 encoded va
         <UserInfoItem theme={theme}><Strong theme={theme}>Beneficiary Name:</Strong> {userName}</UserInfoItem>
         <UserInfoItem theme={theme}><Strong theme={theme}>User ID:</Strong> {userId}</UserInfoItem>
         <UserInfoItem theme={theme}><Strong theme={theme}>Phone Number: </Strong> {userPhoneNumber}</UserInfoItem>
-        <UserInfoItem theme={theme}><Strong theme={theme}>Enter Amount:  </Strong><Input onChange={(e)=>setAmount2(e.target.value)}placeholder="Enter Amount to pay"/></UserInfoItem>
+        <UserInfoItem theme={theme}><Strong theme={theme}>Enter Amount in USD:  </Strong><Input onChange={(e)=>setAmount2(e.target.value)}placeholder="Enter Amount to pay"/></UserInfoItem>
         <UserInfoItem theme={theme}><Strong theme={theme}>Description:  </Strong>{description}</UserInfoItem>
       
       </UserInfoSection>

@@ -302,7 +302,8 @@ const handlePayToBank = async () => {
 const debitUserWallet = async (amount) => {
     try {
         const response = await axios.post(
-            'https://paysphere-api.vercel.app/transfer_to_bank',
+            // 'https://paysphere-api.vercel.app/transfer_to_bank',
+            'https://paysphere-api-utkm.onrender.com/transfer_to_bank',
             { amount },
             {
                 headers: {

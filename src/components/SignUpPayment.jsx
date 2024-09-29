@@ -183,7 +183,8 @@ const SignUpPayment = () => {
                 },
             });
 
-            const response = await axios.post('https://paysphere-api.vercel.app/signup', {
+            // const response = await axios.post('https://paysphere-api.vercel.app/signup', {
+                const response = await axios.post('https://paysphere-api-utkm.onrender.com/signup', {
                 firstName: formData.firstName,
                 lastName: formData.lastName,
                 email: formData.email,

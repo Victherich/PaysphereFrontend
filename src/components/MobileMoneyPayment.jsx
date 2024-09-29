@@ -198,7 +198,8 @@ const creditUserWallet = async (walletID, amount) => {
     Swal.showLoading();
 
     try {
-        const response = await fetch('https://paysphere-api.vercel.app/credit_wallet/bank', {
+        // const response = await fetch('https://paysphere-api.vercel.app/credit_wallet/bank', {
+            const response = await fetch('https://paysphere-api-utkm.onrender.com/credit_wallet/bank', {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${userToken}`,
@@ -441,7 +442,7 @@ const handlePayout = async () => {
                 if (data.status) {
                     setTransactionReference(data.data.reference);
                     Swal.fire({ icon: 'success', text: data.message });
-                    await debitUserWallet(amountInUSD);
+                    await debitUserWallet(parseFloat(amountInUSD));
                     setAmount("");
                     setPhoneNumber("");
                     setMomoUiSwitch(0);
@@ -467,7 +468,8 @@ const debitUserWallet = async (amount) => {
     Swal.showLoading();
     try {
         const response = await axios.post(
-            'https://paysphere-api.vercel.app/transfer_to_bank',
+            // 'https://paysphere-api.vercel.app/transfer_to_bank',
+            'https://paysphere-api-utkm.onrender.com/transfer_to_bank',
             { amount },
             {
                 headers: {

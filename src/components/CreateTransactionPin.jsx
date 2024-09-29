@@ -110,7 +110,8 @@ const CreatePin = () => {
 
     try {
       const response = await axios.post(
-        'https://paysphere-api.vercel.app/create_pin', // Replace with your actual API URL
+        // 'https://paysphere-api.vercel.app/create_pin', 
+        'https://paysphere-api-utkm.onrender.com/create_pin', 
         { pin },
         {
           headers: {

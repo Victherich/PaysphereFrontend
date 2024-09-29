@@ -41,7 +41,8 @@ const RequestToPay = () => {
 
         try {
             const response = await axios.post(
-                'https://paysphere-api.vercel.app/request_payment',
+                // 'https://paysphere-api.vercel.app/request_payment',
+                'https://paysphere-api-utkm.onrender.com/request_payment',
                 { payerId, amount: parseFloat(amount) },
                 {
                     headers: {

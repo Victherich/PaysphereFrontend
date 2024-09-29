@@ -396,9 +396,10 @@ const ApprovePayment = () => {
     } catch (error) {
       Swal.fire({
         title: 'Error!',
-        text: error.response?.data?.message || 'Failed to approve the payment',
+        text: error.response.data.error|| 'Failed to approve the payment',
         icon: 'error',
       });
+      console.error(error)
     } finally {
       loadingAlert.close();
     }

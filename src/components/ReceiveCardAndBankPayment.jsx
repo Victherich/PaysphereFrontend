@@ -404,7 +404,8 @@ const ReceiveCardAndBankPayment = () => {
         Swal.showLoading();
 
         try {
-            const response = await fetch('https://paysphere-api.vercel.app/credit_wallet/bank', {
+            // const response = await fetch('https://paysphere-api.vercel.app/credit_wallet/bank', {
+                const response = await fetch('https://paysphere-api-utkm.onrender.com/credit_wallet/bank', {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${userToken}`,
@@ -452,7 +453,7 @@ const ReceiveCardAndBankPayment = () => {
                         <FaCreditCard />
                         <FaUniversity />
                     </Icon>
-                    <Title theme={theme}>Receive Card and Bank Paymen</Title>
+                    <Title theme={theme}>Receive Card and Bank Payment</Title>
                     <Input
                         theme={theme}
                         value={amount}

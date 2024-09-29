@@ -17,74 +17,7 @@ const DeclinePayment = () => {
   
 
  
-//   const [formData, setFormData] = useState({
-//     walletID: '',
-//     password: '',
-// });
 
-// // Handle input change
-// const handleInputChange = (e) => {
-//     const { name, value } = e.target;
-//     setFormData({
-//         ...formData, // Copy existing form data
-//         [name]: value, // Update specific field with new value
-//     });
-// };
-
-   
-// // Handle form submission
-// const handleSubmit = async (event) => {
-//     event.preventDefault();
-
-//     try {
-//         // Display processing message
-//         Swal.fire({
-//             title: 'Processing...',
-//             text: 'Please wait while we process your request.',
-//             allowOutsideClick: false,
-//             didOpen: () => {
-//                 Swal.showLoading();
-//             },
-//         });
-
-//         // Send POST request to backend for login
-//         const response = await axios.post('https://paysphere-api.vercel.app/login', {
-//             walletID: formData.walletID,
-//             password: formData.password,
-//         }, {
-//             headers: {
-//                 'Content-Type': 'application/json',  // Specify JSON request
-//             },
-//         });
-
-//         // Success feedback and redirect
-//         Swal.fire({
-//             title: 'Success!',
-//             text: 'Processing...',
-//             icon: 'success',
-//             timer: 2000,
-//             showConfirmButton: false,
-//         }).then(() => {
-//             // Redirect to the dashboard page
-//             // navigate('/dashboard');
-//         });
-//         // console.log(response.data)
-//         // const userInfo = response.data.user
-//         const userToken = response.data.token
-//         // console.log(userInfo)
-//         handleDeclinePayment(userToken)
-//         // dispatch(userLogin({userInfo,userToken}))
-
-//     } catch (error) {
-//         console.error(error);
-//         // Handle errors
-//         Swal.fire({
-//             title: 'Error!',
-//             text: error.response?.data?.error || 'failed',
-//             icon: 'error',
-//         });
-//     }
-// };
 
 
 useEffect(()=>{
@@ -105,7 +38,8 @@ useEffect(()=>{
       });
 
       const response = await axios.post(
-        `https://paysphere-api.vercel.app/deny/${transactionId}`,
+        // `https://paysphere-api.vercel.app/deny/${transactionId}`,
+        `https://paysphere-api-utkm.onrender.com/deny/${transactionId}`,
         {}, 
         {
           headers: {

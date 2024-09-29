@@ -47,7 +47,7 @@ const { encodedData3 } = useParams();  // 'encodedData' is the Base64 encoded va
         <UserInfoItem theme={theme}><Strong theme={theme}>Payer Name:</Strong> {userName}</UserInfoItem>
         <UserInfoItem theme={theme}><Strong theme={theme}>User ID:</Strong> {userId}</UserInfoItem>
         <UserInfoItem theme={theme}><Strong theme={theme}>Phone Number: </Strong> {userPhoneNumber}</UserInfoItem>
-        <UserInfoItem theme={theme}><Strong theme={theme}>Amount:  </Strong> NGN {amount2}</UserInfoItem>
+        <UserInfoItem theme={theme}><Strong theme={theme}>Amount:  </Strong> ${amount2} USD</UserInfoItem>
         <UserInfoItem theme={theme}><Strong theme={theme}>Description:  </Strong> {description}</UserInfoItem>
       
       </UserInfoSection>

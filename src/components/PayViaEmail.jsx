@@ -58,7 +58,8 @@ const PayViaEmail = () => {
                 Swal.showLoading();
             },
         });
-      const response = await axios.post('https://paysphere-api.vercel.app/send_money_via_email', {
+      // const response = await axios.post('https://paysphere-api.vercel.app/send_money_via_email', {
+        const response = await axios.post('https://paysphere-api-utkm.onrender.com/send_money_via_email', {
         recipientEmail,
         amount: parseFloat(amount),
       }, {

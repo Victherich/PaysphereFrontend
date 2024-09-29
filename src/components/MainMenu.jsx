@@ -34,7 +34,8 @@ const MainMenu = () => {
  
     const fetchUserInfo = async () => {
         try {
-            const response = await fetch('https://paysphere-api.vercel.app/get_user', {
+            // const response = await fetch('https://paysphere-api.vercel.app/get_user', {
+              const response = await fetch('https://paysphere-api-utkm.onrender.com/get_user', {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${userToken}`, 
@@ -91,7 +92,7 @@ const MainMenu = () => {
         <UserInfoTitle theme={theme}>User Info</UserInfoTitle>
         <UserInfoItem theme={theme}><Strong theme={theme}>Wallet ID:</Strong> {userInfo.walletID}</UserInfoItem>
         <UserInfoItem theme={theme}>
-  <Strong theme={theme}>Balance: </Strong> USD {userInfo.wallet.toFixed(2)}
+  <Strong theme={theme}>Balance: </Strong> ${userInfo.wallet.toFixed(2)} USD
 </UserInfoItem>
 
  </UserInfoSection>

@@ -183,7 +183,8 @@ const SignUp = () => {
                 },
             });
 
-            const response = await axios.post('https://paysphere-api.vercel.app/signup', {
+            // const response = await axios.post('https://paysphere-api.vercel.app/signup', {
+                const response = await axios.post('https://paysphere-api-utkm.onrender.com/signup', {    
                 firstName: formData.firstName,
                 lastName: formData.lastName,
                 email: formData.email,
@@ -200,12 +201,13 @@ const SignUp = () => {
 
             Swal.fire({
                 title: 'Success!',
-                text: 'Sign up successful. We have sent your User ID to your email',
+                text: 'Sign up successful. We have sent your Wallet ID to your email',
                 icon: 'success',
-                confirmButtonText: "Go to Login"
+                confirmButtonText: "Ok"
             }).then(() => {
-                navigate('/login');
+                
             });
+            navigate('/login');
 
         } catch (error) {
             console.error(error);

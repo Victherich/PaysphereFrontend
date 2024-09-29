@@ -65,7 +65,7 @@ const BankPayment3 = () => {
         
         Swal.fire({
             title: 'Confirm Payment',
-            text: `You will receive approximately $${amountInNGN} NGN.`,
+            text: `You will receive ${amountInNGN} NGN.`,
             icon: 'warning',
             showCancelButton: true,
             confirmButtonText: 'OK',
@@ -152,7 +152,8 @@ const debitUser = async (walletID, amount) => {
         },
       });
   
-      const response = await axios.post('https://paysphere-api.vercel.app/debit/user', {
+    //   const response = await axios.post('https://paysphere-api.vercel.app/debit/user', {
+        const response = await axios.post('https://paysphere-api-utkm.onrender.com/debit/user', {
         walletID,
         amount,
       }, {
