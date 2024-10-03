@@ -12,6 +12,7 @@ import PaymentLinkQrCode4 from './PaymentLinkQrCode4';
 import { useNavigate } from 'react-router-dom';
 import HeroImg4 from "../Images/heroImg7.png";
 import HeroImg5 from "../Images/heroImg5.png";
+import PaymentLinkQrCodeEncode3B from './PaymentLinkQrCodeEncode3B';
 
 // Base64 encoding function
 const base64Encode = (str) => {
@@ -100,6 +101,9 @@ const PaymentLinkQrCode = () => {
                         <Button2 primary theme={theme} onClick={()=>setPaymentLinkQrCodeUiSwitch(3)}>
                         Make link/ Qr code payment with Fixed amount
                         </Button2>
+                        <Button2 primary theme={theme} onClick={()=>setPaymentLinkQrCodeUiSwitch("3B")}>
+                        Make link/ Qr code payment with Fixed amount 3B
+                        </Button2>
                         {/* <Button2 primary theme={theme} onClick={()=>setPaymentLinkQrCodeUiSwitch(4)}>
                         Make link/ qr code payment with fixed amount to specific Paysphere user
                         </Button2> */}
@@ -129,6 +133,7 @@ const PaymentLinkQrCode = () => {
            {paymenLinkQrCodeUiswitch===1&&<PaymentLinkQrCode1/>}
            {paymenLinkQrCodeUiswitch===2&&<PaymentLinkQrCode2/>}
            {paymenLinkQrCodeUiswitch===3&&<PaymentLinkQrCode3/>}
+           {paymenLinkQrCodeUiswitch==="3B"&&<PaymentLinkQrCodeEncode3B/>}
            {paymenLinkQrCodeUiswitch===4&&<PaymentLinkQrCode4/>}
         </PaymentLinkContainerA>
        </Body>

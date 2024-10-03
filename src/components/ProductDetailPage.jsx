@@ -52,7 +52,7 @@ const ProductDetail = () => {
   const fetchProductDetails = async () => {
     try {
       const response = await axios.get(
-        `https://elexdondigitalacademy.com/api3/get_product.php?productId=${productId}`
+        `https://hotsalesng.com/api3/get_product.php?productId=${productId}`
       );
       if (response.data.success) {
         dispatch(setProductDetail(response.data.product));
@@ -85,14 +85,14 @@ const ProductDetail = () => {
       <ProductDetailA>
       <ImageSection>
         <MainImage
-          src={`https://elexdondigitalacademy.com/api3/uploads/${mainImage}`}
+          src={`https://hotsalesng.com/api3/uploads/${mainImage}`}
           alt={productDetail.product_name}
         />
         <ThumbnailGallery>
           {productDetail.product_images.map((image, index) => (
             <Thumbnail
               key={index}
-              src={`https://elexdondigitalacademy.com/api3/uploads/${image}`}
+              src={`https://hotsalesng.com/api3/uploads/${image}`}
               alt={`${productDetail.product_name} thumbnail ${index + 1}`}
               onClick={() => handleImageClick(image, index)}
               active={mainImage === image}

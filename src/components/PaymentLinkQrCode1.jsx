@@ -1,4 +1,140 @@
 
+// import React, { useContext, useState } from 'react';
+// import styled from 'styled-components';
+// import { Context } from './Context';
+// import { FaCopy, FaLink, FaQrcode, FaShareAlt } from 'react-icons/fa';
+// import { QRCodeCanvas } from 'qrcode.react';
+// import Swal from 'sweetalert2';
+// import { useSelector } from 'react-redux';
+
+// // Base64 encoding function
+// const base64Encode = (str) => {
+//     return btoa(str); // Converts string to base64
+// };
+
+// // Base64 decoding function
+// const base64Decode = (str) => {
+//     return atob(str); // Converts base64 back to string
+// };
+
+// const PaymentLinkQrCode1 = () => {
+
+//     const { setMenuSwitch, theme,paymenLinkQrCodeUiswitch,setPaymentLinkQrCodeUiSwitch } = useContext(Context);
+//     const userInfo = useSelector(state =>state.userInfo)
+//     const [amount, setAmount] = useState('');
+//     const [url, setUrl] = useState('');
+//     const [description,setDescription]=useState("")
+//     const baseUrl = window.location.origin; // Example base URL
+//     const userId = userInfo.walletID;  // Example user ID
+//     const userName = userInfo.firstName;
+//     const phoneNumber = userInfo.phoneNumber
+    
+
+//     const generateLink = () => {
+//         if (amount.trim() === '') {
+//             Swal.fire({ icon: 'error', title: 'Error', text: 'Please enter an amount' });
+//             return;
+//         }
+
+//         // Encode the userId and amount
+//         const encodedData = base64Encode(`${userId}-${amount}-${userName}-${phoneNumber}-${description}`);
+//         const paymentUrl = `${baseUrl}/payment/${encodedData}`;  // Use the encoded data in the URL
+//         setUrl(paymentUrl);
+//     };
+
+//     const copyToClipboard = () => {
+//         if (url) {
+//             navigator.clipboard.writeText(url);
+//             Swal.fire({ icon: 'success', title: 'Copied!', text: 'Payment link copied to clipboard' });
+//         } else {
+//             Swal.fire({ icon: 'error', title: 'Error', text: 'No link generated to copy' });
+//         }
+//     };
+
+//     // Function to convert QR code to data URL
+//     const getQRCodeDataUrl = () => {
+//         const canvas = document.getElementById('qrCode');
+//         if (canvas) {
+//             return canvas.toDataURL();
+//         }
+//         return null;
+//     };
+
+//     const sharePaymentLink = () => {
+//         const qrCodeDataUrl = getQRCodeDataUrl();
+
+//         if (navigator.share) {
+//             navigator.share({
+//                 title: 'Payment Link',
+//                 text: `Pay $${amount} using this link: ${url}`,
+//                 url: url,
+//                 files: qrCodeDataUrl ? [new File([qrCodeDataUrl], 'QRCode.png', { type: 'image/png' })] : null
+//             })
+//                 .then(() => console.log('Payment link shared successfully'))
+//                 .catch(err => console.error('Error sharing', err));
+//         } else {
+//             Swal.fire({ icon: 'error', title: 'Error', text: 'Sharing is not supported on this device/browser.' });
+//         }
+//     };
+
+//     return (
+//         <PaymentLinkContainerA>
+        
+//            <div>
+//            {!url ? (
+//                 <PaymentLinkContainer theme={theme}>
+//                     <Icon theme={theme}>
+//                         <FaLink /><FaQrcode/>
+//                     </Icon>
+//                     <Title theme={theme}>Receive link/ Qr code payment with Fixed amount</Title>
+//                     <Input
+//                         theme={theme}
+//                         type="text"
+//                         placeholder="Enter Amount in USD"
+//                         value={amount}
+//                         onChange={(e) => setAmount(e.target.value)}
+//                     />
+//                     <Input
+//                         theme={theme}
+//                         type="text"
+//                         placeholder="Enter Description"
+//                         value={description}
+//                         onChange={(e) => setDescription(e.target.value)}
+//                     />
+//                     <ButtonContainer>
+//                         <Button primary theme={theme} onClick={generateLink}>
+//                             Generate Link / QR Code
+//                         </Button>
+//                         {/* <Button onClick={() => {setMenuSwitch(0);setPaymentLinkQrCodeUiSwitch(0)}} theme={theme}>Cancel</Button> */}
+//                         <Button primary onClick={() => setPaymentLinkQrCodeUiSwitch(0)} theme={theme}>Back</Button>
+//                     </ButtonContainer>
+//                 </PaymentLinkContainer>
+//             ) : (
+//                 <PaymentLinkContainer theme={theme}>
+//                     <Title theme={theme}>Copy Payment Link & Scan QR Code</Title>
+
+//                     <LinkWrap>
+//                         <Link theme={theme}>{url}</Link><CopyIcon theme={theme} onClick={copyToClipboard} />
+//                     </LinkWrap>
+//                     <QRCodeCanvas id="qrCode" value={url} size={200} />
+//                     <ButtonContainer>
+//                         <Button primary theme={theme} onClick={sharePaymentLink}>
+//                             Share <FaShareAlt />
+//                         </Button>
+
+//                         <Button onClick={() => {setMenuSwitch(0);setPaymentLinkQrCodeUiSwitch(0)}} theme={theme}>Cancel</Button>
+//                     </ButtonContainer>
+//                 </PaymentLinkContainer>
+//             )}
+//            </div>
+      
+      
+      
+//         </PaymentLinkContainerA>
+//     );
+// };
+
+// export default PaymentLinkQrCode1;
 import React, { useContext, useState } from 'react';
 import styled from 'styled-components';
 import { Context } from './Context';
@@ -18,17 +154,15 @@ const base64Decode = (str) => {
 };
 
 const PaymentLinkQrCode1 = () => {
-
-    const { setMenuSwitch, theme,paymenLinkQrCodeUiswitch,setPaymentLinkQrCodeUiSwitch } = useContext(Context);
-    const userInfo = useSelector(state =>state.userInfo)
+    const { setMenuSwitch, theme, paymenLinkQrCodeUiswitch, setPaymentLinkQrCodeUiSwitch } = useContext(Context);
+    const userInfo = useSelector(state => state.userInfo);
     const [amount, setAmount] = useState('');
     const [url, setUrl] = useState('');
-    const [description,setDescription]=useState("")
+    const [description, setDescription] = useState('');
     const baseUrl = window.location.origin; // Example base URL
     const userId = userInfo.walletID;  // Example user ID
     const userName = userInfo.firstName;
-    const phoneNumber = userInfo.phoneNumber
-    
+    const phoneNumber = userInfo.phoneNumber;
 
     const generateLink = () => {
         if (amount.trim() === '') {
@@ -51,7 +185,28 @@ const PaymentLinkQrCode1 = () => {
         }
     };
 
-    // Function to convert QR code to data URL
+    const sharePaymentLink = () => {
+        const qrCodeDataUrl = getQRCodeDataUrl(); // Optional: convert QR code to an image file
+
+        if (navigator.share) {
+            navigator.share({
+                title: 'Payment Link',
+                text: `Pay $${amount} using this link: ${url}`,
+                url: url,  // This is the URL being shared
+                files: qrCodeDataUrl ? [new File([qrCodeDataUrl], 'QRCode.png', { type: 'image/png' })] : null // Optional: QR code as a file
+            })
+            .then(() => console.log('Payment link shared successfully'))
+            .catch(err => console.error('Error sharing', err));
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Sharing is not supported on this device/browser. Please copy the link manually.'
+            });
+        }
+    };
+
+    // Function to convert QR code to data URL (optional)
     const getQRCodeDataUrl = () => {
         const canvas = document.getElementById('qrCode');
         if (canvas) {
@@ -60,81 +215,60 @@ const PaymentLinkQrCode1 = () => {
         return null;
     };
 
-    const sharePaymentLink = () => {
-        const qrCodeDataUrl = getQRCodeDataUrl();
-
-        if (navigator.share) {
-            navigator.share({
-                title: 'Payment Link',
-                text: `Pay $${amount} using this link: ${url}`,
-                url: url,
-                files: qrCodeDataUrl ? [new File([qrCodeDataUrl], 'QRCode.png', { type: 'image/png' })] : null
-            })
-                .then(() => console.log('Payment link shared successfully'))
-                .catch(err => console.error('Error sharing', err));
-        } else {
-            Swal.fire({ icon: 'error', title: 'Error', text: 'Sharing is not supported on this device/browser.' });
-        }
-    };
-
     return (
         <PaymentLinkContainerA>
-        
-           <div>
-           {!url ? (
-                <PaymentLinkContainer theme={theme}>
-                    <Icon theme={theme}>
-                        <FaLink /><FaQrcode/>
-                    </Icon>
-                    <Title theme={theme}>Receive link/ Qr code payment with Fixed amount</Title>
-                    <Input
-                        theme={theme}
-                        type="text"
-                        placeholder="Enter Amount in USD"
-                        value={amount}
-                        onChange={(e) => setAmount(e.target.value)}
-                    />
-                    <Input
-                        theme={theme}
-                        type="text"
-                        placeholder="Enter Description"
-                        value={description}
-                        onChange={(e) => setDescription(e.target.value)}
-                    />
-                    <ButtonContainer>
-                        <Button primary theme={theme} onClick={generateLink}>
-                            Generate Link / QR Code
-                        </Button>
-                        {/* <Button onClick={() => {setMenuSwitch(0);setPaymentLinkQrCodeUiSwitch(0)}} theme={theme}>Cancel</Button> */}
-                        <Button primary onClick={() => setPaymentLinkQrCodeUiSwitch(0)} theme={theme}>Back</Button>
-                    </ButtonContainer>
-                </PaymentLinkContainer>
-            ) : (
-                <PaymentLinkContainer theme={theme}>
-                    <Title theme={theme}>Copy Payment Link & Scan QR Code</Title>
+            <div>
+                {!url ? (
+                    <PaymentLinkContainer theme={theme}>
+                        <Icon theme={theme}>
+                            <FaLink /><FaQrcode />
+                        </Icon>
+                        <Title theme={theme}>Receive link/ QR code payment with Fixed amount</Title>
+                        <Input
+                            theme={theme}
+                            type="text"
+                            placeholder="Enter Amount in USD"
+                            value={amount}
+                            onChange={(e) => setAmount(e.target.value)}
+                        />
+                        <Input
+                            theme={theme}
+                            type="text"
+                            placeholder="Enter Description"
+                            value={description}
+                            onChange={(e) => setDescription(e.target.value)}
+                        />
+                        <ButtonContainer>
+                            <Button primary theme={theme} onClick={generateLink}>
+                                Generate Link / QR Code
+                            </Button>
+                            <Button primary onClick={() => setPaymentLinkQrCodeUiSwitch(0)} theme={theme}>Back</Button>
+                        </ButtonContainer>
+                    </PaymentLinkContainer>
+                ) : (
+                    <PaymentLinkContainer theme={theme}>
+                        <Title theme={theme}>Copy Payment Link & Scan QR Code</Title>
 
-                    <LinkWrap>
-                        <Link theme={theme}>{url}</Link><CopyIcon theme={theme} onClick={copyToClipboard} />
-                    </LinkWrap>
-                    <QRCodeCanvas id="qrCode" value={url} size={200} />
-                    <ButtonContainer>
-                        <Button primary theme={theme} onClick={sharePaymentLink}>
-                            Share <FaShareAlt />
-                        </Button>
+                        <LinkWrap>
+                            <Link theme={theme}>{url}</Link><CopyIcon theme={theme} onClick={copyToClipboard} />
+                        </LinkWrap>
+                        <QRCodeCanvas id="qrCode" value={url} size={200} />
+                        <ButtonContainer>
+                            <Button primary theme={theme} onClick={sharePaymentLink}>
+                                QR CODE Share
+                            </Button>
 
-                        <Button onClick={() => {setMenuSwitch(0);setPaymentLinkQrCodeUiSwitch(0)}} theme={theme}>Cancel</Button>
-                    </ButtonContainer>
-                </PaymentLinkContainer>
-            )}
-           </div>
-      
-      
-      
+                            <Button onClick={() => { setMenuSwitch(0); setPaymentLinkQrCodeUiSwitch(0) }} theme={theme}>Cancel</Button>
+                        </ButtonContainer>
+                    </PaymentLinkContainer>
+                )}
+            </div>
         </PaymentLinkContainerA>
     );
 };
 
 export default PaymentLinkQrCode1;
+
 
 
 

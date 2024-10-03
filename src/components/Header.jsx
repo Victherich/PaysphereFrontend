@@ -7,6 +7,17 @@ import logo from "../Images/logo.png"
 import { useSelector } from 'react-redux';
 import DashPop from './DashPop';
 import { useRef,useEffect } from 'react';
+import Swal from 'sweetalert2';
+
+
+// export const handleAllBalanceAlert =(balanceDifference)=>{
+//   Swal.fire({
+//     title: 'New Transaction Alert!',
+//     text: `Your balance has changed by $${balanceDifference.toFixed(2)}.`,
+//     icon: 'info',
+//     confirmButtonText: 'OK'
+// });
+// }
 
 const Header = () => {
   const { theme, toggleTheme ,setMenuSwitch,dashPopSwitch,setDashPopSwitch, afterOrderNav,setAfterOrderNav} = useContext(Context);
@@ -50,6 +61,8 @@ const Header = () => {
     }
 
   },[afterOrderNav])
+
+ 
  
 
   return (

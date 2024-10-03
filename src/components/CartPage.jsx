@@ -47,7 +47,7 @@ const CartPage = () => {
         <CartItems>
           {cart.map((item) => (
             <CartItem key={item.id}>
-              <CartImg src={`https://elexdondigitalacademy.com/api3/uploads/${item.product_images[0]}`} alt="Cart Image"/>
+              <CartImg src={`https://hotsalesng.com/api3/uploads/${item.product_images[0]}`} alt="Cart Image"/>
 
               
               <ItemDetails>

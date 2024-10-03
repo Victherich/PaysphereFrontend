@@ -116,6 +116,8 @@ const ContextProvider = ({ children }) => {
     const [newTransactions,setNewTransactions]=useState([])
 
     const [count,setCount]=useState(0)
+    console.log(count)
+
 
   
   
@@ -197,7 +199,7 @@ const handlePolling = async () => {
 useEffect(()=>{
   if(enablePolling===true){
     const id = setInterval(()=>{
-      handlePolling()
+      // handlePolling()
     },3000)
   }
 },[enablePolling])
@@ -325,6 +327,80 @@ try {
   };
   
 
+const handleAllBalanceAlert =(balanceDifference)=>{
+  Swal.fire({
+    title: 'New Transaction Alert!',
+    text: `Your balance has changed by $${balanceDifference.toFixed(2)}.`,
+    icon: 'info',
+    confirmButtonText: 'OK'
+});
+}
+
+
+useEffect(() => {
+  let previousBalance = null; 
+
+  const fetchUserInfo = async () => {
+      try {
+          const response = await fetch('https://paysphere-api-utkm.onrender.com/get_user', {
+              method: 'GET',
+              headers: {
+                  'Authorization': `Bearer ${userToken}`, 
+                  'Content-Type': 'application/json'
+              }
+          });
+
+          if (response.ok) {
+              const data = await response.json();
+              const userInfo = data.user;
+              const currentBalance = userInfo.wallet; 
+              console.log(userInfo)
+
+              // Check if the previous balance exists and is different from the current balance
+              if (previousBalance !== null && previousBalance !== currentBalance) {
+                  const balanceDifference = currentBalance - previousBalance;
+
+                  // Trigger SweetAlert with the balance difference
+                  Swal.fire({
+                    title: `New ${currentBalance<previousBalance?"Debit":"Credit"} Alert!`,
+                      text: `AMOUNT: $${balanceDifference.toFixed(2)}.`,
+                      icon: 'info',
+                      confirmButtonText: 'OK'
+                  });
+
+                  // handleAllBalanceAlert(balanceDifference)
+                  
+              }
+
+              // Update the previous balance to the current balance for future checks
+              previousBalance = currentBalance;
+
+              // Dispatch the user info and token to the Redux store
+              // dispatch(userLogin({ userInfo, userToken }));
+
+          } else if (response.status === 404) {
+              console.log('User not found.');
+          } else {
+              console.log('An error occurred while fetching user details.');
+          }
+      } catch (err) {
+          console.error('Fetch error:', err);
+      } finally {
+          setLoading(false);
+      }
+  };
+
+  // Call fetchUserInfo immediately on component mount
+  fetchUserInfo();
+
+  // Set interval to call fetchUserInfo every 5 seconds
+  const intervalId = setInterval(fetchUserInfo, 5000);
+
+  // Cleanup the interval when the component unmounts
+  return () => clearInterval(intervalId);
+
+}, [userToken, dispatch]);
+
 
   return (
     <Context.Provider value={{ menuSwitch, 
@@ -342,7 +418,8 @@ try {
     dashPopSwitch,setDashPopSwitch,
     storeUserId,setStoreUserId,handleOrderSubmit,
     handleOrderNow2,
-    afterOrderNav,setAfterOrderNav
+    afterOrderNav,setAfterOrderNav,
+    handleAllBalanceAlert
     }}>
       {children}
     </Context.Provider>
@@ -354,3 +431,10 @@ export default ContextProvider;
 // User: elexdond_Ps
 // Database: elexdond_Ps
 // databasePw at https://elexdondigitalacademy.com is paysphere123paysphere
+
+
+
+// password: est123est&&est123est&&
+//User: hotsalesng_ps
+//Database: hotsalesng_ps
+//database at hotsaleng.com

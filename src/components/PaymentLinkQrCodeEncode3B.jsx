@@ -5,37 +5,52 @@ import { Context } from './Context';
 import { FaCopy, FaLink, FaQrcode, FaShareAlt } from 'react-icons/fa';
 import { QRCodeCanvas } from 'qrcode.react';
 import Swal from 'sweetalert2';
-import { useDispatch, useSelector } from 'react-redux';
+import {useSelector }from "react-redux"
 
-// Base64 encoding function
-const base64Encode = (str) => {
-    return btoa(str); // Converts string to base64
-};
 
-// Base64 decoding function
-const base64Decode = (str) => {
-    return atob(str); // Converts base64 back to string
-};
-
-const PaymentLinkQrCode2 = () => {
-
-    const { setMenuSwitch, theme ,paymenLinkQrCodeUiswitch,setPaymentLinkQrCodeUiSwitch} = useContext(Context);
-    const [description, setDescription] = useState('');
-    const userInfo = useSelector(state=>state.userInfo)
+const PaymentLinkQrCodeEncode3B = () => {
+    const userInfo = useSelector(state=>state.userInfo);
+    
+    const { setMenuSwitch, theme,paymenLinkQrCodeUiswitch,setPaymentLinkQrCodeUiSwitch } = useContext(Context);
+    const [amount, setAmount] = useState('');
     const [url, setUrl] = useState('');
-    const baseUrl = window.location.origin; // Example base URL
-    const userId = userInfo.walletID;  // Example user ID
-    const userName = userInfo.firstName;
-    const phoneNumber = userInfo.phoneNumber
+    const baseUrl = window.location.origin; 
+    // const userId = userInfo.walletID 
+    // const userName = userInfo.firstName
+    // const phoneNumber = userInfo.phoneNumber;
+    const [description,setDescription]=useState('')
 
-    const generateLink = () => {
-     
 
-        // Encode the userId and amount
-        const encodedData2 = base64Encode(`${userId}-${userName}-${phoneNumber}-${description}`);
-        const paymentUrl = `${baseUrl}/payment2/${encodedData2}`;  // Use the encoded data in the URL
-        setUrl(paymentUrl);
+    const generateLink = async () => {
+        Swal.fire({text:"Please Wait..."})
+        Swal.showLoading();
+        const userId = userInfo.walletID;
+        const userName = userInfo.firstName;
+        const phoneNumber = userInfo.phoneNumber;
+
+        const data = { userId, userName, phoneNumber, description, amount };
+
+        try {
+            const response = await fetch('https://hotsalesng.com/api3/save_payment.php', {  // Adjust the URL to match your backend API
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                setUrl(result.link);  // Store the link for use later
+                Swal.fire('Success', 'Payment link generated successfully!', 'success');
+            } else {
+                Swal.fire('Error', result.error || 'Something went wrong', 'error');
+            }
+        } catch (error) {
+            Swal.fire('Error', 'Unable to generate the payment link', 'error');
+        }
     };
+
+
 
     const copyToClipboard = () => {
         if (url) {
@@ -61,7 +76,7 @@ const PaymentLinkQrCode2 = () => {
         if (navigator.share) {
             navigator.share({
                 title: 'Payment Link',
-                text: `Pay using this link: ${url}`,
+                text: `Receive USD ${amount} using this link: ${url}`,
                 url: url,
                 files: qrCodeDataUrl ? [new File([qrCodeDataUrl], 'QRCode.png', { type: 'image/png' })] : null
             })
@@ -74,14 +89,21 @@ const PaymentLinkQrCode2 = () => {
 
     return (
         <PaymentLinkContainerA>
-          
+       
            <div>
            {!url ? (
                 <PaymentLinkContainer theme={theme}>
                     <Icon theme={theme}>
                         <FaLink /><FaQrcode/>
                     </Icon>
-                    <Title theme={theme}>Receive link/Qr code payment for variable amounts</Title>
+                    <Title theme={theme}>Make link/ Qr code payment with Fixed amount </Title>
+                    <Input
+                        theme={theme}
+                        type="text"
+                        placeholder="Enter Amount in USD"
+                        value={amount}
+                        onChange={(e) => setAmount(e.target.value)}
+                    />
                     <Input
                         theme={theme}
                         type="text"
@@ -107,7 +129,7 @@ const PaymentLinkQrCode2 = () => {
                     <QRCodeCanvas id="qrCode" value={url} size={200} />
                     <ButtonContainer>
                         <Button primary theme={theme} onClick={sharePaymentLink}>
-                            QR CODE Share 
+                          QR CODE Share
                         </Button>
 
                         <Button onClick={() => {setMenuSwitch(0);setPaymentLinkQrCodeUiSwitch(0)}} theme={theme}>Cancel</Button>
@@ -115,13 +137,12 @@ const PaymentLinkQrCode2 = () => {
                 </PaymentLinkContainer>
             )}
            </div>
-         
-         
+          
         </PaymentLinkContainerA>
     );
 };
 
-export default PaymentLinkQrCode2;
+export default PaymentLinkQrCodeEncode3B;
 
 
 

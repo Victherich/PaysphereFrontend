@@ -118,7 +118,7 @@ const PaymentLinkQrCode3 = () => {
                     <QRCodeCanvas id="qrCode" value={url} size={200} />
                     <ButtonContainer>
                         <Button primary theme={theme} onClick={sharePaymentLink}>
-                            Share <FaShareAlt />
+                          QR CODE Share
                         </Button>
 
                         <Button onClick={() => {setMenuSwitch(0);setPaymentLinkQrCodeUiSwitch(0)}} theme={theme}>Cancel</Button>

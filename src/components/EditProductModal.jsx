@@ -1210,7 +1210,7 @@ const EditProductModal = ({ product, onClose, onUpdate }) => {
         productImages: product.product_images.map(img => `uploads/${img}`),
         type: product.type || 'product', // Prefill type, default to 'product'
       });
-      setPreviewImages(product.product_images.map(img => `https://elexdondigitalacademy.com/api3/uploads/${img}`));
+      setPreviewImages(product.product_images.map(img => `https://hotsalesng.com/api3/uploads/${img}`));
     }
   }, [product]);
 
@@ -1252,6 +1252,45 @@ const EditProductModal = ({ product, onClose, onUpdate }) => {
     }));
   };
 
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   const loadingAlert = Swal.fire({ title: "Updating..." });
+  //   Swal.showLoading();
+
+  //   const formData = new FormData();
+  //   formData.append('productId', product.id);
+  //   formData.append('productName', productData.productName);
+  //   formData.append('description', productData.description);
+  //   formData.append('price', productData.price);
+  //   formData.append('availableStock', productData.availableStock);
+  //   formData.append('userId', productData.userId);
+  //   formData.append('type', productData.type); // Append the type field
+
+  //   productData.productImages.forEach((image) => {
+  //     if (typeof image === 'string') {
+  //       formData.append('productImages[]', image); // for existing images
+  //     } else {
+  //       formData.append('productImages[]', image); // for new images
+  //     }
+  //   });
+
+  //   try {
+  //     const response = await axios.post('https://hotsalesng.com/api3/update_product.php', formData);
+  //     if (response.data.success) {
+  //       Swal.fire('Success', response.data.message, 'success');
+  //       if (onUpdate) onUpdate();
+  //       onClose();
+  //     } else {
+  //       Swal.fire('Error', response.data.error, 'error');
+  //     }
+  //   } catch (error) {
+  //     Swal.fire('Error', 'There was an error updating the product.', 'error');
+  //   } finally {
+  //     loadingAlert.close();
+  //   }
+  // };
+
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const loadingAlert = Swal.fire({ title: "Updating..." });
@@ -1266,29 +1305,38 @@ const EditProductModal = ({ product, onClose, onUpdate }) => {
     formData.append('userId', productData.userId);
     formData.append('type', productData.type); // Append the type field
 
-    productData.productImages.forEach((image) => {
-      if (typeof image === 'string') {
-        formData.append('productImages[]', image); // for existing images
-      } else {
-        formData.append('productImages[]', image); // for new images
-      }
-    });
+    // Add existing images only if no new images are uploaded
+    if (productData.productImages.length === 0 || productData.productImages.every(img => typeof img === 'string')) {
+        // Include existing images if there are no new images
+        product.product_images.forEach(image => {
+            formData.append('productImages[]', `uploads/${image}`); // For existing images
+        });
+    } else {
+        // Include new images
+        productData.productImages.forEach(image => {
+            if (typeof image !== 'string') {
+                formData.append('productImages[]', image); // for new images
+            }
+        });
+    }
 
     try {
-      const response = await axios.post('https://elexdondigitalacademy.com/api3/update_product.php', formData);
-      if (response.data.success) {
-        Swal.fire('Success', response.data.message, 'success');
-        if (onUpdate) onUpdate();
-        onClose();
-      } else {
-        Swal.fire('Error', response.data.error, 'error');
-      }
+        const response = await axios.post('https://hotsalesng.com/api3/update_product.php', formData);
+        if (response.data.success) {
+            Swal.fire('Success', response.data.message, 'success');
+            if (onUpdate) onUpdate();
+            onClose();
+        } else {
+            Swal.fire('Error', response.data.error, 'error');
+        }
     } catch (error) {
-      Swal.fire('Error', 'There was an error updating the product.', 'error');
+        Swal.fire('Error', 'There was an error updating the product.', 'error');
     } finally {
-      loadingAlert.close();
+        loadingAlert.close();
     }
-  };
+};
+
+
 
   return (
     <ModalContainer>

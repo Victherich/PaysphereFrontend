@@ -17,7 +17,7 @@ const UserProducts = ({ setCurrentView }) => {
 
   const fetchUserProducts = async () => {
     try {
-      const response = await axios.get(`https://elexdondigitalacademy.com/api3/get_user_products.php?userId=${userInfo._id}`);
+      const response = await axios.get(`https://hotsalesng.com/api3/get_user_products.php?userId=${userInfo._id}`);
       if (response.data.success) {
         setProducts(response.data.products);
       } else {
@@ -46,7 +46,7 @@ const UserProducts = ({ setCurrentView }) => {
 
     if (confirmed.isConfirmed) {
       try {
-        const response = await axios.delete('https://elexdondigitalacademy.com/api3/delete_product.php', {
+        const response = await axios.delete('https://hotsalesng.com/api3/delete_product.php', {
           data: { productId }
         });
         if (response.data.success) {
@@ -78,9 +78,9 @@ const UserProducts = ({ setCurrentView }) => {
             <p>Price: ${product.price}</p>
             <p>Available Stock: {product.available_stock}</p>
             <p>Type: {product.type}</p> {/* Display the product type */}
-            <ImagePreview src={`https://elexdondigitalacademy.com/api3/uploads/${product.product_images[0]}`} alt={product.product_name} />
+            <ImagePreview src={`https://hotsalesng.com/api3/uploads/${product.product_images[0]}`} alt={product.product_name} />
             <ButtonContainer>
-              <EditButton onClick={() => handleEditProduct(product)}>Edit</EditButton>
+              {/* <EditButton onClick={() => handleEditProduct(product)}>Edit</EditButton> */}
               <DeleteButton onClick={() => handleDeleteProduct(product.id)}>Delete</DeleteButton>
             </ButtonContainer>
           </ProductCard>

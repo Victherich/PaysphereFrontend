@@ -23,7 +23,7 @@ const Services = () => {
 
   const fetchUserProducts = async () => {
     try {
-      const response = await axios.get(`https://elexdondigitalacademy.com/api3/get_user_products.php?userId=${userId2}`);
+      const response = await axios.get(`https://hotsalesng.com/api3/get_user_products.php?userId=${userId2}`);
       if (response.data.success) {
         setProducts(response.data.products);
       } else {
@@ -58,7 +58,7 @@ const Services = () => {
             <article key={index} className='serviceCon' onClick={() => handleProductClick(product)}>
               <div className='serviceImg'>
                 <img
-                  src={`https://elexdondigitalacademy.com/api3/uploads/${product.product_images[0]}`}
+                  src={`https://hotsalesng.com/api3/uploads/${product.product_images[0]}`}
                   alt={product.product_name}
                 />
               </div>

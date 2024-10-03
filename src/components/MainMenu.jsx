@@ -2,6 +2,7 @@
 
 
 
+
 import React, { useContext } from 'react';
 import styled from 'styled-components';
 import { FaMoneyBillWave, FaLink, FaQrcode, FaUserFriends, FaUniversity, FaFileInvoiceDollar, FaMobileAlt, FaWifi, FaCreditCard, FaSms, FaPhoneAlt, FaArrowDown, FaLongArrowAltDown, FaArrowUp, FaCashRegister, FaMoneyBill, FaMailchimp, FaEnvelopeOpen } from 'react-icons/fa';
@@ -14,6 +15,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import CreatePin from './CreateTransactionPin';
 import { userLogin } from '../Features/Slice';
 import { useNavigate } from 'react-router-dom';
+import { handleAllBalanceAlert } from './Header';
 
 const MainMenu = () => {
   const { setMenuSwitch, theme,createTransactionPinSwitch,setCreateTransactionPinSwitch, pop1,balance ,loading, setLoading} = useContext(Context);
@@ -24,50 +26,154 @@ const MainMenu = () => {
   const [transactions, setTransactions] = useState([]);
   const [newTransactions, setNewTransactions] = useState([]);
   const navigate = useNavigate();
-
+console.log(userInfo)
 
 
   
 
 
-  useEffect(() => {
+//   useEffect(() => {
  
-    const fetchUserInfo = async () => {
-        try {
-            // const response = await fetch('https://paysphere-api.vercel.app/get_user', {
-              const response = await fetch('https://paysphere-api-utkm.onrender.com/get_user', {
-                method: 'GET',
-                headers: {
-                    'Authorization': `Bearer ${userToken}`, 
-                    'Content-Type': 'application/json'
-                }
-            });
+//     const fetchUserInfo = async () => {
+//         try {
+//             // const response = await fetch('https://paysphere-api.vercel.app/get_user', {
+//               const response = await fetch('https://paysphere-api-utkm.onrender.com/get_user', {
+//                 method: 'GET',
+//                 headers: {
+//                     'Authorization': `Bearer ${userToken}`, 
+//                     'Content-Type': 'application/json'
+//                 }
+//             });
 
-            if (response.ok) {
-                const data = await response.json();
+//             if (response.ok) {
+//                 const data = await response.json();
 
-                const userInfo = data.user
+//                 const userInfo = data.user
 
-                dispatch(userLogin({userInfo,userToken}))
-            } else if (response.status === 404) {
-                console.log('User not found.');
-            } else {
-                console.log('An error occurred while fetching user details.');
-            }
-        } catch (err) {
-            console.error('Fetch error:', err);
+//                 dispatch(userLogin({userInfo,userToken}))
+//             } else if (response.status === 404) {
+//                 console.log('User not found.');
+//             } else {
+//                 console.log('An error occurred while fetching user details.');
+//             }
+//         } catch (err) {
+//             console.error('Fetch error:', err);
    
-        } finally {
-            setLoading(false);  
-        }
-    };
+//         } finally {
+//             setLoading(false);  
+//         }
+//     };
 
-    fetchUserInfo(); 
+//     fetchUserInfo(); 
 
-}, []);  
+// }, []);  
+
+
+// useEffect(() => {
+//   const fetchUserInfo = async () => {
+//       try {
+//           const response = await fetch('https://paysphere-api-utkm.onrender.com/get_user', {
+//               method: 'GET',
+//               headers: {
+//                   'Authorization': `Bearer ${userToken}`, 
+//                   'Content-Type': 'application/json'
+//               }
+//           });
+
+//           if (response.ok) {
+//               const data = await response.json();
+//               const userInfo = data.user;
+//               dispatch(userLogin({ userInfo, userToken }));
+//           } else if (response.status === 404) {
+//               console.log('User not found.');
+//           } else {
+//               console.log('An error occurred while fetching user details.');
+//           }
+//       } catch (err) {
+//           console.error('Fetch error:', err);
+//       } finally {
+//           setLoading(false);
+//       }
+//   };
+
+//   // Call fetchUserInfo immediately on component mount
+//   fetchUserInfo();
+
+//   // Set interval to call fetchUserInfo every 5 seconds
+//   const intervalId = setInterval(fetchUserInfo, 5000);
+
+//   // Cleanup the interval when the component unmounts
+//   return () => clearInterval(intervalId);
+
+// }, [userToken, dispatch]);
 
 
 
+
+
+useEffect(() => {
+  let previousBalance = null; 
+
+  const fetchUserInfo = async () => {
+      try {
+          const response = await fetch('https://paysphere-api-utkm.onrender.com/get_user', {
+              method: 'GET',
+              headers: {
+                  'Authorization': `Bearer ${userToken}`, 
+                  'Content-Type': 'application/json'
+              }
+          });
+
+          if (response.ok) {
+              const data = await response.json();
+              const userInfo = data.user;
+              const currentBalance = userInfo.wallet; 
+              console.log(userInfo)
+
+              // Check if the previous balance exists and is different from the current balance
+              if (previousBalance !== null && previousBalance !== currentBalance) {
+                  const balanceDifference = currentBalance - previousBalance;
+
+                  // Trigger SweetAlert with the balance difference
+                  Swal.fire({
+                      title: `New ${currentBalance<previousBalance?"Debit":"Credit"} Alert!`,
+                      text: `AMOUNT: $${balanceDifference.toFixed(2)}.`,
+                      icon: 'info',
+                      confirmButtonText: 'OK'
+                  });
+
+                  // handleAllBalanceAlert(balanceDifference)
+                  
+              }
+
+              // Update the previous balance to the current balance for future checks
+              previousBalance = currentBalance;
+
+              // Dispatch the user info and token to the Redux store
+              dispatch(userLogin({ userInfo, userToken }));
+
+          } else if (response.status === 404) {
+              console.log('User not found.');
+          } else {
+              console.log('An error occurred while fetching user details.');
+          }
+      } catch (err) {
+          console.error('Fetch error:', err);
+      } finally {
+          setLoading(false);
+      }
+  };
+
+  // Call fetchUserInfo immediately on component mount
+  fetchUserInfo();
+
+  // Set interval to call fetchUserInfo every 5 seconds
+  const intervalId = setInterval(fetchUserInfo, 5000);
+
+  // Cleanup the interval when the component unmounts
+  return () => clearInterval(intervalId);
+
+}, [userToken, dispatch]);
 
 
 
@@ -90,10 +196,13 @@ const MainMenu = () => {
       {/* User Information Section */}
       <UserInfoSection theme={theme}>
         <UserInfoTitle theme={theme}>User Info</UserInfoTitle>
+        <UserInfoWrap>
         <UserInfoItem theme={theme}><Strong theme={theme}>Wallet ID:</Strong> {userInfo.walletID}</UserInfoItem>
-        <UserInfoItem theme={theme}>
-  <Strong theme={theme}>Balance: </Strong> ${userInfo.wallet.toFixed(2)} USD
+        <UserInfoItem theme={theme} >
+  <Strong theme={theme}>Balance: </Strong> $ {Number(userInfo.wallet).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})} USD
 </UserInfoItem>
+
+        </UserInfoWrap>
 
  </UserInfoSection>
       
@@ -266,7 +375,10 @@ const UserInfoSection = styled.div`
   justify-content:center;
   // align-items:center;
   flex-direction:column;
-  width:
+  
+  @media(max-width:320px){
+    padding:10px;
+  }
 `;
 
 // Styled component for the user info title
@@ -279,17 +391,24 @@ const UserInfoTitle = styled.h2`
 // Styled component for each user info item
 const UserInfoItem = styled.p`
 display:flex;
-  font-size: 16px;
+  // font-size: 16px;
   margin: 5px 0;
   font-weight:400;
   gap:5px;
-  color: ${({ theme }) => (theme === 'light' ? 'black' : '#ddd')};
+  color:white;
+  // color: ${({ theme }) => (theme === 'light' ? 'black' : '#ddd')};
   
+@media(min-width:428px){
+  width:270px;
+}
+
+
 `;
 
 const Strong = styled.p`
-  color: ${({ theme }) => (theme === 'light' ? 'rgba(0,0,255,0.7)' : '#ddd')};
+  // color: ${({ theme }) => (theme === 'light' ? 'rgba(0,0,255,0.7)' : '#ddd')};
   font-weight:bold;
+  color:white;
 `
 
 // Styled component for the storefront section
@@ -413,4 +532,19 @@ const Button = styled.button`
   color:blue;
   border:1px solid blue;
   margin-bottom:10px;
+`
+
+const UserInfoWrap = styled.div`
+  display:flex;
+  flex-direction:column;
+  background-color:rgba(0,0,255,0.5);
+  padding:10px;
+  border-radius:8px;
+  width:300px;
+  font-size:1.3rem;
+  margin-top:10px;
+
+  @media(max-width:428px){
+    width:100%;
+  }
 `
